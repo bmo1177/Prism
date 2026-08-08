@@ -1,8 +1,6 @@
-import type { OpenCodeClient } from "./OpenCodeClient";
-import type { ProvenanceClient } from "./ProvenanceClient";
-import type { EnvironmentClient } from "./EnvironmentClient";
+export * from "./types";
 
-export type { OpenCodeClientOptions } from "./OpenCodeClient";
+export type { AgentRuntime } from "./runtime";
 
 /** Core Nexus client that unifies access to all backend services. */
 export { OpenCodeClient } from "./OpenCodeClient";
@@ -28,29 +26,7 @@ export { ConfigurationService } from "./ConfigurationService";
 /** Monitoring & observability (logging/metrics/health checks). */
 export { MonitoringService } from "./MonitoringService";
 
-/** Type definitions for all platform services. */
-export type {
-  SessionMeta,
-  SessionPage,
-  SessionQuery,
-  RunConfig,
-  RunFilters,
-  RunPage,
-  RunFacet,
-  RunRecord,
-  ProvenanceRecord,
-  ProvenanceQuery,
-  ProvenancePage,
-  EnvironmentInfo,
-  EnvironmentSnapshot,
-  GitStatus,
-  GitLogEntry,
-  SkillInfo,
-  SkillMetadata,
-  PlatformProfile,
-  MonitoringMetrics,
-  HealthCheckResult,
-  LogEntry,
-  PlatformConfig,
-  ConfigurationChange,
-} from "./types";
+/** Nexus orchestrator with a unified API across all services. */
+export { NexusClient, createNexusClient } from "./NexusClient";
+
+export type { NexusServicesConfig } from "./NexusClient";

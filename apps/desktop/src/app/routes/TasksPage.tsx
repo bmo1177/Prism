@@ -242,6 +242,7 @@ export function TasksPage() {
             {editing.scheduleKind === "every" && (
               <div className="flex flex-wrap gap-1.5">
                 <span className="text-xs text-muted">{t("form.presets", "Quick:")}</span>
+                {/* eslint-disable i18next/no-literal-string -- time-unit shorthand (15m/1h/6h/24h), displayed verbatim per existing convention */}
                 {[
                   { label: "15m", secs: "900" },
                   { label: "1h", secs: "3600" },
@@ -253,15 +254,14 @@ export function TasksPage() {
                     type="button"
                     onClick={() => setEditing((s) => ({ ...s, scheduleValue: secs }))}
                     className={cn(
-                      "rounded px-2 py-0.5 text-xs transition-colors",
-                      editing.scheduleValue === secs
-                        ? "bg-accent text-bg"
-                        : "bg-surface-2 text-muted hover:text-text"
+                      "rounded-input border border-border bg-surface px-2.5 py-1 text-xs text-text transition-colors hover:bg-surface-2",
+                      editing.scheduleValue === secs && "border-accent",
                     )}
                   >
                     {label}
                   </button>
                 ))}
+                {/* eslint-enable i18next/no-literal-string */}
               </div>
             )}
           </div>

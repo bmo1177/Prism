@@ -6,7 +6,6 @@ import type {
   McpServer,
   OAuthAuthorization,
   OpenCodeClientOptions,
-  OpenCodePart,
   OpenCodeRawEvent,
   PermissionReply,
   ProviderAuthMethod,
@@ -27,7 +26,7 @@ import { BaseAgentRuntime } from "./base-runtime";
 const LEGACY_BLIND_CONTEXT = 128_000;
 
 /** Host UI contract for present_artifact tool. */
-const ARTIFACT_PRESENTATION_SYSTEM = `Open Science Desktop can display workspace files through the present_artifact tool.`;
+const ARTIFACT_PRESENTATION_SYSTEM = `This host can display workspace files through the present_artifact tool. To show a file inline in the conversation, call present_artifact with display="inline". To open it in a dedicated panel, call present_artifact with display="panel" and placement="right" or placement="bottom". Use target="new-screen" to open the artifact in a new pane, or target="new-session" to present it in a dedicated session. Never claim an artifact is displayed unless you have actually called present_artifact for it.`;
 
 type CustomProviderConfig = Record<
   string,
@@ -107,9 +106,9 @@ export class OpenCodeClient extends BaseAgentRuntime implements AgentRuntime {
   private abort: AbortController | null = null;
   private es: EventSource | null = null;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
-  private _status: string = "offline";
-  private statusHistory: Array<{ status: string; timestamp: number }> = [];
-  private statusChangeListener?: (status: string) => void;
+  // Accumulated delta text per part, so streamed deltas emit the running value.
+  private readonly deltaText = new Map<string, string>();
+  private readonly deltaReasoning = new Map<string, string>();
 
   // Connection management
   constructor(opts: OpenCodeClientOptions = {}) {
@@ -132,23 +131,6 @@ export class OpenCodeClient extends BaseAgentRuntime implements AgentRuntime {
       this.authHeader = null;
       this.authToken = null;
     }
-
-    this._status = "offline";
-    this.statusHistory = [];
-  }
-
-  /** Get current connection status. */
-  get status(): string {
-    return this._status;
-  }
-
-  /** Subscribe to status changes. */
-  onStatusChange(listener: (status: string) => void): () => void {
-    this.statusChangeListener = listener;
-    listener(this._status);
-    return () => {
-      this.statusChangeListener = undefined;
-    };
   }
 
   /** Get connection health status. */
@@ -163,14 +145,8 @@ export class OpenCodeClient extends BaseAgentRuntime implements AgentRuntime {
     }
   }
 
-  /** Get status history for debugging. */
-  getStatusHistory(): Array<{ status: string; timestamp: number }> {
-    return [...this.statusHistory];
-  }
-
   /** Reset connection to attempt recovery. */
   async reset(): Promise<void> {
-    this.setStatus("resetting");
     this.close();
     await this.connect();
   }
@@ -178,24 +154,6 @@ export class OpenCodeClient extends BaseAgentRuntime implements AgentRuntime {
   /** Event stream for SSE integration. */
   get eventStream(): EventSource | null {
     return this.es;
-  }
-
-  /** Get status history count. */
-  get statusHistoryCount(): number {
-    return this.statusHistory.length;
-  }
-
-  /** Set connection status and notify listeners. */
-  private setStatus(status: string): void {
-    const oldStatus = this._status;
-    this._status = status;
-    this.statusHistory.push({ status, timestamp: Date.now() });
-    if (this.statusHistory.length > 100) {
-      this.statusHistory.shift();
-    }
-    if (this.statusChangeListener) {
-      this.statusChangeListener(status);
-    }
   }
 
   /** Build request headers. */
@@ -602,6 +560,17 @@ export class OpenCodeClient extends BaseAgentRuntime implements AgentRuntime {
     return [...skills].sort((a, b) => a.name.localeCompare(b.name));
   }
 
+  /** List available slash commands. */
+  async listCommands(): Promise<CommandInfo[]> {
+    const res = await this.fetchImpl(`${this.baseUrl}/command${this.dirQuery()}`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) throw await this.apiError(res, "Failed to list commands");
+
+    const body = (await res.json()) as CommandInfo[] | { data?: CommandInfo[] };
+    return Array.isArray(body) ? body : body.data ?? [];
+  }
+
   /** Get default model. */
   async getDefaultModel(): Promise<string | null> {
     const res = await this.fetchImpl(`${this.baseUrl}/global/config`, { headers: this.headers() });
@@ -823,7 +792,7 @@ export class OpenCodeClient extends BaseAgentRuntime implements AgentRuntime {
     const res = await this.fetchImpl(`${this.baseUrl}/global/config`, {
       method: "PATCH",
       headers: this.headers(true),
-      body: JSON.stringify({ provider: { [providerID]: { options: { region } } }),
+      body: JSON.stringify({ provider: { [providerID]: { options: { region } } } }),
     });
     if (!res.ok) throw await this.apiError(res, "Failed to set provider region");
   }
@@ -1057,14 +1026,202 @@ export class OpenCodeClient extends BaseAgentRuntime implements AgentRuntime {
 
   /** Normalize OpenCode raw events. */
   private normalize(event: OpenCodeRawEvent): void {
-    // This method would handle all event types
-    // For now, we'll just acknowledge that it exists
+    const p = event.properties ?? {};
+    const sessionId = String(p.sessionID ?? p.sessionId ?? "");
+    switch (event.type) {
+      case "message.part.updated": {
+        const part = p.part as
+          | {
+              id?: string;
+              type?: string;
+              text?: string;
+              callID?: string;
+              tool?: string;
+              state?: Record<string, unknown>;
+            }
+          | undefined;
+        if (!part) break;
+        if (part.type === "text" && typeof part.text === "string") {
+          this.deltaText.set(String(part.id ?? ""), part.text);
+          this.emit({ type: "text.updated", sessionId, partId: String(part.id ?? ""), text: part.text });
+        } else if (part.type === "reasoning" && typeof part.text === "string") {
+          this.deltaReasoning.set(String(part.id ?? ""), part.text);
+          this.emit({ type: "reasoning.updated", sessionId, partId: String(part.id ?? ""), text: part.text });
+        } else if (part.type === "tool") {
+          const st = (part.state ?? {}) as Record<string, unknown>;
+          const meta = (st.metadata ?? {}) as Record<string, unknown>;
+          const time = (st.time ?? {}) as Record<string, unknown>;
+          this.emit({
+            type: "tool.updated",
+            sessionId,
+            callId: String(part.callID ?? part.id ?? ""),
+            tool: String(part.tool ?? ""),
+            status: mapToolStatus(String(st.status ?? "pending")),
+            title: typeof st.title === "string" ? st.title : undefined,
+            input:
+              typeof st.input === "object" && st.input !== null
+                ? (st.input as Record<string, unknown>)
+                : undefined,
+            output: typeof st.output === "string" ? st.output : undefined,
+            partialOutput: typeof meta.output === "string" ? meta.output : undefined,
+            diff: typeof meta.diff === "string" ? meta.diff : undefined,
+            startedAt: typeof time.start === "number" ? time.start : undefined,
+            endedAt: typeof time.end === "number" ? time.end : undefined,
+            childSessionId: typeof st.childSessionId === "string" ? st.childSessionId : undefined,
+          });
+        }
+        break;
+      }
+      case "message.part.delta": {
+        const partId = String(p.partID ?? "");
+        const field = String(p.field ?? "text");
+        const delta = String(p.delta ?? "");
+        if (field === "reasoning") {
+          const next = (this.deltaReasoning.get(partId) ?? "") + delta;
+          this.deltaReasoning.set(partId, next);
+          this.emit({ type: "reasoning.updated", sessionId, partId, text: next });
+        } else {
+          const next = (this.deltaText.get(partId) ?? "") + delta;
+          this.deltaText.set(partId, next);
+          this.emit({ type: "text.updated", sessionId, partId, text: next });
+        }
+        break;
+      }
+      case "session.idle": {
+        this.emit({ type: "session.idle", sessionId });
+        break;
+      }
+      case "session.status": {
+        const st = p.status as { type?: string; attempt?: number; message?: string; next?: number } | undefined;
+        if (st?.type === "retry") {
+          this.emit({
+            type: "session.retry",
+            sessionId,
+            attempt: st.attempt ?? 1,
+            message: String(st.message ?? ""),
+            nextAt: st.next ?? Date.now(),
+          });
+        }
+        break;
+      }
+      case "session.error": {
+        const err = p.error as { message?: string; data?: { message?: string } } | undefined;
+        const message = err?.data?.message ?? err?.message ?? String(p.error ?? "");
+        this.emit({ type: "error", sessionId, message });
+        break;
+      }
+      case "session.step":
+      case "step-start": {
+        const step = typeof p.step === "number" ? p.step : Number(p.step ?? 1);
+        if (Number.isFinite(step)) this.emit({ type: "step.updated", sessionId, step });
+        break;
+      }
+      case "session.compacted": {
+        this.emit({
+          type: "session.compacted",
+          sessionId,
+          auto: p.auto !== false,
+          overflow: typeof p.overflow === "boolean" ? p.overflow : undefined,
+        });
+        break;
+      }
+      case "question.asked": {
+        const requestId = String(p.requestID ?? p.requestId ?? "");
+        const raw = p.question ?? p.questions;
+        const questions = Array.isArray(raw) ? raw : raw ? [raw] : [];
+        this.emit({
+          type: "question.asked",
+          sessionId,
+          requestId,
+          questions: questions.map((q) => {
+            const item = q as Record<string, unknown>;
+            return {
+              question: String(item.question ?? ""),
+              header: String(item.header ?? ""),
+              options: Array.isArray(item.options)
+                ? (item.options as Array<Record<string, unknown>>).map((o) => ({
+                    label: String(o.label ?? ""),
+                    description: typeof o.description === "string" ? o.description : undefined,
+                  }))
+                : [],
+              multiple: Boolean(item.multiple),
+              custom: Boolean(item.custom),
+            };
+          }),
+        });
+        break;
+      }
+      case "question.resolved": {
+        this.emit({
+          type: "question.resolved",
+          sessionId,
+          requestId: String(p.requestID ?? p.requestId ?? ""),
+        });
+        break;
+      }
+      case "permission.asked": {
+        this.emit({
+          type: "permission.asked",
+          sessionId,
+          requestId: String(p.requestID ?? p.requestId ?? ""),
+          action: String(p.action ?? "unknown"),
+          resources: Array.isArray(p.resources) ? p.resources.map(String) : [String(p.resource ?? "")].filter(Boolean),
+        });
+        break;
+      }
+      case "permission.resolved": {
+        this.emit({
+          type: "permission.resolved",
+          sessionId,
+          requestId: String(p.requestID ?? p.requestId ?? ""),
+        });
+        break;
+      }
+      case "message.updated":
+      case "message.agent": {
+        this.emit({
+          type: "message.agent",
+          sessionId,
+          messageID: typeof p.messageID === "string" ? p.messageID : undefined,
+          agent: typeof p.agent === "string" ? p.agent : undefined,
+        });
+        break;
+      }
+      default:
+        break;
+    }
   }
 
   /** Read event stream. */
   private async readStream(body: ReadableStream<Uint8Array>): Promise<void> {
-    // This would read SSE stream and parse events
-    // For now, we'll just acknowledge that it exists
-    return;
+    const reader = body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        // SSE frames are separated by a blank line; each frame's `data:` line
+        // holds one JSON payload (multi-line data is joined by the server).
+        const frames = buffer.split(/\r?\n\r?\n/);
+        buffer = frames.pop() ?? "";
+        for (const frame of frames) {
+          const dataLines = frame
+            .split(/\r?\n/)
+            .filter((line) => line.startsWith("data:"))
+            .map((line) => line.slice(5).trimStart());
+          if (dataLines.length === 0) continue;
+          const payload = dataLines.join("\n");
+          try {
+            this.normalize(JSON.parse(payload) as OpenCodeRawEvent);
+          } catch {
+            /* ignore malformed frames */
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
   }
 }

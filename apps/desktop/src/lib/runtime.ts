@@ -882,7 +882,7 @@ async function performTurn(
           draftWorkspaces,
         };
       });
-      lockKey = id;
+      lockKey = id!;
       // The draft's model/effort override moved onto the real id — repersist so
       // a relaunch restores this pane's model, not the global default.
       saveRecord(SESSION_MODELS_KEY, get().sessionModels);
@@ -890,7 +890,7 @@ async function performTurn(
       moveScrollMemory(`chat:${draftSrc}`, `chat:${id}`);
       void get().refreshSessions();
     }
-    const sid = id;
+    const sid = id!;
     interruptedSessions.delete(sid); // a fresh turn folds its events normally
     void logDebug(`turn → ${sid}`);
     // A fresh turn restarts step counting (the SDK resets its own counter on idle).

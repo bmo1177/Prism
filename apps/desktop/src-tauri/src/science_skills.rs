@@ -48,7 +48,7 @@ pub fn scan(root: &Path) -> Vec<ScienceSkill> {
         .filter(|p| p.is_dir())
         .filter_map(|p| parse_dir(&p))
         .collect();
-    out.sort_by(|a, b| a.title.to_lowercase().cmp(&b.title.to_lowercase()));
+    out.sort_by_key(|a| a.title.to_lowercase());
     out
 }
 

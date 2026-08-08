@@ -379,3 +379,148 @@ export interface OpenCodeToolPart {
   state: { status: "pending" | "running" | "completed" | "error"; title?: string };
 }
 export type OpenCodePart = OpenCodeTextPart | OpenCodeToolPart | { type: string };
+
+// ---- Platform service types (Phase 5+) ----
+
+import type { ProvenanceRecord, RunRecord, HardwareInfo, PackageSnapshot } from "@ai4s/shared";
+
+/** Canonical artifact/run shapes, re-exported from @ai4s/shared so the
+ *  platform services share one source of truth with the app. */
+export type { ProvenanceRecord, RunRecord, HardwareInfo, PackageSnapshot } from "@ai4s/shared";
+
+/** Query for paging/filtering provenance records. */
+export interface ProvenanceQuery {
+  sessionId?: string;
+  search?: string;
+  beforeIndex?: number;
+  limit?: number;
+}
+
+/** One page of provenance records with a keyset cursor. */
+export interface ProvenancePage {
+  rows: ProvenanceRecord[];
+  total: number;
+  next?: number;
+}
+
+/** Configuration for starting a run. */
+export interface RunConfig {
+  command: string;
+  sessionId?: string;
+  model?: string;
+  surface?: "local" | "hpc" | "modal" | "jupyter" | "ssh";
+  host?: string;
+  cwd?: string;
+}
+
+/** Filters for listing runs. */
+export interface RunFilters {
+  search?: string;
+  status?: "ok" | "failed";
+  surface?: string;
+  sessionId?: string;
+  sinceTs?: number;
+  beforeTs?: number;
+  beforeRowid?: number;
+  limit?: number;
+}
+
+/** One page of runs with a keyset cursor. */
+export interface RunPage {
+  rows: RunRecord[];
+  total: number;
+  next?: number;
+}
+
+/** Aggregation facet over runs, e.g. by status or surface. */
+export interface RunFacet {
+  key: string;
+  count: number;
+}
+
+/** A full environment snapshot (software + hardware). */
+export interface EnvironmentSnapshot {
+  python?: string;
+  platform: string;
+  app: string;
+  packages?: PackageSnapshot;
+  hardware?: HardwareInfo;
+}
+
+/** Alias kept for EnvironmentService callers. */
+export type EnvironmentInfo = EnvironmentSnapshot;
+
+/** Git working-tree status. */
+export interface GitStatus {
+  branch: string;
+  clean: boolean;
+  staged: number;
+  unstaged: number;
+  untracked: number;
+}
+
+/** One git history entry. */
+export interface GitLogEntry {
+  hash: string;
+  author: string;
+  date: string;
+  message: string;
+}
+
+/** Skill metadata as discovered from a bundle. */
+export interface SkillMetadata {
+  id: string;
+  name: string;
+  description?: string;
+  tags?: string[];
+  path?: string;
+}
+
+/** Central platform configuration. */
+export interface PlatformConfig {
+  defaultProfile?: string;
+  openCodeUrl?: string;
+  workspace?: string;
+  features?: Record<string, boolean>;
+}
+
+/** A named platform configuration profile. */
+export interface PlatformProfile {
+  id: string;
+  name: string;
+  config: PlatformConfig;
+}
+
+/** A configuration change record. */
+export interface ConfigurationChange {
+  key: string;
+  from?: unknown;
+  to: unknown;
+  ts: number;
+  by?: string;
+}
+
+/** Result of a single service health check. */
+export interface HealthCheckResult {
+  status: "healthy" | "unhealthy";
+  service?: string;
+  lastChecked?: string;
+  error?: string;
+}
+
+/** One log entry emitted by a service. */
+export interface LogEntry {
+  ts: string;
+  level: "debug" | "info" | "warn" | "error";
+  service?: string;
+  message: string;
+  context?: Record<string, unknown>;
+}
+
+/** Aggregated platform metrics. */
+export interface MonitoringMetrics {
+  uptime?: number;
+  runs?: number;
+  errors?: number;
+  [key: string]: unknown;
+}
