@@ -1,0 +1,166 @@
+{
+  "notebooks": {
+    "title": "Notebooks",
+    "openJupyterLab": "JupyterLab öffnen",
+    "openJupyterLabTitle": "Das vollständige JupyterLab (gleiche Umgebung und Dateien) im Browser öffnen",
+    "newNotebook": "Neues Notebook",
+    "pythonNotebook": "Python-Notebook",
+    "rNotebook": "R-Notebook",
+    "description": "Alle Jupyter-Notebooks aus Ihren Sitzungsordnern, neueste zuerst. Zellen laufen auf dem lokalen Python- oder R-Kernel im eigenen Ordner des Notebooks; der Agent arbeitet an denselben Dateien.",
+    "createsIn": "Neue Notebooks werden erstellt in",
+    "empty": {
+      "tauri": "Noch keine Notebooks. Erstellen Sie eines, oder lassen Sie den Agenten eines erzeugen.",
+      "web": "Notebooks sind in der Desktop-App verfügbar."
+    },
+    "toast": {
+      "openingJupyterLab": "JupyterLab wird im Browser geöffnet…",
+      "setUpJupyterFirst": "Richten Sie zuerst Jupyter ein — Einstellungen → MCP-Server → Jupyter.",
+      "couldNotOpenJupyterLab": "JupyterLab konnte nicht geöffnet werden",
+      "couldNotCreateNotebook": "Notebook konnte nicht erstellt werden"
+    },
+    "editor": {
+      "backAria": "Zurück zu Notebooks",
+      "languageR": "R",
+      "languagePython": "Python",
+      "saved": "Gespeichert",
+      "unsaved": "Nicht gespeichert",
+      "openJupyterLabAria": "In JupyterLab öffnen",
+      "historyAria": "Verlauf",
+      "historyTitle": "Verlauf — jede aufgezeichnete Version mit Code und Unterhaltung",
+      "reloadAria": "Von der Festplatte neu laden",
+      "reloadTitle": "Neu laden (Änderungen des Agenten übernehmen)",
+      "closeAria": "Inspektor schließen",
+      "stopCellTitle": "Stopp — startet den Kernel dieses Notebooks neu (Variablen werden zurückgesetzt)",
+      "stopLabel": "Stopp",
+      "runLabel": "Ausführen",
+      "addCellLabel": "Zelle hinzufügen"
+    }
+  },
+  "files": {
+    "loading": "Wird geladen…",
+    "folderEmpty": "Dieser Ordner ist leer.",
+    "explorerUnavailableWeb": "Der Datei-Explorer ist in der Desktop-App verfügbar.",
+    "selectFilePrompt": "Wählen Sie eine Datei, um sie hier anzuzeigen.",
+    "pane": {
+      "subtitle": "Ordner dieser Sitzung",
+      "closeAria": "Dateien schließen"
+    },
+    "contextMenu": {
+      "copyPath": "Pfad kopieren",
+      "copyRelativePath": "Relativen Pfad kopieren",
+      "relativePathLabel": "Relativer Pfad",
+      "openInDefaultApp": "In Standard-App öffnen"
+    }
+  },
+  "skills": {
+    "title": "Skills & Agenten",
+    "description": {
+      "prefix": "Live aus der OpenCode-Runtime geladen — die gebündelten Skill-Pakete, alles unter ",
+      "suffix": " in Ihrem Arbeitsbereich sowie Ihre eigenen Skills in ~/.claude/skills oder ~/.agents/skills."
+    },
+    "install": {
+      "sectionTitle": "Einen Skill installieren",
+      "placeholder": "Eine SKILL.md einfügen oder eine URL / Beschreibung, aus der der Agent eine macht",
+      "starting": "Wird gestartet…",
+      "cta": "Skill installieren",
+      "hintConnected": "Eine eingefügte SKILL.md wird direkt installiert; alles andere öffnet eine Agentensitzung. Installierte Skills stehen in jedem Arbeitsbereich zur Verfügung.",
+      "hintDisconnected": "Verbinden Sie zuerst die Runtime.",
+      "installed": "„{{name}}“ installiert — in jedem Arbeitsbereich verfügbar.",
+      "agentPrompt": "Der Nutzer hat dies in das Feld zum Installieren von Skills eingegeben:\n\n---\n{{input}}\n---\n\nBitte hilf geduldig bei der Installation: Finde heraus, welcher Skill gemeint ist (URL abrufen, suchen oder bei Unklarheit nachfragen), und speichere ihn dann als Skill-Datei unter .opencode/skills/<name>/SKILL.md innerhalb dieses Arbeitsbereichs — niemals außerhalb; die App stellt ihn danach in jedem Arbeitsbereich bereit. Das Format ist im Skill customize-opencode beschrieben. Antworte am Ende mit dem Namen des installierten Skills.",
+      "echo": "Bitte hilf mir, diesen Skill zu installieren:\n\n{{input}}"
+    },
+    "environment": {
+      "sectionTitle": "Wissenschaftliche Umgebung",
+      "detectionUnavailable": "Die Umgebungserkennung läuft in der Desktop-App.",
+      "found": "gefunden",
+      "notFound": "nicht gefunden",
+      "appManaged": "app-verwaltet",
+      "note": "OpenCode führt Code mit dem aus, was hier installiert ist (z. B. Python über sein Shell-Tool). uv ist in der App enthalten, und Jupyter kann unter Einstellungen → Konnektoren von der App verwaltet werden. Python und R sind nicht gebündelt – installieren Sie sie oder ein Science Pack, um Analysen zu ermöglichen."
+    },
+    "agentsSection": {
+      "sectionTitle": "Agenten ({{count}})",
+      "empty": "Keine Agenten gemeldet.",
+      "agentMode": {
+        "primary": "primär",
+        "subagent": "Subagent",
+        "all": "alle"
+      }
+    },
+    "skillsListSection": {
+      "sectionTitle": "Skills ({{count}})",
+      "empty": "Noch keine Skills geladen.",
+      "source": {
+        "builtin": "integriert",
+        "project": "Projekt",
+        "user": "Benutzer"
+      }
+    },
+    "disconnected": "Verbinden Sie die Runtime, um die geladenen Skills und Agenten aufzulisten."
+  },
+  "notFound": {
+    "title": "404 — Nicht gefunden",
+    "hint": "Diese Seite existiert nicht.",
+    "backLink": "Zurück zum Arbeitsbereich"
+  },
+  "design": {
+    "title": "Design-Vorlagen",
+    "eyebrow": "Design",
+    "subtitle": "Gebündelte Design-Vorlagen mit Live-Vorschau — klicken Sie auf einen Stil, um zu starten.",
+    "sectionWireframes": "Wireframes",
+    "sectionCritique": "Design-Kritik",
+    "sectionDecks": "Folienauflagen",
+    "useStyle": "Diesen Stil verwenden",
+    "previewAria": "Vorschau von {{title}}",
+    "webOnly": "Design-Vorlagen sind in der Desktop-App verfügbar.",
+    "error": "Design-Vorlagen konnten nicht geladen werden.",
+    "empty": {
+      "noTemplates": "In dieser Ausgabe ist noch keine Design-Vorlage enthalten."
+    },
+    "bestFor": "Geeignet für: {{text}}",
+    "previewUnavailable": "Vorschau nicht verfügbar."
+  },
+  "research": {
+    "title": "Forschung",
+    "eyebrow": "Wissenschaft",
+    "subtitle": "Ihre Wissenschafts-Säule — starten Sie einen Forschungs-Workflow oder greifen Sie aktuelle Arbeiten aus Notebooks und Run-Verlauf auf.",
+    "webOnly": "Live-Notebooks, Runs und Provenienz sind in der Desktop-App verfügbar.",
+    "sectionWorkflows": "Wissenschafts-Workflows",
+    "sectionLab": "Ihr Labor",
+    "startWorkflow": "Workflow starten",
+    "openNotebooks": "Notebooks",
+    "openRuns": "Runs",
+    "notebooksCount_one": "{{count}} Notebook in Ihren Sitzungen",
+    "notebooksCount_other": "{{count}} Notebooks in Ihren Sitzungen",
+    "runsCount_one": "{{count}} Run erfasst",
+    "runsCount_other": "{{count}} Runs erfasst"
+  },
+  "provenance": {
+    "title": "Provenienz",
+    "eyebrow": "Wissenschaft",
+    "subtitle": "Jede aufgezeichnete Version jeder Datei, die der Agent geschrieben hat, über alle Sitzungen hinweg — durchsuchen und nachvollziehen.",
+    "webOnly": "Provenienz wird auf Ihrem Rechner in der Desktop-App erfasst.",
+    "searchPlaceholder": "Dateien, Tools oder Notizen durchsuchen",
+    "resultCount_one": "{{count}} geschriebene Version",
+    "resultCount_other": "{{count}} geschriebene Versionen",
+    "empty": "Noch keine Provenienz erfasst — starten Sie eine Sitzung, dann erscheinen die Schreibvorgänge des Agents hier.",
+    "noMatches": "Keine Versionen passen zu Ihrer Suche.",
+    "loadMore": "Mehr laden",
+    "reproduce": "Reproduzieren",
+    "reproduceTitle": "Reproduktions-Prompt für die Ursprungsunterhaltung vorbereiten",
+    "openConversation": "Konversation öffnen",
+    "openConversationTitle": "Die Konversation öffnen, aus der diese Version stammt",
+    "producedByRunTitle": "Erzeugt von diesem Run",
+    "contentNotCaptured": "Der Inhalt dieser Version wurde nicht erfasst."
+  },
+  "science": {
+    "title": "Wissenschafts-Skills",
+    "eyebrow": "Wissenschaft",
+    "subtitle": "Die gebündelten Wissenschafts-Skills — klicken Sie einen an, um eine Sitzung zu starten, die sein Protokoll in Ihrem Workspace ausführt.",
+    "webOnly": "Wissenschafts-Skills sind in der Desktop-App verfügbar.",
+    "error": "Wissenschafts-Skills konnten nicht geladen werden.",
+    "useSkill": "Skill verwenden",
+    "empty": {
+      "noSkills": "Dieser Build enthält keine Wissenschafts-Skills."
+    }
+  }
+}

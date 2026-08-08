@@ -1,0 +1,44 @@
+{
+  "title": "Aufgaben",
+  "description": "Zeitgesteuerte Agent-Ausführungen — ein Prompt, der nach Zeitplan ausgelöst wird und in der Historie wie jede Konversation erscheint. Erstelle einen Job, lege den Rhythmus fest, die App löst fällige Jobs automatisch aus.",
+  "webOnly": "Geplante Jobs laufen im lokalen Scheduler der Desktop-App und stehen im Web-Client nicht zur Verfügung.",
+  "loading": "Aufgaben werden geladen…",
+  "created": "Aufgabe erstellt — sie wird planmäßig ausgelöst.",
+  "fired": "Aufgabe in neuer Sitzung gestartet.",
+  "confirmDelete": "Aufgabe „{title}“ löschen? Sie wird nicht mehr ausgelöst. Das kann nicht rückgängig gemacht werden.",
+  "untitled": "Aufgabe ohne Titel",
+  "pause": "Pausieren",
+  "resume": "Fortsetzen",
+  "runNow": "Jetzt ausführen",
+  "delete": "Löschen",
+  "nextRun": "nächste Ausführung",
+  "lastRun": "letzte Ausführung",
+  "paused": "pausiert",
+  "error": {
+    "promptRequired": "Der Prompt ist erforderlich.",
+    "cronInvalid": "Dieser Cron-Ausdruck ist ungültig."
+  },
+  "scheduleKind": {
+    "every": "Alle x Sekunden",
+    "cron": "Cron-Ausdruck",
+    "at": "Zu Zeitstempel"
+  },
+  "form": {
+    "add": "Neue Aufgabe",
+    "cancel": "Abbrechen",
+    "title": "Titel",
+    "titlePlaceholder": "z. B. Morgen-Digest",
+    "prompt": "Prompt",
+    "promptPlaceholder": "Was soll der Agent tun, wenn diese Aufgabe ausgelöst wird?",
+    "schedule": "Zeitplan",
+    "value": "Wert",
+    "create": "Aufgabe erstellen",
+    "everyPlaceholder": "z. B. 3600 = jede Stunde",
+    "cronPlaceholder": "z. B. 0 9 * * 1-5",
+    "atPlaceholder": "Unix-Sekunden, z. B. 1704067200"
+  },
+  "empty": {
+    "title": "Noch keine Aufgaben",
+    "body": "Erstelle eine Aufgabe, um eine Agent-Ausführung zu planen — sie läuft nach deinem Rhythmus und erscheint in der Konversationshistorie."
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "notebooks": {
+    "title": "Notebooks",
+    "openJupyterLab": "Open JupyterLab",
+    "openJupyterLabTitle": "Open the full JupyterLab (same env and files) in your browser",
+    "newNotebook": "New notebook",
+    "pythonNotebook": "Python notebook",
+    "rNotebook": "R notebook",
+    "description": "All Jupyter notebooks across your session folders, newest first. Cells run on the local Python or R kernel in the notebook's own folder; the agent works on the same files.",
+    "createsIn": "New notebooks are created in",
+    "empty": {
+      "tauri": "No notebooks yet. Create one, or ask the agent to produce one.",
+      "web": "Notebooks are available in the desktop app."
+    },
+    "toast": {
+      "openingJupyterLab": "Opening JupyterLab in your browser…",
+      "setUpJupyterFirst": "Set up Jupyter first — Settings → MCP servers → Jupyter.",
+      "couldNotOpenJupyterLab": "Could not open JupyterLab",
+      "couldNotCreateNotebook": "Could not create notebook"
+    },
+    "editor": {
+      "backAria": "Back to notebooks",
+      "languageR": "R",
+      "languagePython": "Python",
+      "saved": "Saved",
+      "unsaved": "Unsaved",
+      "openJupyterLabAria": "Open in JupyterLab",
+      "historyAria": "History",
+      "historyTitle": "History — every recorded version with its code and conversation",
+      "reloadAria": "Reload from disk",
+      "reloadTitle": "Reload (pick up the agent's changes)",
+      "closeAria": "Close inspector",
+      "stopCellTitle": "Stop — restarts this notebook's kernel (variables reset)",
+      "stopLabel": "Stop",
+      "runLabel": "Run",
+      "addCellLabel": "Add cell"
+    }
+  },
+  "files": {
+    "loading": "Loading…",
+    "folderEmpty": "This folder is empty.",
+    "explorerUnavailableWeb": "The file explorer is available in the desktop app.",
+    "selectFilePrompt": "Select a file to preview it here.",
+    "pane": {
+      "subtitle": "this session's folder",
+      "closeAria": "Close files"
+    },
+    "contextMenu": {
+      "copyPath": "Copy path",
+      "copyRelativePath": "Copy relative path",
+      "relativePathLabel": "Relative path",
+      "openInDefaultApp": "Open in default app"
+    }
+  },
+  "skills": {
+    "title": "Skills & Agents",
+    "description": {
+      "prefix": "Loaded live from the OpenCode runtime — the bundled skill packs, everything under ",
+      "suffix": " in your workspace, and your own skills in ~/.claude/skills or ~/.agents/skills."
+    },
+    "install": {
+      "sectionTitle": "Install a skill",
+      "placeholder": "Paste a SKILL.md, or a URL / description for the agent to turn into one",
+      "starting": "Starting…",
+      "cta": "Install skill",
+      "hintConnected": "A pasted SKILL.md installs straight away; anything else opens an agent session. Installed skills are available in every workspace.",
+      "hintDisconnected": "Connect the runtime first.",
+      "installed": "Installed “{{name}}” — available in every workspace.",
+      "agentPrompt": "The user typed this into the Skills install box:\n\n---\n{{input}}\n---\n\nPlease help them install it patiently: work out which skill they mean (fetch the URL, search for it, or ask them if it is ambiguous), then save it as a skill file at .opencode/skills/<name>/SKILL.md inside this workspace — never outside it; the app then makes it available in every workspace. The customize-opencode skill documents the format. Finally reply with the installed skill's name.",
+      "echo": "Please help me install this skill:\n\n{{input}}"
+    },
+    "environment": {
+      "sectionTitle": "Scientific environment",
+      "detectionUnavailable": "Environment detection runs in the desktop app.",
+      "found": "found",
+      "notFound": "not found",
+      "appManaged": "app-managed",
+      "note": "OpenCode runs code with whatever is installed here (e.g. Python via its shell tool). uv ships with the app, and Jupyter can be app-managed in Settings → Connectors. Python and R are not bundled — install them or a Science Pack to enable analysis."
+    },
+    "agentsSection": {
+      "sectionTitle": "Agents ({{count}})",
+      "empty": "No agents reported.",
+      "agentMode": {
+        "primary": "primary",
+        "subagent": "subagent",
+        "all": "all"
+      }
+    },
+    "skillsListSection": {
+      "sectionTitle": "Skills ({{count}})",
+      "empty": "No skills loaded yet.",
+      "source": {
+        "builtin": "built-in",
+        "project": "project",
+        "user": "user"
+      }
+    },
+    "disconnected": "Connect the runtime to list the skills and agents it has loaded."
+  },
+  "notFound": {
+    "title": "404 — Not found",
+    "hint": "This page does not exist.",
+    "backLink": "Back to workspace"
+  },
+  "design": {
+    "title": "Design templates",
+    "eyebrow": "Design",
+    "subtitle": "Bundled design templates with live previews — click a style to start building.",
+    "sectionWireframes": "Wireframes",
+    "sectionCritique": "Design critique",
+    "sectionDecks": "Slide decks",
+    "useStyle": "Use this style",
+    "previewAria": "Preview of {{title}}",
+    "webOnly": "Design templates are available in the desktop app.",
+    "error": "Could not load design templates.",
+    "empty": {
+      "noTemplates": "No design templates shipped with this build."
+    },
+    "bestFor": "Best for: {{text}}",
+    "previewUnavailable": "Preview unavailable."
+  },
+  "research": {
+    "title": "Research",
+    "eyebrow": "Science",
+    "subtitle": "Your science pillar — start a research workflow, or pick up recent work from your notebooks and run history.",
+    "webOnly": "Live notebooks, runs, and provenance are available in the desktop app.",
+    "sectionWorkflows": "Science workflows",
+    "sectionLab": "Your lab",
+    "startWorkflow": "Start workflow",
+    "openNotebooks": "Notebooks",
+    "openRuns": "Runs",
+    "notebooksCount_one": "{{count}} notebook across your sessions",
+    "notebooksCount_other": "{{count}} notebooks across your sessions",
+    "runsCount_one": "{{count}} run recorded",
+    "runsCount_other": "{{count}} runs recorded"
+  },
+  "provenance": {
+    "title": "Provenance",
+    "eyebrow": "Science",
+    "subtitle": "Every recorded version of every file the agent wrote, across all your sessions — browse, filter, and reproduce any of them.",
+    "webOnly": "Provenance is recorded on your machine in the desktop app.",
+    "searchPlaceholder": "Search files, tools, or notes",
+    "resultCount_one": "{{count}} written version",
+    "resultCount_other": "{{count}} written versions",
+    "empty": "No provenance recorded yet — start a session and the agent's writes will appear here.",
+    "noMatches": "No versions match your search.",
+    "loadMore": "Load more",
+    "reproduce": "Reproduce",
+    "reproduceTitle": "Draft a reproduce prompt into the originating conversation",
+    "openConversation": "Open conversation",
+    "openConversationTitle": "Open the conversation this version came from",
+    "producedByRunTitle": "Produced by this run",
+    "contentNotCaptured": "The content of this version was not captured."
+  },
+  "science": {
+    "title": "Science skills",
+    "eyebrow": "Science",
+    "subtitle": "The bundled science skills — click one to start a session that runs its protocol on your workspace.",
+    "webOnly": "Science skills are available in the desktop app.",
+    "error": "Could not load science skills.",
+    "useSkill": "Use this skill",
+    "empty": {
+      "noSkills": "No science skills shipped with this build."
+    }
+  }
+}

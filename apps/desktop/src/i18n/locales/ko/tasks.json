@@ -1,0 +1,44 @@
+{
+  "title": "작업",
+  "description": "예약된 에이전트 실행 — 일정에 따라 실행되며 일반 대화처럼 기록에 나타나는 프롬프트입니다. 작업을 만들고 주기를 설정하면 앱이 마감된 작업을 자동으로 실행합니다.",
+  "webOnly": "예약 작업은 데스크톱 앱의 로컬 스케줄러에서 실행되며 웹 클라이언트에서 사용할 수 없습니다.",
+  "loading": "작업 불러오는 중…",
+  "created": "작업이 생성되었습니다. 일정대로 실행됩니다.",
+  "fired": "새 세션에서 작업이 시작되었습니다.",
+  "confirmDelete": "작업 '{title}'을(를) 삭제할까요? 더 이상 실행되지 않습니다. 되돌릴 수 없습니다.",
+  "untitled": "이름 없는 작업",
+  "pause": "일시 중지",
+  "resume": "재개",
+  "runNow": "지금 실행",
+  "delete": "삭제",
+  "nextRun": "다음 실행",
+  "lastRun": "마지막 실행",
+  "paused": "일시 중지됨",
+  "error": {
+    "promptRequired": "프롬프트가 필요합니다.",
+    "cronInvalid": "해당 cron 표현식이 잘못되었습니다."
+  },
+  "scheduleKind": {
+    "every": "N초마다",
+    "cron": "cron 표현식",
+    "at": "타임스탬프로"
+  },
+  "form": {
+    "add": "새 작업",
+    "cancel": "취소",
+    "title": "제목",
+    "titlePlaceholder": "예: 아침 연구 다이제스트",
+    "prompt": "프롬프트",
+    "promptPlaceholder": "이 작업이 실행될 때 에이전트는 무엇을 해야 하나요?",
+    "schedule": "일정",
+    "value": "값",
+    "create": "작업 만들기",
+    "everyPlaceholder": "예: 3600 = 매시간",
+    "cronPlaceholder": "예: 0 9 * * 1-5",
+    "atPlaceholder": "Unix 초, 예: 1704067200"
+  },
+  "empty": {
+    "title": "아직 작업이 없습니다",
+    "body": "작업을 만들어 에이전트 실행을 예약하면 설정한 주기로 실행되고 대화 기록에 표시됩니다."
+  }
+}

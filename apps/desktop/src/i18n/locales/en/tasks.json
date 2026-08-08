@@ -1,0 +1,44 @@
+{
+  "title": "Tasks",
+  "description": "Scheduled agent runs — a prompt that fires on a schedule and appears in the conversation history like any session. Create a job, set its rhythm, and the running app fires due jobs automatically.",
+  "webOnly": "Scheduled jobs run on the desktop app's local scheduler and are not available in the web client.",
+  "loading": "Loading tasks…",
+  "created": "Task created — it will fire on schedule.",
+  "fired": "Task started in a new session.",
+  "confirmDelete": "Delete task “{title}”? It will stop firing. This cannot be undone.",
+  "untitled": "Untitled task",
+  "pause": "Pause",
+  "resume": "Resume",
+  "runNow": "Run now",
+  "delete": "Delete",
+  "nextRun": "next run",
+  "lastRun": "last run",
+  "paused": "paused",
+  "error": {
+    "promptRequired": "The prompt is required.",
+    "cronInvalid": "That cron expression is not valid."
+  },
+  "scheduleKind": {
+    "every": "Every N seconds",
+    "cron": "Cron expression",
+    "at": "At timestamp"
+  },
+  "form": {
+    "add": "New task",
+    "cancel": "Cancel",
+    "title": "Title",
+    "titlePlaceholder": "e.g. Morning research digest",
+    "prompt": "Prompt",
+    "promptPlaceholder": "What should the agent do when this task fires?",
+    "schedule": "Schedule",
+    "value": "Value",
+    "create": "Create task",
+    "everyPlaceholder": "e.g. 3600 = every hour",
+    "cronPlaceholder": "e.g. 0 9 * * 1-5",
+    "atPlaceholder": "Unix seconds, e.g. 1774569600"
+  },
+  "empty": {
+    "title": "No tasks yet",
+    "body": "Create a task to schedule an agent run — it fires on your cadence and shows up in the conversation history."
+  }
+}

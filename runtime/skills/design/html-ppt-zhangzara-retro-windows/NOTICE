@@ -1,0 +1,12 @@
+Craft - Design pack (skills-design)
+
+html-ppt-zhangzara-retro-windows is adapted from the Open Design project's design-templates
+(open-design-main), MIT-licensed upstream
+(https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/retro-windows).
+The bundled LICENSE file carries the original MIT copyright notice and
+must be redistributed with any copy of example.html or SKILL.md.
+
+Modifications for Craft: removed Open Design od:/triggers frontmatter,
+replaced the <artifact> output contract with a workspace-file contract,
+removed Open-Design-runtime references, and added an inline deck-runtime
+specification so the deck works standalone.

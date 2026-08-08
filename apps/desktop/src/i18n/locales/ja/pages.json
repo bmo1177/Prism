@@ -1,0 +1,166 @@
+{
+  "notebooks": {
+    "title": "ノートブック",
+    "openJupyterLab": "JupyterLab を開く",
+    "openJupyterLabTitle": "同じ環境とファイルで、ブラウザで完全な JupyterLab を開く",
+    "newNotebook": "新規ノートブック",
+    "pythonNotebook": "Python ノートブック",
+    "rNotebook": "R ノートブック",
+    "description": "セッションフォルダ全体の Jupyter ノートブックを新しい順に表示します。セルはノートブック自身のフォルダ内のローカル Python または R カーネルで実行され、エージェントも同じファイルを操作します。",
+    "createsIn": "新しいノートブックの作成先:",
+    "empty": {
+      "tauri": "まだノートブックがありません。作成するか、エージェントに作成を依頼してください。",
+      "web": "ノートブックはデスクトップアプリで利用可能です。"
+    },
+    "toast": {
+      "openingJupyterLab": "ブラウザで JupyterLab を開いています…",
+      "setUpJupyterFirst": "先に Jupyter を設定してください — 設定 → MCP サーバー → Jupyter。",
+      "couldNotOpenJupyterLab": "JupyterLab を開けませんでした",
+      "couldNotCreateNotebook": "ノートブックを作成できませんでした"
+    },
+    "editor": {
+      "backAria": "ノートブック一覧に戻る",
+      "languageR": "R",
+      "languagePython": "Python",
+      "saved": "保存済み",
+      "unsaved": "未保存",
+      "openJupyterLabAria": "JupyterLab で開く",
+      "historyAria": "履歴",
+      "historyTitle": "履歴 — 記録された各バージョンのコードと会話",
+      "reloadAria": "ディスクから再読み込み",
+      "reloadTitle": "再読み込み（エージェントの変更を取り込む）",
+      "closeAria": "インスペクターを閉じる",
+      "stopCellTitle": "停止 — このノートブックのカーネルを再起動します（変数はリセットされます）",
+      "stopLabel": "停止",
+      "runLabel": "実行",
+      "addCellLabel": "セルを追加"
+    }
+  },
+  "files": {
+    "loading": "読み込み中…",
+    "folderEmpty": "このフォルダは空です。",
+    "explorerUnavailableWeb": "ファイルエクスプローラーはデスクトップアプリで利用可能です。",
+    "selectFilePrompt": "ファイルを選択するとここにプレビューが表示されます。",
+    "pane": {
+      "subtitle": "このセッションのフォルダ",
+      "closeAria": "ファイルを閉じる"
+    },
+    "contextMenu": {
+      "copyPath": "パスをコピー",
+      "copyRelativePath": "相対パスをコピー",
+      "relativePathLabel": "相対パス",
+      "openInDefaultApp": "デフォルトのアプリで開く"
+    }
+  },
+  "skills": {
+    "title": "スキル & エージェント",
+    "description": {
+      "prefix": "OpenCode ランタイムからライブで読み込まれます — 同梱のスキルパック、ワークスペース内の ",
+      "suffix": " にあるものすべて、そして ~/.claude/skills または ~/.agents/skills にあるご自身のスキル。"
+    },
+    "install": {
+      "sectionTitle": "スキルをインストール",
+      "placeholder": "SKILL.md を貼り付けるか、エージェントに作らせる URL / 説明を貼り付けてください",
+      "starting": "開始中…",
+      "cta": "スキルをインストール",
+      "hintConnected": "貼り付けた SKILL.md はそのままインストールされます。それ以外はエージェントのセッションが開きます。インストールしたスキルはすべてのワークスペースで使えます。",
+      "hintDisconnected": "先にランタイムに接続してください。",
+      "installed": "「{{name}}」をインストールしました — すべてのワークスペースで使えます。",
+      "agentPrompt": "ユーザーがスキルのインストール欄に次の内容を入力しました：\n\n---\n{{input}}\n---\n\n根気よくインストールを手伝ってください：まずどのスキルを指しているかを特定し（URL の取得、検索、曖昧な場合はユーザーへの確認）、次にスキルファイルとして .opencode/skills/<name>/SKILL.md に保存します。必ずこのワークスペース内に保存し、外には書き込まないでください（その後アプリがすべてのワークスペースで使えるようにします）。形式は customize-opencode スキルに説明があります。最後にインストールしたスキル名を返答してください。",
+      "echo": "このスキルのインストールを手伝ってください：\n\n{{input}}"
+    },
+    "environment": {
+      "sectionTitle": "科学計算環境",
+      "detectionUnavailable": "環境検出はデスクトップアプリで実行されます。",
+      "found": "検出済み",
+      "notFound": "未検出",
+      "appManaged": "アプリ管理",
+      "note": "OpenCode はここにインストールされているものを使ってコードを実行します（例: シェルツール経由の Python）。uv はアプリに同梱されており、Jupyter は「設定 → コネクタ」でアプリが管理できます。Python と R はバンドルされていません。分析を有効にするには、それらまたは Science Pack をインストールしてください。"
+    },
+    "agentsSection": {
+      "sectionTitle": "エージェント ({{count}})",
+      "empty": "エージェントが報告されていません。",
+      "agentMode": {
+        "primary": "プライマリ",
+        "subagent": "サブエージェント",
+        "all": "すべて"
+      }
+    },
+    "skillsListSection": {
+      "sectionTitle": "スキル ({{count}})",
+      "empty": "まだスキルが読み込まれていません。",
+      "source": {
+        "builtin": "組み込み",
+        "project": "プロジェクト",
+        "user": "ユーザー"
+      }
+    },
+    "disconnected": "読み込まれたスキルとエージェントを一覧表示するには、ランタイムに接続してください。"
+  },
+  "notFound": {
+    "title": "404 — 見つかりません",
+    "hint": "このページは存在しません。",
+    "backLink": "ワークスペースに戻る"
+  },
+  "design": {
+    "title": "デザインテンプレート",
+    "eyebrow": "デザイン",
+    "subtitle": "同梱のデザインテンプレートをライブでプレビュー。スタイルをクリックして開始しましょう。",
+    "sectionWireframes": "ワイヤーフレーム",
+    "sectionCritique": "デザインレビュー",
+    "sectionDecks": "スライドデッキ",
+    "useStyle": "このスタイルを使う",
+    "previewAria": "{{title}} のプレビュー",
+    "webOnly": "デザインテンプレートはデスクトップアプリで利用できます。",
+    "error": "デザインテンプレートを読み込めませんでした。",
+    "empty": {
+      "noTemplates": "このビルドにはまだデザインテンプレートがありません。"
+    },
+    "bestFor": "用途: {{text}}",
+    "previewUnavailable": "プレビューを利用できません。"
+  },
+  "research": {
+    "title": "研究",
+    "eyebrow": "サイエンス",
+    "subtitle": "サイエンスの柱です。研究ワークフローを開始するか、ノートブックと実行履歴から最近の作業を続けましょう。",
+    "webOnly": "ライブのノートブック、実行、来歴はデスクトップアプリで利用できます。",
+    "sectionWorkflows": "科学ワークフロー",
+    "sectionLab": "ラボ",
+    "startWorkflow": "ワークフローを開始",
+    "openNotebooks": "ノートブック",
+    "openRuns": "実行",
+    "notebooksCount_one": "セッション全体で{{count}}件のノートブック",
+    "notebooksCount_other": "セッション全体で{{count}}件のノートブック",
+    "runsCount_one": "記録済み{{count}}回の実行",
+    "runsCount_other": "記録済み{{count}}回の実行"
+  },
+  "provenance": {
+    "title": "来歴",
+    "eyebrow": "サイエンス",
+    "subtitle": "エージェントが書き込んだ全ファイルの全記録バージョンを、すべてのセッションにわたって閲覧・追跡できます。",
+    "webOnly": "来歴はデスクトップアプリでこのマシンに記録されます。",
+    "searchPlaceholder": "ファイル、ツール、メモを検索",
+    "resultCount_one": "書き込みバージョン{{count}}件",
+    "resultCount_other": "書き込みバージョン{{count}}件",
+    "empty": "まだ来歴が記録されていません。セッションを開始すると、エージェントの書き込みがここに表示されます。",
+    "noMatches": "検索に一致するバージョンがありません。",
+    "loadMore": "さらに読み込む",
+    "reproduce": "再現",
+    "reproduceTitle": "元の会話に再現プロンプトを準備",
+    "openConversation": "会話を開く",
+    "openConversationTitle": "このバージョンの生成元会話を開く",
+    "producedByRunTitle": "この実行によって生成",
+    "contentNotCaptured": "このバージョンの内容は記録されていません。"
+  },
+  "science": {
+    "title": "サイエンススキル",
+    "eyebrow": "サイエンス",
+    "subtitle": "同梱のサイエンススキル——クリックすると、ワークスペースでそのプロトコルを実行するセッションを開始します。",
+    "webOnly": "サイエンススキルはデスクトップアプリで利用できます。",
+    "error": "サイエンススキルを読み込めませんでした。",
+    "useSkill": "このスキルを使う",
+    "empty": {
+      "noSkills": "このビルドにはサイエンススキルが含まれていません。"
+    }
+  }
+}

@@ -1,0 +1,137 @@
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { Command } from "cmdk";
+import { useNavigate } from "react-router-dom";
+import {
+  BookOpen,
+  FileSearch,
+  FileSpreadsheet,
+  FileText,
+  LayoutTemplate,
+  Moon,
+  NotebookPen,
+  PackagePlus,
+  Plus,
+  Presentation,
+  RotateCw,
+  ScanSearch,
+  Settings,
+  ShieldCheck,
+} from "lucide-react";
+import { useUiStore } from "@/lib/store";
+import { useRuntimeStore } from "@/lib/runtime";
+import { useLayoutStore } from "@/lib/layout";
+import { useIsMobile } from "@/lib/useIsMobile";
+import { isGatewayWeb } from "@/lib/webMode";
+import { WORKFLOW_STARTERS } from "@/components/thread/WorkflowStarters";
+
+interface Action {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  run: () => void;
+}
+
+/** Prompt for a starter workflow by id, so ⌘K and the empty-session cards stay in sync. */
+const starterPrompt = (id: string) => WORKFLOW_STARTERS.find((s) => s.id === id)?.prompt ?? "";
+
+export function CommandPalette() {
+  const { t } = useTranslation("nav");
+  const open = useUiStore((s) => s.paletteOpen);
+  const setOpen = useUiStore((s) => s.setPaletteOpen);
+  const toggleTheme = useUiStore((s) => s.toggleTheme);
+  const navigate = useNavigate();
+  // Tiling is desktop-only: web/phone show one pane, so there is no Screen to open.
+  const newPaneAllowed = !useIsMobile() && !isGatewayWeb;
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen(!useUiStore.getState().paletteOpen);
+      }
+      // Consume Esc only when the palette is open — a marked-handled Esc must
+      // not also interrupt a running agent turn (LiveSessionPage listens too).
+      if (e.key === "Escape" && useUiStore.getState().paletteOpen) {
+        e.preventDefault();
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [setOpen]);
+
+  const close = () => setOpen(false);
+
+  // Start a new session and send a workflow prompt, then reveal that session.
+  // Its own Screen and pane, like every other "new session" entry — the pane the
+  // user was reading stays put.
+  const runWorkflow = async (starterId: string) => {
+    close();
+    const layout = useLayoutStore.getState();
+    const leafId = newPaneAllowed ? layout.openInNewGroup(null) : null;
+    useRuntimeStore.getState().startDraft();
+    const id = await useRuntimeStore.getState().sendPrompt(starterPrompt(starterId));
+    if (id && leafId) layout.bindSession(leafId, id);
+    if (id) navigate(`/live/${id}`);
+  };
+
+  const actions: Action[] = [
+    { id: "new", label: t("commandPalette.actions.newSession"), icon: <Plus size={16} />, run: () => { if (newPaneAllowed) useLayoutStore.getState().openInNewGroup(null); useRuntimeStore.getState().startDraft(); navigate("/live"); close(); } },
+    { id: "analyze", label: t("commandPalette.actions.analyzeData"), icon: <FileSearch size={16} />, run: () => void runWorkflow("analyze") },
+    { id: "review", label: t("commandPalette.actions.auditReport"), icon: <ShieldCheck size={16} />, run: () => void runWorkflow("audit") },
+    { id: "docx", label: t("commandPalette.actions.docx"), icon: <FileText size={16} />, run: () => void runWorkflow("docx") },
+    { id: "pptx", label: t("commandPalette.actions.pptx"), icon: <Presentation size={16} />, run: () => void runWorkflow("pptx") },
+    { id: "xlsx", label: t("commandPalette.actions.xlsx"), icon: <FileSpreadsheet size={16} />, run: () => void runWorkflow("xlsx") },
+    { id: "pdf", label: t("commandPalette.actions.pdf"), icon: <FileText size={16} />, run: () => void runWorkflow("pdf") },
+    { id: "design-wireframe", label: t("commandPalette.actions.designWireframe"), icon: <LayoutTemplate size={16} />, run: () => void runWorkflow("design-wireframe") },
+    { id: "design-deck", label: t("commandPalette.actions.designDeck"), icon: <Presentation size={16} />, run: () => void runWorkflow("design-deck") },
+    { id: "design-review", label: t("commandPalette.actions.designReview"), icon: <ScanSearch size={16} />, run: () => void runWorkflow("design-review") },
+    { id: "science-survey", label: t("commandPalette.actions.scienceSurvey"), icon: <BookOpen size={16} />, run: () => void runWorkflow("science-survey") },
+    { id: "science-paper", label: t("commandPalette.actions.sciencePaper"), icon: <NotebookPen size={16} />, run: () => void runWorkflow("science-paper") },
+    { id: "science-repro", label: t("commandPalette.actions.scienceRepro"), icon: <RotateCw size={16} />, run: () => void runWorkflow("science-repro") },
+    { id: "science-integrity", label: t("commandPalette.actions.scienceIntegrity"), icon: <ShieldCheck size={16} />, run: () => void runWorkflow("science-integrity") },
+    { id: "notebooks", label: t("commandPalette.actions.openNotebooks"), icon: <NotebookPen size={16} />, run: () => { navigate("/notebooks"); close(); } },
+    { id: "skills", label: t("commandPalette.actions.manageSkills"), icon: <PackagePlus size={16} />, run: () => { navigate("/skills"); close(); } },
+    { id: "settings", label: t("commandPalette.actions.openSettings"), icon: <Settings size={16} />, run: () => { navigate("/settings"); close(); } },
+    { id: "theme", label: t("commandPalette.actions.toggleTheme"), icon: <Moon size={16} />, run: () => { toggleTheme(); close(); } },
+  ];
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center bg-black/20 pt-[16vh]"
+      onClick={close}
+    >
+      <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg">
+        <Command
+          label={t("commandPalette.ariaLabel")}
+          className="overflow-hidden rounded-card border border-border bg-surface shadow-pop"
+        >
+          <Command.Input
+            autoFocus
+            placeholder={t("commandPalette.placeholder")}
+            className="w-full border-b border-border bg-transparent px-4 py-3 text-sm text-text outline-none placeholder:text-muted"
+          />
+          <Command.List className="max-h-80 overflow-y-auto p-2">
+            <Command.Empty className="px-3 py-6 text-center text-sm text-muted">
+              {t("commandPalette.noResults")}
+            </Command.Empty>
+            {actions.map((a) => (
+              <Command.Item
+                key={a.id}
+                value={a.label}
+                onSelect={a.run}
+                className="flex cursor-pointer items-center gap-3 rounded-input px-3 py-2 text-sm text-text data-[selected=true]:bg-surface-2"
+              >
+                <span className="text-muted">{a.icon}</span>
+                {a.label}
+              </Command.Item>
+            ))}
+          </Command.List>
+        </Command>
+      </div>
+    </div>
+  );
+}

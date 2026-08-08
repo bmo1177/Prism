@@ -1,0 +1,44 @@
+{
+  "title": "Tâches",
+  "description": "Exécutions d'agent planifiées — un prompt déclenché selon un calendrier qui apparaît dans l'historique comme toute conversation. Créez un job, définissez son rythme, l'application déclenche automatiquement les jobs échus.",
+  "webOnly": "Les jobs planifiés s'exécutent dans le planificateur local du bureau et ne sont pas disponibles dans le client web.",
+  "loading": "Chargement des tâches…",
+  "created": "Tâche créée — elle se déclenchera selon le calendrier.",
+  "fired": "Tâche démarrée dans une nouvelle session.",
+  "confirmDelete": "Supprimer la tâche « {title} » ? Elle ne sera plus déclenchée. Cette action est irréversible.",
+  "untitled": "Tâche sans titre",
+  "pause": "Pause",
+  "resume": "Reprendre",
+  "runNow": "Exécuter maintenant",
+  "delete": "Supprimer",
+  "nextRun": "prochaine exécution",
+  "lastRun": "dernière exécution",
+  "paused": "en pause",
+  "error": {
+    "promptRequired": "Le prompt est requis.",
+    "cronInvalid": "Cette expression cron n'est pas valide."
+  },
+  "scheduleKind": {
+    "every": "Toutes les x secondes",
+    "cron": "Expression cron",
+    "at": "À l'horodatage"
+  },
+  "form": {
+    "add": "Nouvelle tâche",
+    "cancel": "Annuler",
+    "title": "Titre",
+    "titlePlaceholder": "p. ex. résumé matinal",
+    "prompt": "Prompt",
+    "promptPlaceholder": "Que doit faire l'agent quand cette tâche se déclenche ?",
+    "schedule": "Calendrier",
+    "value": "Valeur",
+    "create": "Créer la tâche",
+    "everyPlaceholder": "p. ex. 3600 = chaque heure",
+    "cronPlaceholder": "p. ex. 0 9 * * 1-5",
+    "atPlaceholder": "Secondes Unix, p. ex. 1704067200"
+  },
+  "empty": {
+    "title": "Aucune tâche pour l'instant",
+    "body": "Créez une tâche pour planifier une exécution d'agent : elle se déclenche selon votre cadence et apparaît dans l'historique."
+  }
+}

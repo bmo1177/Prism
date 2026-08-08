@@ -1,0 +1,13 @@
+Craft - Design pack (skills-design)
+
+This skill is adapted from the Open Design project (open-design-main)
+copyright their respective contributors, licensed under the Apache
+License, Version 2.0 (https://www.apache.org/licenses/LICENSE-2.0).
+
+Modifications for Craft: removed the Open Design `od:`/`triggers`
+frontmatter, replaced the `<artifact>` output contract with a
+workspace-file output contract, and removed Open-Design-runtime
+references. The bundled `example.html` is a rendering reference and is
+not shipped to the skill runtime body.
+
+See the Apache License, Version 2.0 for the full terms.

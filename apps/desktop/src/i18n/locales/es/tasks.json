@@ -1,0 +1,44 @@
+{
+  "title": "Tareas",
+  "description": "Ejecuciones de agente programadas — un prompt que se dispara según un calendario y aparece en el historial como cualquier conversación. Crea un trabajo, define su ritmo, y la app dispara los trabajos vencidos automáticamente.",
+  "webOnly": "Los trabajos programados se ejecutan en el programador local de la aplicación de escritorio y no están disponibles en el cliente web.",
+  "loading": "Cargando tareas…",
+  "created": "Tarea creada — se ejecutará según lo programado.",
+  "fired": "Tarea iniciada en una nueva sesión.",
+  "confirmDelete": "¿Eliminar la tarea «{title}»? Dejará de ejecutarse. Esto no se puede deshacer.",
+  "untitled": "Tarea sin título",
+  "pause": "Pausar",
+  "resume": "Reanudar",
+  "runNow": "Ejecutar ahora",
+  "delete": "Eliminar",
+  "nextRun": "próxima ejecución",
+  "lastRun": "última ejecución",
+  "paused": "en pausa",
+  "error": {
+    "promptRequired": "Se requiere el prompt.",
+    "cronInvalid": "Esa expresión cron no es válida."
+  },
+  "scheduleKind": {
+    "every": "Cada x segundos",
+    "cron": "Expresión cron",
+    "at": "En marca de tiempo"
+  },
+  "form": {
+    "add": "Nueva tarea",
+    "cancel": "Cancelar",
+    "title": "Título",
+    "titlePlaceholder": "p. ej. Resumen de investigación",
+    "prompt": "Prompt",
+    "promptPlaceholder": "¿Qué debe hacer el agente cuando se dispare esta tarea?",
+    "schedule": "Horario",
+    "value": "Valor",
+    "create": "Crear tarea",
+    "everyPlaceholder": "p. ej. 3600 = cada hora",
+    "cronPlaceholder": "p. ej. 0 9 * * 1-5",
+    "atPlaceholder": "Segundos Unix, p. ej. 1704067200"
+  },
+  "empty": {
+    "title": "Aún no hay tareas",
+    "body": "Crea una tarea para programar una ejecución de agente: se dispara según tu ritmo y aparece en el historial de conversaciones."
+  }
+}
