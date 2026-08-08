@@ -1,4 +1,4 @@
-import type { OpenCodeClient } from "./OpenCodeClient";
+import { OpenCodeClient } from "./OpenCodeClient";
 import { RunService } from "./RunService";
 import { ProvenanceService } from "./ProvenanceService";
 import { EnvironmentService } from "./EnvironmentService";
@@ -6,7 +6,7 @@ import { GitService } from "./GitService";
 import { SkillDiscoveryService } from "./SkillDiscoveryService";
 import { ConfigurationService } from "./ConfigurationService";
 import { MonitoringService } from "./MonitoringService";
-import type { HealthCheckResult, MonitoringMetrics } from "./types";
+import type { HealthCheckResult, MonitoringMetrics, SkillInfo } from "./types";
 
 /** Endpoint configuration for every platform service. */
 export interface NexusServicesConfig {
@@ -42,7 +42,16 @@ export class NexusClient {
   }
 
   private initializeServices(): void {
-    if (this.services.openCode) this.openCodeClient = this.services.openCode;
+    if (this.services.openCode) {
+      this.openCodeClient = this.services.openCode;
+    } else if (this.services.openCodeUrl) {
+      // URL-only construction: build the OpenCode client for the caller
+      // (the hosted-platform shape), forwarding the gateway token.
+      this.openCodeClient = new OpenCodeClient({
+        baseUrl: this.services.openCodeUrl,
+        password: this.services.password,
+      });
+    }
     if (this.services.runUrl) this.runService = new RunService(this.services.runUrl, this.services.password);
     if (this.services.provenanceUrl) {
       this.provenanceService = new ProvenanceService(this.services.provenanceUrl, this.services.password);
@@ -133,9 +142,10 @@ export class NexusClient {
     return (await this.openCodeClient?.listSessions()) ?? [];
   }
 
-  // Unified skill discovery
-  async discoverSkills(): Promise<any[]> {
-    return (await this.skillDiscoveryService?.discoverSkills()) ?? [];
+  // Unified skill discovery — the OpenCode registry is the live source, so
+  // discovery works without a separately configured skill service.
+  async discoverSkills(): Promise<SkillInfo[]> {
+    return (await this.openCodeClient?.listSkills()) ?? [];
   }
 
   // Unified provenance operations

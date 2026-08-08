@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { OpenCodeClient, ProvenanceService, RunService } from "@ai4s/sdk";
+import { OpenCodeClient, ProvenanceService, RunService, createNexusClient } from "@ai4s/sdk";
 import { startMockOpenCode, type MockOpenCode } from "@ai4s/sdk/mock-server";
 
 let server: MockOpenCode;
@@ -106,5 +106,17 @@ describe("gateway health checks", () => {
   it("reports unhealthy when the gateway is unreachable", async () => {
     await expect(new RunService("http://127.0.0.1:1").healthCheck()).resolves.toBe(false);
     await expect(new ProvenanceService("http://127.0.0.1:1").healthCheck()).resolves.toBe(false);
+  });
+});
+
+describe("NexusClient URL-only construction", () => {
+  it("builds its own OpenCode client from openCodeUrl and serves discovery from it", async () => {
+    const nexus = createNexusClient({
+      openCodeUrl: `http://127.0.0.1:${server.port}`,
+      password: "tok",
+    });
+    const skills = await nexus.discoverSkills();
+    expect(skills.length).toBeGreaterThan(0);
+    expect(skills.map((s) => s.name)).toContain("home-skill");
   });
 });

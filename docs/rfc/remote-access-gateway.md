@@ -125,6 +125,8 @@ bidirectional framing.)
 | **Files** ⭐ | `GET /v1/fs/list?path=&root=` | `list_dir` (`artifact_file.rs`) | non-recursive, sandboxed |
 | | `GET /v1/fs/read?path=&root=` | `read_artifact` | MIME + range |
 | Projects | `GET /v1/workspaces`, `POST /v1/workspaces/switch` | project.rs | which folder is active |
+| Runs | `GET /v1/runs`, `GET /v1/runs/query?q=`, `GET /v1/runs/log?hash=` | runs.rs / runs_index.rs | read-only local run history |
+| Provenance | `GET /v1/provenance?path=`, `GET /v1/provenance/query?q=` | provenance.rs | read-only artifact version history |
 
 **Never over the wire:** API keys / secrets. They live in the OS keychain and
 must never appear in any endpoint, event, log, or export — regardless of client
