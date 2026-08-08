@@ -403,23 +403,15 @@ export interface ProvenancePage {
   next?: number;
 }
 
-/** Configuration for starting a run. */
-export interface RunConfig {
-  command: string;
-  sessionId?: string;
-  model?: string;
-  surface?: "local" | "hpc" | "modal" | "jupyter" | "ssh";
-  host?: string;
-  cwd?: string;
-}
-
-/** Filters for listing runs. */
-export interface RunFilters {
+/** Query for the runs index: search, filters, facets, and keyset paging. */
+export interface RunQuery {
   search?: string;
-  status?: "ok" | "failed";
+  status?: string;
   surface?: string;
   sessionId?: string;
+  /** Time filter: only runs at or after this epoch-seconds instant. */
   sinceTs?: number;
+  /** Keyset cursor from a previous page's `next`. */
   beforeTs?: number;
   beforeRowid?: number;
   limit?: number;
@@ -428,13 +420,17 @@ export interface RunFilters {
 /** One page of runs with a keyset cursor. */
 export interface RunPage {
   rows: RunRecord[];
+  /** Total matching the full filter (for the header count). */
   total: number;
-  next?: number;
+  /** Facet counts for the current filter context, by status and surface. */
+  facets: { status: RunFacet[]; surface: RunFacet[] };
+  /** Cursor for the next (older) page; absent at the end. */
+  next?: { ts: number; rowid: number };
 }
 
 /** Aggregation facet over runs, e.g. by status or surface. */
 export interface RunFacet {
-  key: string;
+  value: string;
   count: number;
 }
 

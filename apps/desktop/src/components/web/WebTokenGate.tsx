@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { OpenCodeClient } from "@ai4s/sdk";
 import { gatewayOrigin, setGatewayToken } from "@/lib/webMode";
 
 /** Pre-auth screen for the gateway-served web client: paste the bearer token
- *  (validated against /v1/whoami) before the real app boots. See
- *  docs/rfc/remote-access-gateway.md. */
+ *  (validated against the gateway's whoami, through the SDK) before the real
+ *  app boots. See docs/rfc/remote-access-gateway.md. */
 export function WebTokenGate({ onConnect }: { onConnect: () => void }) {
   const { t } = useTranslation(["settings"]);
   const [token, setToken] = useState("");
@@ -17,10 +18,11 @@ export function WebTokenGate({ onConnect }: { onConnect: () => void }) {
     setBusy(true);
     setError("");
     try {
-      const r = await fetch(`${gatewayOrigin()}/v1/whoami`, {
-        headers: { Authorization: `Bearer ${tok}` },
-      });
-      if (!r.ok) {
+      const who = await new OpenCodeClient({
+        baseUrl: gatewayOrigin(),
+        password: tok,
+      }).whoami();
+      if (!who) {
         setError(t("remote.error"));
         setBusy(false);
         return;

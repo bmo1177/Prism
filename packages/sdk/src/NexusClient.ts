@@ -19,6 +19,8 @@ export interface NexusServicesConfig {
   skillDiscoveryUrl?: string;
   configurationUrl?: string;
   monitoringUrl?: string;
+  /** Gateway bearer token, forwarded to the HTTP services that require it. */
+  password?: string;
 }
 
 /**
@@ -41,8 +43,10 @@ export class NexusClient {
 
   private initializeServices(): void {
     if (this.services.openCode) this.openCodeClient = this.services.openCode;
-    if (this.services.runUrl) this.runService = new RunService(this.services.runUrl);
-    if (this.services.provenanceUrl) this.provenanceService = new ProvenanceService(this.services.provenanceUrl);
+    if (this.services.runUrl) this.runService = new RunService(this.services.runUrl, this.services.password);
+    if (this.services.provenanceUrl) {
+      this.provenanceService = new ProvenanceService(this.services.provenanceUrl, this.services.password);
+    }
     if (this.services.environmentUrl) this.environmentService = new EnvironmentService(this.services.environmentUrl);
     if (this.services.gitUrl) this.gitService = new GitService(this.services.gitUrl);
     if (this.services.skillDiscoveryUrl) {
@@ -136,7 +140,11 @@ export class NexusClient {
 
   // Unified provenance operations
   async getProvenance(query?: any): Promise<any> {
-    return this.provenanceService?.listProvenance(query);
+    return this.provenanceService?.queryProvenance(query);
+  }
+
+  async listProvenance(path: string): Promise<any> {
+    return this.provenanceService?.listProvenance(path);
   }
 
   // Unified environment operations
@@ -145,16 +153,16 @@ export class NexusClient {
   }
 
   // Unified run operations
-  async startRun(config: any): Promise<any> {
-    return this.runService?.startRun(config);
+  async listRuns(): Promise<any[]> {
+    return this.runService?.listRuns() ?? [];
   }
 
-  async listRuns(filters?: any): Promise<any> {
-    return this.runService?.listRuns(filters);
+  async queryRuns(query: any): Promise<any> {
+    return this.runService?.queryRuns(query);
   }
 
-  async stopRun(runId: string): Promise<void> {
-    return this.runService?.stopRun(runId);
+  async readRunLog(hash: string): Promise<any> {
+    return this.runService?.readRunLog(hash) ?? null;
   }
 
   // Unified git operations

@@ -238,7 +238,7 @@ vi.mock("@ai4s/sdk", () => {
       this.statusCb("offline");
     }
   }
-  return { OpenCodeClient, DEFAULT_OPENCODE_URL: "http://127.0.0.1:4096" };
+  return { OpenCodeClient, DEFAULT_OPENCODE_URL: "http://127.0.0.1:4096", createNexusClient: () => ({}) };
 });
 
 import type { ArtifactBlock } from "@ai4s/shared";

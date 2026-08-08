@@ -1,6 +1,7 @@
 // A minimal OpenCode-protocol server for tests and local dev. Node-only.
 // Implements the endpoints the app uses (POST /session, POST /session/:id/prompt_async,
-// GET /event SSE) and streams an OpenCode-shaped agent turn.
+// GET /event SSE) and streams an OpenCode-shaped agent turn. Also serves the
+// /v1 gateway contract (whoami, runs, provenance, health) the SDK services hit.
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 
 export interface MockOpenCode {
@@ -24,6 +25,21 @@ export function startMockOpenCode(port = 0): Promise<MockOpenCode> {
   };
 
   const messages: Record<string, Array<{ info: unknown; parts: unknown[] }>> = {};
+
+  // ---- canned /v1 gateway data (RunService / ProvenanceService / whoami) ----
+  const mockRuns = [
+    { runId: "run_mock1", ts: 1700000100, sessionId: "ses_mock", command: "python train.py --lr 3e-4", status: "ok", surface: "local", logHash: "hash1", wallMs: 1234 },
+    { runId: "run_mock2", ts: 1699999000, command: "julia solve.jl", status: "failed", surface: "local", logHash: "hash2" },
+    { runId: "run_mock3", ts: 1699998000, command: "sbatch job.sh", status: "ok", surface: "hpc" },
+  ];
+  const mockLogs: Record<string, string> = {
+    hash1: "Training loss: 0.31\nEpoch 5/5 done.\n",
+    hash2: "Error: dimension mismatch\n",
+  };
+  const mockProvenance = [
+    { path: "data/notes.md", version: 1, ts: 1700000000, tool: "write", sessionId: "ses_mock", log: "draft notes" },
+    { path: "data/notes.md", version: 2, ts: 1700000100, tool: "edit", sessionId: "ses_mock", diff: "-draft\n+revised" },
+  ];
 
   const streamTurn = (sessionID: string) => {
     const push = (obj: unknown) => clients.forEach((c) => send(c, obj));
@@ -249,6 +265,89 @@ export function startMockOpenCode(port = 0): Promise<MockOpenCode> {
       });
       return;
     }
+    // ---- /v1 gateway contract (RunService / ProvenanceService / whoami) ----
+    const pathOnly = url.split("?")[0];
+    const params = new URLSearchParams(url.split("?")[1] ?? "");
+
+    if (req.method === "GET" && pathOnly === "/v1/health") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ ok: true, service: "craft-gateway" }));
+      return;
+    }
+    if (req.method === "GET" && pathOnly === "/v1/whoami") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ mode: "full", directory: "/mock/workspace" }));
+      return;
+    }
+    if (req.method === "GET" && pathOnly === "/v1/runs") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(mockRuns));
+      return;
+    }
+    if (req.method === "GET" && pathOnly === "/v1/runs/query") {
+      let q: { search?: string; status?: string; surface?: string };
+      try {
+        q = JSON.parse(params.get("q") ?? "{}") as typeof q;
+      } catch {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "bad query" }));
+        return;
+      }
+      const rows = mockRuns.filter((r) => {
+        if (q.search && !r.command.includes(q.search)) return false;
+        if (q.status && r.status !== q.status) return false;
+        if (q.surface && r.surface !== q.surface) return false;
+        return true;
+      });
+      const facet = (field: "status" | "surface") => {
+        const counts = new Map<string, number>();
+        for (const r of rows) {
+          if (!r[field]) continue;
+          counts.set(r[field], (counts.get(r[field]) ?? 0) + 1);
+        }
+        return [...counts.entries()].map(([value, count]) => ({ value, count }));
+      };
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ rows, total: rows.length, facets: { status: facet("status"), surface: facet("surface") } }));
+      return;
+    }
+    if (req.method === "GET" && pathOnly === "/v1/runs/log") {
+      const log = mockLogs[params.get("hash") ?? ""];
+      if (log === undefined) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "not found" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end(log);
+      return;
+    }
+    if (req.method === "GET" && pathOnly === "/v1/provenance/query") {
+      let q: { search?: string; sessionId?: string; limit?: number };
+      try {
+        q = JSON.parse(params.get("q") ?? "{}") as typeof q;
+      } catch {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "bad query" }));
+        return;
+      }
+      const rows = mockProvenance.filter((p) => {
+        if (q.search && !(p.path + (p.log ?? "")).includes(q.search)) return false;
+        if (q.sessionId && p.sessionId !== q.sessionId) return false;
+        return true;
+      });
+      const total = rows.length;
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ rows: q.limit ? rows.slice(0, q.limit) : rows, total }));
+      return;
+    }
+    if (req.method === "GET" && pathOnly === "/v1/provenance") {
+      const path = params.get("path") ?? "";
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(mockProvenance.filter((p) => p.path === path)));
+      return;
+    }
+
     res.writeHead(404);
     res.end();
   });

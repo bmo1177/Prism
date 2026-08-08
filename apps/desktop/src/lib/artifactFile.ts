@@ -4,7 +4,7 @@
 // session folder, default; "base" = the folder all session workspaces live under).
 import type { FileRoot } from "@ai4s/shared";
 import { isTauri } from "./tauri";
-import { isGatewayWeb, gatewayToken, gatewayOrigin } from "./webMode";
+import { isGatewayWeb, gatewayToken, gatewayOrigin, gatewayGet } from "./webMode";
 
 export type { FileRoot };
 
@@ -139,13 +139,11 @@ export interface DirEntry {
 /** List one directory under the root (non-recursive; "" = the root). Desktop only. */
 export async function listDir(rel: string, root?: FileRoot, dir?: string): Promise<DirEntry[]> {
   if (isGatewayWeb) {
-    const t = gatewayToken();
     const url =
-      `${gatewayOrigin()}/v1/fs/list?path=${encodeURIComponent(rel)}` +
+      `/v1/fs/list?path=${encodeURIComponent(rel)}` +
       `${root ? `&root=${root}` : ""}${dir ? `&dir=${encodeURIComponent(dir)}` : ""}`;
     try {
-      const r = await fetch(url, { headers: t ? { Authorization: `Bearer ${t}` } : {} });
-      return r.ok ? ((await r.json()) as DirEntry[]) : [];
+      return (await gatewayGet<DirEntry[]>(url)) ?? [];
     } catch {
       return [];
     }

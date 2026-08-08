@@ -5,9 +5,12 @@
 // execution. Pure derivation lives here; the Tauri bridge is separate so this
 // can be unit-tested without a desktop shell.
 import type { RunArtifact, RunRecord } from "@ai4s/shared";
-import type { ToolUpdatedEvent } from "@ai4s/sdk";
+import type { ToolUpdatedEvent, RunQuery, RunPage } from "@ai4s/sdk";
 import { isTauri, logDebug } from "./tauri";
-import { isGatewayWeb, gatewayGet } from "./webMode";
+import { isGatewayWeb } from "./webMode";
+import { getNexus } from "./nexus";
+
+export type { RunQuery, RunPage, RunFacet } from "@ai4s/sdk";
 
 /** The compute surface a run targeted. Only "local" runs produce workspace
  *  files we can hash; remote surfaces are recorded honestly with their command
@@ -249,7 +252,7 @@ export async function recordRun(
 export async function listRuns(): Promise<RunRecord[]> {
   if (isGatewayWeb) {
     try {
-      return (await gatewayGet<RunRecord[]>("/v1/runs")) ?? [];
+      return (await getNexus()?.getRunService()?.listRuns()) ?? [];
     } catch {
       return [];
     }
@@ -263,42 +266,13 @@ export async function listRuns(): Promise<RunRecord[]> {
   }
 }
 
-/** A keyset-paginated, faceted query over the runs index. */
-export interface RunQuery {
-  search?: string;
-  status?: string;
-  surface?: string;
-  sessionId?: string;
-  /** Time filter: only runs at or after this epoch-seconds instant. */
-  sinceTs?: number;
-  /** Keyset cursor from a previous page's `next`. */
-  beforeTs?: number;
-  beforeRowid?: number;
-  limit?: number;
-}
-
-export interface RunFacet {
-  value: string;
-  count: number;
-}
-
-export interface RunPage {
-  rows: RunRecord[];
-  /** Total matching the full filter (for the header count). */
-  total: number;
-  facets: { status: RunFacet[]; surface: RunFacet[] };
-  /** Cursor for the next (older) page; absent at the end. */
-  next?: { ts: number; rowid: number };
-}
-
 const EMPTY_PAGE: RunPage = { rows: [], total: 0, facets: { status: [], surface: [] } };
 
 /** Query the runs index (indexed, paginated, faceted). Empty page in browser dev. */
 export async function queryRuns(query: RunQuery): Promise<RunPage> {
   if (isGatewayWeb) {
     try {
-      const q = encodeURIComponent(JSON.stringify(query));
-      return (await gatewayGet<RunPage>(`/v1/runs/query?q=${q}`)) ?? EMPTY_PAGE;
+      return (await getNexus()?.getRunService()?.queryRuns(query)) ?? EMPTY_PAGE;
     } catch {
       return EMPTY_PAGE;
     }
@@ -316,7 +290,7 @@ export async function queryRuns(query: RunQuery): Promise<RunPage> {
 export async function readRunLog(hash: string): Promise<string | null> {
   if (isGatewayWeb) {
     try {
-      return await gatewayGet<string>(`/v1/runs/log?hash=${encodeURIComponent(hash)}`);
+      return (await getNexus()?.getRunService()?.readRunLog(hash)) ?? null;
     } catch {
       return null;
     }

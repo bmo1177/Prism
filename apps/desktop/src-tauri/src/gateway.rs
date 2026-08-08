@@ -432,6 +432,26 @@ fn v1(stream: &mut TcpStream, req: &Request, ctx: &Ctx, rest: &str) {
                 Err(e) => respond_json(stream, 404, &err_json(&e)),
             }
         }
+        // Artifact provenance: the desktop's append-only version store, exposed
+        // through the same functions the Provenance page's Tauri commands call,
+        // so the web client gets the identical history (and page shape).
+        ("GET", ["provenance"]) => {
+            let path = req.query_get("path").unwrap_or_default();
+            match crate::provenance::list_provenance(ctx.app.clone(), path) {
+                Ok(list) => respond_json(stream, 200, &serde_json::to_string(&list).unwrap_or_else(|_| "[]".into())),
+                Err(e) => respond_json(stream, 500, &err_json(&e)),
+            }
+        }
+        ("GET", ["provenance", "query"]) => {
+            let q = req.query_get("q").unwrap_or_else(|| "{}".into());
+            match serde_json::from_str::<crate::provenance::ProvenanceQuery>(&q) {
+                Ok(query) => match crate::provenance::query_provenance(ctx.app.clone(), query) {
+                    Ok(page) => respond_json(stream, 200, &serde_json::to_string(&page).unwrap_or_else(|_| "{}".into())),
+                    Err(e) => respond_json(stream, 500, &err_json(&e)),
+                },
+                Err(e) => respond_json(stream, 400, &err_json(&format!("bad query: {e}"))),
+            }
+        }
         ("GET", ["events"]) => {
             let dir = ws_dir(ctx);
             events(stream, ctx, &dir);
@@ -1172,5 +1192,63 @@ mod tests {
         assert_eq!(normalize_mode("read-only"), "read-only");
         assert_eq!(normalize_mode("full"), "full");
         assert_eq!(normalize_mode("garbage"), "full");
+    }
+
+    /// A scratch workspace root for the /v1/provenance arms, fed straight to the
+    /// same store functions the arms serve (their AppHandle only resolves this).
+    fn prov_root(tag: &str) -> std::path::PathBuf {
+        let dir = std::env::temp_dir().join(format!("craft-gw-prov-{tag}-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    #[test]
+    fn provenance_v1_list_serves_recorded_versions() {
+        let root = prov_root("list");
+        crate::provenance::append_record(&root, "fig/plot.py", "write", Some("ses_1".into()), Some("m".into()), Some("print(1)".into()), None, Some("wrote fig/plot.py".into()), None, None).unwrap();
+        crate::provenance::append_record(&root, "fig/plot.py", "edit", Some("ses_1".into()), None, None, Some("@@ -1 +1 @@".into()), None, None, None).unwrap();
+        // The arm's 200 body is serde_json::to_string(versions_for(root, path)) —
+        // exactly what the "list_provenance" Tauri command serves.
+        let list = crate::provenance::versions_for(&root, "fig/plot.py").unwrap();
+        let body = serde_json::to_string(&list).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&body).unwrap();
+        assert_eq!(v.as_array().unwrap().len(), 2);
+        assert_eq!(v[0]["path"], "fig/plot.py");
+        assert_eq!(v[0]["version"], 1);
+        assert_eq!(v[0]["tool"], "write");
+        assert_eq!(v[0]["sessionId"], "ses_1");
+        assert_eq!(v[1]["version"], 2);
+        assert_eq!(v[1]["diff"], "@@ -1 +1 @@");
+
+        let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn provenance_v1_query_search_filters_rows() {
+        let root = prov_root("query");
+        crate::provenance::append_record(&root, "a.md", "write", Some("s1".into()), Some("m1".into()), Some("hello".into()), None, Some("wrote a".into()), None, None).unwrap();
+        crate::provenance::append_record(&root, "b.py", "run", Some("s2".into()), None, None, None, Some("rendered fig".into()), None, Some("run_9".into())).unwrap();
+        // The arm parses `q` into ProvenanceQuery (camelCase, as the TS client
+        // sends it) and serves query_store's page as {rows, total, next}.
+        let q: crate::provenance::ProvenanceQuery = serde_json::from_str(r#"{"search":"fig"}"#).unwrap();
+        let page = crate::provenance::query_store(&root, &q).unwrap();
+        let body = serde_json::to_string(&page).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&body).unwrap();
+        assert_eq!(v["total"], 1);
+        assert_eq!(v["rows"][0]["path"], "b.py");
+        assert_eq!(v["rows"][0]["runId"], "run_9");
+        assert!(v["next"].is_null());
+
+        let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn provenance_v1_query_rejects_bad_json() {
+        // The arm answers 400 with err_json("bad query: {e}") when `q` doesn't
+        // parse into the browsing query; "{}" (the default) always does.
+        assert!(serde_json::from_str::<crate::provenance::ProvenanceQuery>("{oops").is_err());
+        assert!(serde_json::from_str::<crate::provenance::ProvenanceQuery>("{}").is_ok());
+        assert!(serde_json::from_str::<crate::provenance::ProvenanceQuery>("not json").is_err());
     }
 }

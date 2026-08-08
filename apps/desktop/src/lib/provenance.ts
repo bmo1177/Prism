@@ -2,10 +2,14 @@
 // calls into version records in `.openscience/provenance.jsonl`, and read them
 // back for the artifact History view. Pure derivation is separated from the
 // Tauri bridge so it can be unit-tested without a desktop shell.
-import type { ToolUpdatedEvent } from "@ai4s/sdk";
+import type { ToolUpdatedEvent, ProvenanceQuery, ProvenancePage } from "@ai4s/sdk";
 import type { ProvenanceRecord } from "@ai4s/shared";
 import { isTauri, logDebug } from "./tauri";
+import { isGatewayWeb } from "./webMode";
+import { getNexus } from "./nexus";
 import { deriveArtifact, parsePatchFiles } from "./artifacts";
+
+export type { ProvenanceQuery, ProvenancePage } from "@ai4s/sdk";
 
 export interface ProvenanceInput {
   path: string;
@@ -108,6 +112,13 @@ export async function recordProvenance(
 
 /** All recorded versions of one artifact, oldest first ([] in browser dev). */
 export async function listProvenance(path: string): Promise<ProvenanceRecord[]> {
+  if (isGatewayWeb) {
+    try {
+      return (await getNexus()?.getProvenanceService()?.listProvenance(path)) ?? [];
+    } catch {
+      return [];
+    }
+  }
   if (!isTauri) return [];
   try {
     const { invoke } = await import("@tauri-apps/api/core");
@@ -129,28 +140,17 @@ export async function readEnvLockfile(hash: string): Promise<string | null> {
 }
 
 /** A keyset-paginated query over the whole provenance store (all sessions). */
-export interface ProvenanceQuery {
-  /** Only records authored in one session (its `sessionId`). */
-  sessionId?: string;
-  /** Case-insensitive substring over path, tool, and log note. */
-  search?: string;
-  /** Cursor from a previous page's `next` (the append-order index of its last row). */
-  beforeIndex?: number;
-  limit?: number;
-}
-
-export interface ProvenancePage {
-  rows: ProvenanceRecord[];
-  /** Total matching the filters (for the header count). */
-  total: number;
-  /** Cursor for the next (older) page; absent at the end. */
-  next?: number;
-}
-
 const EMPTY_PAGE: ProvenancePage = { rows: [], total: 0 };
 
 /** Browse the global provenance trail, newest first (empty page in browser dev). */
 export async function queryProvenance(query: ProvenanceQuery): Promise<ProvenancePage> {
+  if (isGatewayWeb) {
+    try {
+      return (await getNexus()?.getProvenanceService()?.queryProvenance(query)) ?? EMPTY_PAGE;
+    } catch {
+      return EMPTY_PAGE;
+    }
+  }
   if (!isTauri) return EMPTY_PAGE;
   try {
     const { invoke } = await import("@tauri-apps/api/core");

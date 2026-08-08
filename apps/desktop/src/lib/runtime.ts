@@ -45,6 +45,7 @@ import {
   type ToolStatus,
 } from "./tauri";
 import { isGatewayWeb, gatewayToken, gatewayOrigin } from "./webMode";
+import { initNexus } from "./nexus";
 import { samePath } from "./workspacePath";
 import { kernelReset } from "./kernel";
 import { moveScrollMemory } from "./scrollMemory";
@@ -1456,23 +1457,24 @@ export const useRuntimeStore = create<RuntimeState>((set, get) => ({
     let directory: string | null;
     let password: string | null;
     let baseUrl = get().serverUrl;
+    let c: OpenCodeClient;
     if (isGatewayWeb) {
       // Web client: same-origin gateway; the pasted token is the OpenCodeClient
-      // password, and the workspace directory comes from /v1/whoami.
+      // password, and the workspace directory comes from the gateway's whoami
+      // (read through the SDK — the UI never fetches the gateway itself).
       baseUrl = gatewayOrigin();
       password = gatewayToken();
       directory = null;
+      c = new OpenCodeClient({ baseUrl, password: password ?? undefined });
       let readOnly = false;
       try {
-        const r = await fetch(`${baseUrl}/v1/whoami`, {
-          headers: password ? { Authorization: `Bearer ${password}` } : {},
-        });
-        if (r.ok) {
-          const who = (await r.json()) as { directory?: string; mode?: string };
+        const who = await c.whoami();
+        if (who) {
           directory = who.directory ?? null;
           // A read-only token 403s every write — surface that in the UI
           // instead of letting "New session" / the composer fail opaquely.
           readOnly = who.mode === "read-only";
+          if (directory) c.setDirectory(directory);
         }
       } catch {
         /* whoami is best-effort; the client still connects */
@@ -1485,14 +1487,15 @@ export const useRuntimeStore = create<RuntimeState>((set, get) => ({
       // The bundled sidecar requires per-run Basic auth; browser dev (no Tauri)
       // gets null and connects to a user-run passwordless server.
       password = await runtimePassword();
+      c = new OpenCodeClient({
+        baseUrl,
+        directory: directory ?? undefined,
+        password: password ?? undefined,
+      });
     }
-    const c = new OpenCodeClient({
-      baseUrl,
-      directory: directory ?? undefined,
-      password: password ?? undefined,
-    });
     opencodeClient = c;
     client = c;
+    initNexus(c);
     // Background streams reuse the same sidecar; the foreground now streams this
     // folder, so drop any background stream that was covering it (avoid a double
     // fold of the same events).

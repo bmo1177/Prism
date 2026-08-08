@@ -1,101 +1,69 @@
-import type { RunConfig, RunFilters, RunPage, RunRecord } from "./types";
-
-/** Retry an async fetch call a few times with a short backoff, so transient
- *  service restarts don't fail a user action. */
-async function withRetry<T>(attempt: () => Promise<T>, tries = 3, delayMs = 250): Promise<T> {
-  let lastError: unknown;
-  for (let i = 0; i < tries; i++) {
-    try {
-      return await attempt();
-    } catch (error) {
-      lastError = error;
-      if (i < tries - 1) await new Promise((resolve) => setTimeout(resolve, delayMs * (i + 1)));
-    }
-  }
-  throw lastError;
-}
+import type { RunQuery, RunPage, RunRecord } from "./types";
 
 /**
- * Run service for starting, listing, and stopping runs.
- * Provides unified run operations with retry logic.
+ * Run service for listing and querying runs.
+ * Talks to the desktop gateway's /v1/runs contract.
  */
 export class RunService {
-  constructor(private runUrl: string) {}
+  constructor(
+    private baseUrl: string,
+    private password?: string,
+  ) {}
 
-  /** Start a new run. */
-  async startRun(config: RunConfig): Promise<RunRecord> {
-    return withRetry(async () => {
-      const response = await fetch(`${this.runUrl}/api/runs`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(config),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to start run: ${response.status} ${await response.text()}`);
-      }
-      
-      return response.json();
-    });
+  /** Request headers, with the gateway bearer token when configured. */
+  private headers(): Record<string, string> {
+    const h: Record<string, string> = { "Content-Type": "application/json" };
+    if (this.password) h["Authorization"] = `Bearer ${this.password}`;
+    return h;
   }
 
-  /** Get a run by id. */
-  async getRun(runId: string): Promise<RunRecord> {
-    const response = await fetch(`${this.runUrl}/api/runs/${encodeURIComponent(runId)}`, {
+  /** All recorded runs, newest first. */
+  async listRuns(): Promise<RunRecord[]> {
+    const response = await fetch(`${this.baseUrl}/v1/runs`, {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: this.headers(),
     });
-    
-    if (!response.ok) {
-      throw new Error(`Failed to get run: ${response.status} ${await response.text()}`);
-    }
-    
-    return response.json();
-  }
 
-  /** List runs with pagination and filtering. */
-  async listRuns(filters?: RunFilters): Promise<RunPage> {
-    const params = new URLSearchParams();
-    if (filters?.search) params.set("search", filters.search);
-    if (filters?.status) params.set("status", filters.status);
-    if (filters?.surface) params.set("surface", filters.surface);
-    if (filters?.sessionId) params.set("sessionId", filters.sessionId);
-    if (filters?.sinceTs) params.set("sinceTs", filters.sinceTs.toString());
-    if (filters?.beforeTs) params.set("beforeTs", filters.beforeTs.toString());
-    if (filters?.beforeRowid) params.set("beforeRowid", filters.beforeRowid.toString());
-    if (filters?.limit) params.set("limit", filters.limit.toString());
-    
-    const queryString = params.toString();
-    const response = await fetch(`${this.runUrl}/api/runs?${queryString}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    
     if (!response.ok) {
       throw new Error(`Failed to list runs: ${response.status} ${await response.text()}`);
     }
-    
+
     return response.json();
   }
 
-  /** Stop a running run. */
-  async stopRun(runId: string): Promise<void> {
-    return withRetry(async () => {
-      const response = await fetch(`${this.runUrl}/api/runs/${encodeURIComponent(runId)}/stop`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to stop run: ${response.status} ${await response.text()}`);
-      }
+  /** Query the runs index with search, filters, facets, and keyset paging. */
+  async queryRuns(query: RunQuery): Promise<RunPage> {
+    const q = encodeURIComponent(JSON.stringify(query));
+    const response = await fetch(`${this.baseUrl}/v1/runs/query?q=${q}`, {
+      method: "GET",
+      headers: this.headers(),
     });
+
+    if (!response.ok) {
+      throw new Error(`Failed to query runs: ${response.status} ${await response.text()}`);
+    }
+
+    return response.json();
   }
 
-  /** Health check for run service. */
+  /** A run's captured stdout/stderr by its log hash. */
+  async readRunLog(hash: string): Promise<string> {
+    const response = await fetch(`${this.baseUrl}/v1/runs/log?hash=${encodeURIComponent(hash)}`, {
+      method: "GET",
+      headers: this.headers(),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to read run log: ${response.status} ${await response.text()}`);
+    }
+
+    return response.text();
+  }
+
+  /** Health check for the run service. */
   async healthCheck(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.runUrl}/api/health`, {
+      const response = await fetch(`${this.baseUrl}/v1/health`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         signal: AbortSignal.timeout(3000),

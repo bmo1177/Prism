@@ -96,7 +96,7 @@ export class OpenCodeClient extends BaseAgentRuntime implements AgentRuntime {
   private readonly fetchImpl: typeof fetch;
   private readonly authHeader: string | null;
   private readonly authToken: string | null;
-  private readonly directory: string | null;
+  private directory: string | null;
   private readonly connectTimeoutMs: number;
   private readonly requestTimeoutMs: number;
   private readonly customFetch: boolean;
@@ -143,6 +143,24 @@ export class OpenCodeClient extends BaseAgentRuntime implements AgentRuntime {
     } catch {
       return false;
     }
+  }
+
+  /** Best-effort gateway identity (GET /v1/whoami); null when unreachable. */
+  async whoami(): Promise<{ directory?: string | null; mode?: string } | null> {
+    try {
+      const res = await this.fetchWithTimeout(`${this.baseUrl}/v1/whoami`, {
+        headers: this.headers(),
+      });
+      if (!res.ok) return null;
+      return (await res.json()) as { directory?: string | null; mode?: string };
+    } catch {
+      return null;
+    }
+  }
+
+  /** Re-scope the client's directory after a whoami identity lookup. */
+  setDirectory(directory: string | null): void {
+    this.directory = directory;
   }
 
   /** Reset connection to attempt recovery. */
