@@ -1,14 +1,15 @@
 <div align="center">
 
-[![Prism — Light bent into work](./docs/assets/banner.webp)](https://github.com/bmo1177/Prism)
-
 # Prism
 
-**Local-first, model-agnostic AI workbench for macOS, Windows & Linux.**
+**Light bent into work.**
 
-One beam in, every wavelength out. Prism refracts your questions across agents,
-notebooks, files, figures, reports, and review — each a different color of the
-same thought. Built with Tauri, MCP, agent skills, and reproducible artifacts.
+One beam in, every wavelength out. Prism is a local-first, model-agnostic AI
+workbench that refracts your questions across agents, notebooks, files, figures,
+reports, and review — each a different color of the same thought.
+
+Built with Tauri 2, React, MCP, agent skills, and reproducible artifacts.
+Runs on macOS, Windows, and Linux.
 
 <p>
   <b>English</b> ·
@@ -22,10 +23,8 @@ same thought. Built with Tauri, MCP, agent skills, and reproducible artifacts.
 
 <p>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
-  <a href="https://doi.org/10.5281/zenodo.21805331"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21805331-1682D4" alt="DOI"></a>
   <a href="https://internscience.github.io/ResearchClawBench-Home/"><img src="https://img.shields.io/badge/%F0%9F%8F%86%20%231-ResearchClawBench-FFB300" alt="#1 on ResearchClawBench"></a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platforms">
-  <img src="https://img.shields.io/badge/i18n-7%20languages-5B8DEF" alt="7 interface languages">
   <img src="https://img.shields.io/badge/built%20with-Tauri%202%20%2B%20React-24C8DB" alt="Built with Tauri + React">
 </p>
 
@@ -33,282 +32,181 @@ same thought. Built with Tauri, MCP, agent skills, and reproducible artifacts.
 
 ---
 
-## News
+## What is Prism?
 
-- **2026-08-09** — 🌈 **Introducing Prism.** Reborn from Open Science Desktop — same powerful engine, new identity. Light bent into work.
-- **2026-08-01** — 🗂️ **Projects, memory, and full history.** Group sessions into named projects (import an existing repo *in place*, no copying), give the agent persistent global and project memory, and reach every past conversation through a searchable history with archive, restore, and export. *(v0.3.1)*
-- **2026-07-24** — 🪟 **Split-pane tiling.** Tile sessions side by side, drag panes to re-dock them, keep several independent Screens, and run a different model in each pane. *(v0.3.0)*
-- **2026-07-21** — 🌐 **Access from anywhere — even your phone.** A token-authenticated gateway serves the *real* desktop UI to a CLI, a browser on your LAN, or your phone (loopback by default; LAN is opt-in). Start a run at your desk and read the finished figure and report on your phone. *(v0.2.3)*
-- **2026-07-21** — 🧭 **Browser control.** The agent can drive your own Chrome — profile and logins intact — to read the live web the way you do, or an isolated private browser on demand. *(v0.2.3)*
-- **2026-07-09** — 🎉 **#1 on ResearchClawBench.** Prism ranks #1 by scored-task average on [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/), an end-to-end benchmark for autonomous scientific research agents (Pass@1 leaderboard).
+Prism is a desktop AI workbench. You ask a question. Prism bends it through every
+tool you have — agents, notebooks, files, browsers, remote machines — and gives
+you back not just an answer, but the whole spectrum: figures, code, reports,
+provenance, and the exact path the thinking took.
+
+**One input. Every wavelength.**
+
+- A research question becomes a literature survey, an experiment, a figure, and a paper.
+- A design brief becomes prototypes, exports, and presentation decks.
+- A data question becomes analysis, notebooks, charts, and a report.
+- A coding task becomes agents, tools, tests, and documentation.
+
+All of it local. All of it yours. All of it traceable.
 
 ---
 
-## Contents
+## Why "Prism"?
 
-- [✨ What it does](#what-it-does)
-- [🎬 See it in action](#see-it-in-action)
-- [🧪 Current capabilities](#current-capabilities)
-- [🔌 Skills and connectors](#skills-and-connectors)
-- [📦 Install](#install)
-- [🚀 Build from source](#build-from-source)
-- [🔒 Safety and privacy](#safety-and-privacy)
-- [🗂️ Repository layout](#repository-layout)
-- [📌 Status](#status)
-- [🤝 Contributing](#contributing)
-- [📖 Citation](#citation)
-- [⚖️ License](#license)
+A prism takes one beam of light and reveals it was always made of many colors.
+Prism takes one question and reveals it was always made of many tasks — each one
+a different wavelength of the same thought, each one producing something real.
 
-## What it does
+---
 
-**Runs the whole research loop** — from a broad direction to a finished paper:
-exploration, literature survey, hypothesis, experiment code, analysis, figures, and
-write-up, in one continuous, auditable session.
+## Features
 
-- **Autonomous research agents** — the bundled agent runtime chains specialist skills
-  end to end (explore → survey → experiment → write), and each stage drops a real,
-  inspectable artifact into your workspace, not just a chat reply.
-- **Everything traces back** — figures, tables, reports, notebooks, and run outputs
-  link to the exact code, inputs, environment, model output, and conversation that
-  produced them.
-- **Local-first and yours** — sessions, data, provenance, notebooks, and run records
-  live in local folders on your machine. Nothing leaves by default.
-- **Model-agnostic runtime** — the UI talks through `packages/sdk` to a bundled,
-  pinned sidecar. Bring your own model; providers, skills, and MCP servers
-  stay pluggable.
-- **Reproducible by construction** — local, SSH/Slurm, Modal, and notebook-batch runs
-  are captured as reproducible run records, not loose terminal scrollback.
-- **Reach it from anywhere** — a built-in, token-authenticated gateway serves the
-  *real* desktop UI to a browser on your LAN or phone (or, with a tunnel, from
-  anywhere) — kick off a run at your desk and check on it from your phone over lunch.
-  Off by default; loopback-only until you opt in, and API keys never leave the machine.
-- **Drives your own browser** — the agent can control your real Chrome, with your
-  profile and logins intact, to read the live web the way you do — or an isolated
-  private browser when you'd rather it not.
-- **Plan before it acts** — `/plan` lays out an execution plan before touching a
-  file, and `/goal` fixes the objective, constraints, and acceptance criteria the
-  agent then works toward.
-- **Built for long projects** — named projects group their sessions, two layers of
-  persistent memory (global and per-project) carry what matters between them, and a
-  long conversation compacts itself as it approaches the model's context window.
-- **Work several threads at once** — tile panes side by side, keep independent
-  Screens, and give each pane its own model.
-- **Extensible** — agent skills, MCP servers and one-click science connectors,
-  `/` commands, `!` shell mode, and a model-agnostic SDK.
+### Autonomous agents that produce real artifacts
+Not just chat. Every agent action produces inspectable files — figures, code,
+reports, notebooks — linked back to the exact inputs, environment, and conversation
+that created them.
 
-## See it in action
+### Everything traces back
+Provenance tracking links every output to its source. Open any artifact and see
+the script, the data, the model output, and the conversation that made it.
 
-**One prompt -> a publication-grade figure, and every point traces to the exact code
-and inputs that made it.** No black boxes: open any artifact to see its generating
-script, its data files, and the conversation that produced it.
+### Local-first by default
+Your sessions, data, provenance, notebooks, and run records live on your machine.
+Nothing leaves unless you want it to.
 
-![A rendered cross-species atlas figure beside its generating script and input files in the artifact inspector](./docs/assets/showcase-provenance.webp)
+### Model-agnostic
+Bring your own model. The runtime supports any provider — OpenAI, Anthropic,
+local models, custom endpoints. Skills and MCP servers stay pluggable.
 
-**Literature -> a verifiable report.** Fan the search out across sources, draft a
-manuscript rendered as a PDF, and gate it on a citation review — DOIs resolved,
-unsourced numbers and figure/code inconsistencies flagged — before anything ships.
+### Reach it from anywhere
+A built-in gateway serves the real desktop UI to a browser on your LAN or phone.
+Start a run at your desk, check results from your phone.
 
-![A protein-language-model literature survey compiled into a PDF manuscript, with a citation reviewer confirming every DOI resolves](./docs/assets/showcase-literature.webp)
+### Drive your own browser
+The agent can control your real Chrome — profile and logins intact — or use an
+isolated private browser.
 
-**Drives your own Chrome.** The agent reads the live web through your real browser
-profile — logins and all — then turns what it finds into a figure and a sortable CSV.
+### Plan before acting
+`/plan` lays out an execution plan. `/goal` fixes the objective, constraints, and
+acceptance criteria. Then the agent executes.
 
-![The agent driving the user's own Chrome via browser-control to harvest bioRxiv preprints into a chart and CSV](./docs/assets/showcase-browser.webp)
+### Work on several things at once
+Tile panes side by side. Run different models in each. Drag to dock. Independent
+Screens for different projects.
 
-**Research from anywhere — even your phone.** A built-in authenticated gateway serves
-the *real* desktop UI to a browser on your LAN (or a tunnel), so you can kick off a run
-at your desk and read the finished figure and report on your phone.
+---
 
-<table align="center">
-  <tr>
-    <td align="center" width="33%"><img src="./docs/assets/showcase-mobile-home.webp" width="240" alt="The workbench in a phone browser: the new-session screen with starter analyses"><br><sub>New session</sub></td>
-    <td align="center" width="33%"><img src="./docs/assets/showcase-mobile-run.webp" width="240" alt="A completed dose-response analysis — script, results, figure, and report — on a phone"><br><sub>A finished analysis</sub></td>
-    <td align="center" width="33%"><img src="./docs/assets/showcase-mobile-reproduce.webp" width="240" alt="Reproducing an scVI benchmark, with its ARI-vs-epoch figure, viewed on a phone"><br><sub>A reproduced benchmark</sub></td>
-  </tr>
-</table>
+## Research loop
 
-<details>
-<summary><b>More screenshots</b></summary>
+The full scientific method, as a skill chain:
 
-<br>
-
-![Reproducing an scVI integration benchmark on a remote A100 with a pinned environment, execution log, and provenance](./docs/assets/showcase-remote.webp)
-
-![An 8-arm scVI hyperparameter sweep table beside a live analysis notebook sharing the agent's kernel](./docs/assets/showcase-experiment.webp)
-
-</details>
-
-## Current capabilities
-
-**The research loop, as skills.** One meta-skill runs the full pipeline; each stage
-is a self-contained skill that produces a real, gradeable artifact — runnable on any
-model the runtime supports:
-
-| Skill | Role | Primary output |
+| Stage | What it does | Output |
 | --- | --- | --- |
-| `ai4s-agent` | Runs the four skills below, in order | The full research package |
-| `research-explorer` | Turn a broad direction into concrete topics | `research_exploration.md`, `topic_matrix.md`, `literature_pre_survey.md` |
-| `literature-survey` | Write a literature survey | 6–20 pp PDF, 60+ real citations, LaTeX source, taxonomy figures |
-| `experiment-suite` | Build an experiment package | Design doc, runnable code, `results.json` with provenance, figures, report |
-| `paper-writer` | Write a research paper | 8–14 pp PDF, 200+ citations, 4–8 figures, tables |
-| `mindmap-render` | Render a mindmap | Image generated from a `topic_matrix.md` |
-| `integrity-auditor` | Audit a paper's integrity | Image / numerical / logical findings, 4-level evidence grading, `audit_report.md` |
+| Explore | Turn a broad direction into concrete topics | Topic matrix, literature pre-survey |
+| Survey | Search and synthesize the literature | 6–20 pp PDF, 60+ real citations |
+| Experiment | Design and run experiments | Code, results, figures, provenance |
+| Write | Draft a publication | 8–14 pp PDF, 200+ citations, figures |
 
-These ship in the `ai4s-skills` pack alongside first-party review skills and the
-office/document skills below.
+Each stage is self-contained. Run them individually or let the meta-skill chain
+them end to end.
 
-### Platform
+---
 
-| Area | Current state |
-| --- | --- |
-| Desktop shell | Tauri 2 + React + TypeScript + Vite, with macOS, Windows, and Linux desktop builds. |
-| Runtime | Bundled sidecar, auto-started by the app, isolated from the user's own config/data. |
-| Projects | Named project workspaces that group their sessions; import an existing folder in place (never copied) or adopt one already inside the workspace; move an existing session into a project. |
-| Sessions | Multi-session chat/history, dated workspace folders, searchable history with archive/restore/export, `@` file and `#` conversation references, `/` commands, and `!` shell mode. |
-| Layout | N-ary split-pane tiling with drag-to-dock, independent Screens, per-pane model and reasoning effort, and cross-screen pane drag. |
-| Agent modes | `/plan` for plan-then-execute, `/goal` for objective and acceptance criteria, live subagent status in its own panel, and Stop that reflects the runtime's real server state. |
-| Memory | Global and per-project memory layers, switchable, plus automatic context compaction as a conversation approaches the model's window. |
-| Remote compute | Register machines from your `~/.ssh/config`, probe them, and submit, track, or cancel jobs from the app. |
-| Appearance | Light, Warm, and Dark themes with per-theme accents, and UI zoom. |
-| Files | Global and per-session file browsing, context menu actions, external open/reveal, copy path, and local preview server. |
-| Remote access | Token-authenticated gateway that serves the real UI to a CLI, a LAN web browser, or your phone (loopback by default, LAN opt-in); read-only vs full access modes; copy a link with the token embedded to connect in one tap. API keys never cross the wire. |
-| Browser control | The agent drives your own Chrome — profile and login state preserved — reading pages through the accessibility tree, or an isolated/private browser on demand. |
-| Notebooks | Real `.ipynb` files, Python and R notebook creation, local kernel execution, managed Jupyter environment via bundled `uv`, and an Open JupyterLab action. |
-| Runs | Append-only run logs, global SQLite run index, search/facets/pagination, local/remote surfaces, output links, logs, and reproduce prompts. |
-| Provenance | Workspace provenance tracking links produced artifacts back to the run or edit that created them. |
-| Review | Traceability, statistics-integrity, domain-check, large-file, publication-figure, remote-compute, and Modal run skills are bundled as first-party skills. |
-| Viewers | PDF, image, video, HTML, Markdown, code, CSV/TSV tables with charts, DOCX, XLSX, PPTX, molecules, 3D meshes, genome tracks, FITS, DOS/DOSCAR, EIGENVAL bands, qcode, anomaly maps, and phase files. |
-| Models | Provider catalog, OAuth/API-key provider flows, custom OpenAI-compatible endpoints, and local/provider-specific options. |
-| Interface languages | English, Simplified Chinese, Japanese, Spanish, German, French, and Korean. |
+## Connectors
 
-## Skills and connectors
+One-click science integrations:
 
-Bundled skills are fetched for builds and releases instead of being committed into
-git history:
+- Literature: arXiv, PubMed, Crossref, Semantic Scholar, bioRxiv/medRxiv
+- Biomedical: ClinicalTrials.gov, MyVariant/ClinVar
+- Materials: Materials Project
+- Economics: FRED
+- Climate: Open-Meteo
+- Space weather, USGS water data
 
-- `ai4s-skills` pack.
-- Office/document skills: `docx`, `pdf`, `pptx`, and `xlsx`.
-- First-party core skills in `runtime/skills/core/`:
-  `traceability-review`, `stats-integrity`, `domain-check`, `large-file`,
-  `publication-figures`, `remote-compute`, and `modal-run`.
+Add any MCP server or local tool from Settings.
 
-One-click science MCP connectors currently include:
-
-- Literature search: arXiv, PubMed, Crossref, Semantic Scholar, bioRxiv/medRxiv.
-- Biomedical databases: PubMed, ClinicalTrials.gov, MyVariant/ClinVar.
-- Materials Project.
-- FRED economic data.
-- Space weather.
-- Open-Meteo weather and climate.
-- USGS water data.
-
-You can also add any local or remote MCP server from Settings. See
-[`docs/CONNECT_YOUR_TOOLS.md`](./docs/CONNECT_YOUR_TOOLS.md).
+---
 
 ## Install
 
-Download the latest installer from the
-[Releases page](https://github.com/bmo1177/Prism/releases/latest).
+Download from the [Releases page](https://github.com/bmo1177/Prism/releases/latest).
 
-- **macOS**: `.dmg` / `.app`, Apple Silicon and Intel, macOS 13 Ventura or later.
-- **Windows**: NSIS `.exe` and `.msi`, Windows 10/11 x64.
-- **Linux**: `.deb`, `.rpm`, and AppImage on x86_64 Linux.
-
-The macOS packages are Developer ID signed, notarized, and stapled, so they open
-normally — no `xattr` workaround needed. Windows and Linux builds are not signed yet.
-
-**Windows**: if SmartScreen appears, choose **More info -> Run anyway**.
-
-**Linux**:
+| Platform | Format |
+| --- | --- |
+| macOS | `.dmg` / `.app` (Apple Silicon & Intel) |
+| Windows | `.exe` / `.msi` |
+| Linux | `.deb` / `.rpm` / AppImage |
 
 ```bash
+# Linux .deb
 sudo apt install ./Prism_*.deb
-# or
+
+# Linux .rpm
 sudo rpm -i Prism-*.rpm
-# or make the AppImage executable and run it directly
+
+# AppImage
 chmod +x Prism_*.AppImage
 ./Prism_*.AppImage
 ```
 
+---
+
 ## Build from source
 
-Prerequisites:
-
-- Node.js >= 20
-- pnpm 9
-- Rust toolchain
-- macOS, Windows, or Linux system dependencies required by Tauri
+Requirements: Node.js ≥ 20, pnpm 9, Rust toolchain, Tauri system dependencies.
 
 ```bash
 git clone https://github.com/bmo1177/Prism
 cd Prism
 pnpm install
 
-# Fetch pinned sidecars and bundled skills. These are git-ignored.
+# Fetch bundled sidecars and skills
 bash scripts/dev/fetch-opencode.sh
 bash scripts/dev/fetch-uv.sh
 bash scripts/dev/fetch-skills.sh
 
-# Run in development or build installers.
+# Develop
 pnpm --filter @ai4s/desktop tauri dev
+
+# Build
 pnpm --filter @ai4s/desktop tauri build
 ```
 
-Useful checks:
+---
 
-```bash
-pnpm test
-pnpm typecheck
-pnpm lint
-```
+## Safety
 
-## Safety and privacy
+- Workspace files stay local by default.
+- Command execution, file deletion, and remote connections require approval.
+- Provider credentials are stored in app-private config, never in git or provenance.
+- Settings shows a plain-language data-flow view.
 
-- Workspace files, raw data, session history, provenance, notebooks, and run records
-  stay local by default.
-- Command execution, file deletion, dependency installation, and remote connections
-  are human-approved flows in the desktop app.
-- Provider credentials are written to app-private runtime config, not to the
-  workspace, provenance, git, exports, or global config.
-- Settings includes a plain-language data-flow view explaining what can be sent to
-  the selected model provider.
+---
 
 ## Repository layout
 
-| Path | Purpose |
+| Path | What |
 | --- | --- |
-| `apps/desktop/` | Tauri + React desktop app. |
-| `packages/sdk/` | Client wrapper; keeps the UI from calling the runtime directly. |
-| `packages/shared/` | Shared domain types and chart palette. |
-| `packages/ui/` | Shared UI package. |
-| `runtime/skills/core/` | First-party scientific skills. |
-| `runtime/skills/external/` | Build-fetched external skills. |
-| `runtime/harness/` | Runtime harness knowledge and operator context. |
-| `runtime/mcp/` | MCP runtime notes/configuration. |
-| `examples/` | Built-in example workspaces. |
-| `scripts/dev/` | Sidecar, `uv`, skill fetchers, and focused regression probes. |
-| `docs/` | Product, technical, operator, connector, and research notes. |
+| `apps/desktop/` | Tauri + React desktop shell |
+| `packages/sdk/` | Runtime client wrapper |
+| `packages/shared/` | Shared types and chart palette |
+| `packages/ui/` | Shared UI components |
+| `runtime/skills/` | Agent skills (core + external) |
+| `runtime/mcp/` | MCP configuration |
+| `runtime/harness/` | Runtime operator context |
+| `examples/` | Example workspaces |
+| `scripts/dev/` | Sidecar and skill fetchers |
+| `docs/` | Product and technical docs |
+
+---
 
 ## Status
 
-The project is a working desktop MVP in active development. The most reliable current
-implementation log is [`PROGRESS.md`](./PROGRESS.md). Product and architecture notes
-live in [`docs/PRD.md`](./docs/PRD.md) and
-[`docs/TECHNICAL_DESIGN.md`](./docs/TECHNICAL_DESIGN.md), but those documents include
-target design as well as historical status notes.
+Active development. MVP stage. See [PROGRESS.md](./PROGRESS.md) for the current
+implementation log.
 
-Near-term work is focused on Windows code signing, auto-update, broader
-Windows/Linux verification, richer connector hardening, and continued
-reproducibility review. macOS releases are already signed and notarized.
-
-## Contributing
-
-Issues and PRs are welcome. Keep changes minimal and verifiable, follow
-[`AGENTS.md`](./AGENTS.md), and run the checks before opening a PR.
+---
 
 ## Citation
-
-If you use Prism in your research, please cite it:
 
 ```bibtex
 @software{prism,
@@ -322,12 +220,10 @@ If you use Prism in your research, please cite it:
 }
 ```
 
-GitHub's **"Cite this repository"** button (top of the repo page, generated from
-[`CITATION.cff`](./CITATION.cff)) provides the same reference in APA and BibTeX.
+---
 
 ## License
 
-[MIT](./LICENSE). Bundled third-party skills and connectors keep their own licenses.
+[MIT](./LICENSE)
 
-> Prism is beta research tooling. Treat outputs as drafts: verify numbers,
-> citations, code, and conclusions before publication or decision-making.
+> Prism is beta software. Treat outputs as drafts — verify before you publish.
