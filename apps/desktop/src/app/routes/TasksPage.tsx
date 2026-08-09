@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CalendarClock, Loader2, Pause, Play, Plus, Trash2, X, Zap } from "lucide-react";
+import { CalendarClock, Clock, Loader2, Pause, Play, Plus, Trash2, X, Zap } from "lucide-react";
 import type { CronJob, NewCronJob } from "@/lib/tasks";
 import { createJob, deleteJob, listJobs, runJobNow, setJobEnabled } from "@/lib/tasks";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/cn";
 import { isGatewayWeb } from "@/lib/webMode";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { PageHeader } from "@/components/cards/PageHeader";
 
-/** Sidebar "Tasks" page — scheduled agent runs ("AI cowork automation"). Each
+/** Sidebar "Tasks" page - scheduled agent runs ("AI cowork automation"). Each
  *  job fires an OpenCode session turn on a schedule; runs land in the normal
  *  conversation history. Desktop-only (the desktop app owns the scheduler). */
 export function TasksPage() {
@@ -18,17 +20,28 @@ export function TasksPage() {
   const [editing, setEditing] = useState<NewCronJob>({
     title: "",
     prompt: "",
-    scheduleKind: "every",
-    scheduleValue: "3600",
+    scheduleKind: "daily",
+    scheduleValue: "0 8 * * *",
   });
   // For the "at" kind we keep a datetime-local string and derive scheduleValue from it.
   const [atDatetime, setAtDatetime] = useState("");
+  // For "daily" and "weekday" kinds we keep a time string (HH:MM).
+  const [timeValue, setTimeValue] = useState("08:00");
   const [showForm, setShowForm] = useState(false);
+  /** A task awaiting the destructive delete confirmation. */
+  const [pendingDelete, setPendingDelete] = useState<CronJob | null>(null);
+  // Hoisted so the datetime picker's floor doesn't recompute on every render.
+  const [minDatetime] = useState(() => new Date(Date.now() + 60_000).toISOString().slice(0, 16));
 
   const reload = useCallback(async () => {
-    const next = await listJobs();
-    setJobs(next);
-    setLoading(false);
+    try {
+      const next = await listJobs();
+      setJobs(next);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -39,12 +52,23 @@ export function TasksPage() {
   }, [reload]);
 
   const handleKindChange = (kind: string) => {
-    let defaultValue = "3600";
+    let defaultValue = "0 8 * * *";
+    if (kind === "every") defaultValue = "3600";
     if (kind === "cron") defaultValue = "0 9 * * 1-5";
     if (kind === "at") defaultValue = "";
     if (kind === "event") defaultValue = "session_start";
+    if (kind === "daily") defaultValue = timeToCron(timeValue, "daily");
+    if (kind === "weekday") defaultValue = timeToCron(timeValue, "weekday");
     setEditing((s) => ({ ...s, scheduleKind: kind, scheduleValue: defaultValue }));
     if (kind !== "at") setAtDatetime("");
+  };
+
+  const handleTimeChange = (time: string) => {
+    setTimeValue(time);
+    setEditing((s) => ({
+      ...s,
+      scheduleValue: timeToCron(time, s.scheduleKind),
+    }));
   };
 
   const handleAtDatetimeChange = (value: string) => {
@@ -79,7 +103,8 @@ export function TasksPage() {
       toast.success(t("created"));
       setShowForm(false);
       setAtDatetime("");
-      setEditing({ title: "", prompt: "", scheduleKind: "every", scheduleValue: "3600" });
+      setTimeValue("08:00");
+      setEditing({ title: "", prompt: "", scheduleKind: "daily", scheduleValue: "0 8 * * *" });
       await reload();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : String(e));
@@ -88,9 +113,9 @@ export function TasksPage() {
     }
   };
 
-  const remove = async (id: string, title: string) => {
-    if (!window.confirm(t("confirmDelete", { title: title || t("untitled") }))) return;
-    await deleteJob(id);
+  const remove = async (job: CronJob) => {
+    await deleteJob(job.id);
+    setPendingDelete(null);
     await reload();
   };
 
@@ -130,26 +155,23 @@ export function TasksPage() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-3xl px-8 py-8">
-        <header className="mb-4 flex items-start gap-3">
-          <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-input bg-accent/10 text-accent">
-            <CalendarClock size={17} strokeWidth={1.75} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h1 className="font-serif text-xl leading-tight text-text">{t("title")}</h1>
-            <p className="mt-0.5 text-sm text-muted">{t("description")}</p>
-          </div>
-        </header>
-
-        <button
-          onClick={() => setShowForm((s) => !s)}
-          className="flex items-center gap-1.5 rounded-input border border-border bg-surface px-3 py-1.5 text-sm font-medium text-text transition-colors hover:bg-surface-2"
-        >
-          {showForm ? <X size={14} /> : <Plus size={14} />}
-          {showForm ? t("form.cancel") : t("form.add")}
-        </button>
+        <PageHeader
+          icon={<CalendarClock size={18} strokeWidth={1.75} />}
+          title={t("title")}
+          subtitle={t("description")}
+          actions={
+            <button
+              onClick={() => setShowForm((s) => !s)}
+              className="flex items-center gap-1.5 rounded-input bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg transition-opacity hover:opacity-90"
+            >
+              {showForm ? <X size={14} /> : <Plus size={14} />}
+              {showForm ? t("form.cancel") : t("form.add")}
+            </button>
+          }
+        />
 
         {showForm && (
-          <div className="mt-3 space-y-3 rounded-input border border-border bg-surface p-4">
+          <div className="mt-3 space-y-3 rounded-card border border-border bg-surface p-4 shadow-card">
             <label className="block">
               <span className="mb-1 block text-xs font-medium text-muted">{t("form.title")}</span>
               <input
@@ -178,9 +200,10 @@ export function TasksPage() {
                   className="w-full rounded-input border border-border bg-surface px-2 py-1.5 text-sm text-text outline-none focus:border-accent"
                 >
                   {/* eslint-disable-next-line i18next/no-literal-string */}
-                  {["every", "cron", "at", "event"].map((k) => (
+                  {["daily", "weekday", "every", "cron", "at", "event"].map((k) => (
                     <option key={k} value={k} className="bg-surface">
-                      {scheduleKindLabel(k, null)}
+                      {/* @ts-expect-error dynamic i18n key */}
+                      {t(`scheduleKind.${k}`)}
                     </option>
                   ))}
                 </select>
@@ -193,7 +216,7 @@ export function TasksPage() {
                   <input
                     type="datetime-local"
                     value={atDatetime}
-                    min={new Date().toISOString().slice(0, 16)}
+                    min={minDatetime}
                     onChange={(e) => handleAtDatetimeChange(e.target.value)}
                     className="w-full rounded-input border border-border bg-surface px-2.5 py-1.5 text-sm text-text outline-none focus:border-accent"
                   />
@@ -215,6 +238,20 @@ export function TasksPage() {
                     ))}
                   </select>
                 </label>
+              ) : editing.scheduleKind === "daily" || editing.scheduleKind === "weekday" ? (
+                /* Time picker for daily/weekday kinds */
+                <label className="block min-w-[8rem] flex-1">
+                  <span className="mb-1 block text-xs font-medium text-muted">{t("form.time", "Time")}</span>
+                  <div className="flex items-center gap-2">
+                    <Clock size={14} className="shrink-0 text-muted" />
+                    <input
+                      type="time"
+                      value={timeValue}
+                      onChange={(e) => handleTimeChange(e.target.value)}
+                      className="w-full rounded-input border border-border bg-surface px-2.5 py-1.5 text-sm text-text outline-none focus:border-accent"
+                    />
+                  </div>
+                </label>
               ) : (
                 /* Free-text value field for "every" and "cron" */
                 <label className="block min-w-[10rem] flex-1">
@@ -222,7 +259,7 @@ export function TasksPage() {
                   <input
                     value={editing.scheduleValue}
                     onChange={(e) => setEditing((s) => ({ ...s, scheduleValue: e.target.value }))}
-                    placeholder={placeholderFor(editing.scheduleKind, null)}
+                    placeholder={placeholderFor(editing.scheduleKind, t)}
                     className="w-full rounded-input border border-border bg-surface px-2.5 py-1.5 font-mono text-sm text-text outline-none placeholder:text-muted focus:border-accent"
                   />
                 </label>
@@ -231,12 +268,40 @@ export function TasksPage() {
               <button
                 onClick={() => void submit()}
                 disabled={ticking}
-                className="flex items-center gap-1.5 rounded-input bg-accent px-3 py-1.5 text-sm font-medium text-bg transition-opacity hover:opacity-90 disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-input bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg transition-opacity hover:opacity-90 disabled:opacity-50"
               >
                 {ticking && <Loader2 size={14} className="animate-spin" />}
                 {t("form.create")}
               </button>
             </div>
+
+            {/* Quick presets for "daily" and "weekday" kinds */}
+            {(editing.scheduleKind === "daily" || editing.scheduleKind === "weekday") && (
+              <div className="flex flex-wrap gap-1.5">
+                <span className="text-xs text-muted">{t("form.presets", "Quick:")}</span>
+                {/* eslint-disable i18next/no-literal-string -- time presets, displayed verbatim */}
+                {[
+                  { label: "7:00", time: "07:00" },
+                  { label: "8:00", time: "08:00" },
+                  { label: "9:00", time: "09:00" },
+                  { label: "12:00", time: "12:00" },
+                  { label: "18:00", time: "18:00" },
+                ].map(({ label, time }) => (
+                  <button
+                    key={time}
+                    type="button"
+                    onClick={() => handleTimeChange(time)}
+                    className={cn(
+                      "rounded-input border border-border bg-surface px-2.5 py-1 text-xs text-text transition-colors hover:bg-surface-2",
+                      timeValue === time && "border-accent",
+                    )}
+                  >
+                    {label}
+                  </button>
+                ))}
+                {/* eslint-enable i18next/no-literal-string */}
+              </div>
+            )}
 
             {/* Quick presets for "every" kind */}
             {editing.scheduleKind === "every" && (
@@ -269,35 +334,46 @@ export function TasksPage() {
 
         {loading && (
           <div className="mt-6 flex items-center gap-2 text-sm text-muted">
-            <Loader2 size={15} className="animate-spin" /> {t("loading")}
+            <Loader2 size={15} className="animate-spin text-accent" /> {t("loading")}
           </div>
         )}
 
-        {!loading && jobs.length === 0 && (
-          <div className="mt-6 rounded-input border border-dashed border-border bg-surface px-4 py-8 text-center">
-            <CalendarClock size={22} className="mx-auto text-muted" strokeWidth={1.5} />
-            <p className="mt-2 text-sm font-medium text-text">{t("empty.title")}</p>
-            <p className="mx-auto mt-1 max-w-sm text-xs text-muted">{t("empty.body")}</p>
+        {!loading && jobs.length === 0 && !showForm && (
+          <div className="mt-6 flex flex-col items-center rounded-card border border-dashed border-border bg-surface p-8 text-center shadow-card">
+            <div className="rounded-input bg-surface-2 p-2.5 text-accent">
+              <CalendarClock size={24} strokeWidth={1.5} />
+            </div>
+            <p className="mt-3 text-sm font-medium text-text">{t("empty.title")}</p>
+            <p className="mt-1 max-w-sm text-xs text-muted">{t("empty.body")}</p>
+            <button
+              onClick={() => setShowForm(true)}
+              className="mt-4 inline-flex items-center gap-1.5 rounded-input bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg transition-opacity hover:opacity-90"
+            >
+              <Plus size={14} />
+              {t("form.add")}
+            </button>
           </div>
         )}
 
         {!loading && jobs.length > 0 && (
-          <ul className="mt-3 space-y-2">
-            {jobs.map((job) => (
-              <li key={job.id} className="rounded-input border border-border bg-surface p-3">
-                <div className="flex items-start gap-2">
+          <ul className="mt-4 space-y-2.5">
+            {jobs.map((job, i) => (
+              <li
+                key={job.id}
+                className="card-enter rounded-card border border-border bg-surface p-4 shadow-card transition-all hover:border-accent/30 hover:shadow-pop"
+                style={{ animationDelay: `${i * 40}ms` }}
+              >
+                <div className="flex items-start gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", job.enabled ? "bg-ok" : "bg-muted/40")} />
-                      <span className="truncate text-sm font-medium text-text">{job.title}</span>
+                      <span className={cn("h-2 w-2 shrink-0 rounded-full", job.enabled ? "bg-ok" : "bg-muted/40")} />
+                      <span className="truncate text-sm font-medium text-text">{job.title || t("untitledTask", "Untitled Task")}</span>
                     </div>
-                    <p className="mt-1 line-clamp-2 whitespace-pre-wrap text-xs text-muted">{job.prompt}</p>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted">
+                    <p className="mt-1.5 line-clamp-2 whitespace-pre-wrap text-xs text-muted">{job.prompt}</p>
+                    <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted">
                       {/* eslint-disable-next-line i18next/no-literal-string */}
-                      <span className="rounded bg-surface-2 px-1.5 py-0.5 font-mono">
-                        {job.scheduleKind === "event"
-                          ? `event: ${job.scheduleValue}`
-                          : `${job.scheduleKind}: ${job.scheduleKind === "at" ? absoluteTs(Number(job.scheduleValue)) : job.scheduleValue}`}
+                      <span className="rounded bg-surface-2 px-2 py-0.5 font-mono text-[10.5px]">
+                        {formatScheduleLabel(job)}
                       </span>
                       {job.nextRunAt != null && job.scheduleKind !== "event" && (
                         <span title={absoluteTs(job.nextRunAt)}>
@@ -321,7 +397,7 @@ export function TasksPage() {
                     <IconButton label={t("runNow")} onClick={() => void fire(job)} disabled={ticking}>
                       <Zap size={13} />
                     </IconButton>
-                    <IconButton label={t("delete")} onClick={() => void remove(job.id, job.title)} disabled={ticking}>
+                    <IconButton label={t("delete")} onClick={() => setPendingDelete(job)} disabled={ticking}>
                       <Trash2 size={13} />
                     </IconButton>
                   </div>
@@ -331,6 +407,16 @@ export function TasksPage() {
           </ul>
         )}
       </div>
+
+      {pendingDelete && (
+        <ConfirmDialog
+          title={t("confirmDelete.title", "Delete Task")}
+          body={t("confirmDelete.description", "Are you sure you want to delete this task? This action cannot be undone.")}
+          confirmLabel={t("confirmDelete.confirm", "Delete")}
+          onConfirm={() => void remove(pendingDelete)}
+          onCancel={() => setPendingDelete(null)}
+        />
+      )}
     </div>
   );
 }
@@ -360,14 +446,6 @@ function IconButton({
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function scheduleKindLabel(kind: string, _t: any): string {
-  if (kind === "cron") return "Cron expression";
-  if (kind === "at") return "At specific time";
-  if (kind === "event") return "On Event";
-  return "Every interval";
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function placeholderFor(kind: string, _t: any): string {
   switch (kind) {
     case "every":
@@ -376,6 +454,41 @@ function placeholderFor(kind: string, _t: any): string {
       return "0 9 * * 1-5";
     default:
       return "";
+  }
+}
+
+/** Convert an HH:MM time string to a cron expression.
+ *  daily → "M H * * *"   (every day)
+ *  weekday → "M H * * 1-5" (Mon-Fri) */
+function timeToCron(time: string, kind: string): string {
+  const [h, m] = time.split(":").map(Number);
+  const hour = Math.min(23, Math.max(0, h || 0));
+  const minute = Math.min(59, Math.max(0, m || 0));
+  if (kind === "weekday") return `${minute} ${hour} * * 1-5`;
+  return `${minute} ${hour} * * *`;
+}
+
+/** Human-readable label for the schedule badge in the job list. */
+function formatScheduleLabel(job: CronJob): string {
+  switch (job.scheduleKind) {
+    case "event":
+      return `event: ${job.scheduleValue}`;
+    case "at":
+      return `at: ${absoluteTs(Number(job.scheduleValue))}`;
+    case "daily": {
+      const cronParts = job.scheduleValue.split(" ");
+      return `daily at ${cronParts[1]?.padStart(2, "0")}:${cronParts[0]?.padStart(2, "0")}`;
+    }
+    case "weekday": {
+      const cronParts = job.scheduleValue.split(" ");
+      return `weekdays at ${cronParts[1]?.padStart(2, "0")}:${cronParts[0]?.padStart(2, "0")}`;
+    }
+    case "every":
+      return `every: ${job.scheduleValue}s`;
+    case "cron":
+      return `cron: ${job.scheduleValue}`;
+    default:
+      return `${job.scheduleKind}: ${job.scheduleValue}`;
   }
 }
 

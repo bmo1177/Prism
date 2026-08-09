@@ -26,6 +26,15 @@
       "in": "放大",
       "out": "缩小",
       "reset": "复原"
+    },
+    "accentLabel": "强调色",
+    "accentHint": "用于按钮、链接和高亮",
+    "accent": {
+      "terracotta": "赤陶色",
+      "blue": "蓝色",
+      "green": "绿色",
+      "violet": "紫色",
+      "rose": "玫红"
     }
   },
   "language": {

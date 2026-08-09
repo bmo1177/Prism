@@ -19,8 +19,8 @@ fn git_lock() -> &'static Mutex<()> {
     LOCK.get_or_init(|| Mutex::new(()))
 }
 
-const AUTHOR_NAME: &str = "Craft";
-const AUTHOR_EMAIL: &str = "craft@local";
+const AUTHOR_NAME: &str = "Prism";
+const AUTHOR_EMAIL: &str = "prism@local";
 
 /// Snapshots commit to dedicated refs OUTSIDE `refs/heads/*`, never to any
 /// branch — one chain PER user branch, keyed as `<prefix>/<branch>` (following

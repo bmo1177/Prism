@@ -22,7 +22,7 @@ import type {
 import { OPENCODE_VERSION } from "@ai4s/sdk";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { useUiStore, ZOOM_MAX, ZOOM_MIN } from "@/lib/store";
+import { useUiStore, ZOOM_MAX, ZOOM_MIN, ACCENTS, ACCENT_SWATCHES } from "@/lib/store";
 import { shippedLocales } from "@/i18n/config";
 import { getClient, useRuntimeStore } from "@/lib/runtime";
 import { useUpdateStore } from "@/lib/update";
@@ -89,6 +89,8 @@ export function SettingsPage() {
   const section = resolveSection(useParams().section);
   const theme = useUiStore((s) => s.theme);
   const setTheme = useUiStore((s) => s.setTheme);
+  const accent = useUiStore((s) => s.accent);
+  const setAccent = useUiStore((s) => s.setAccent);
   const locale = useUiStore((s) => s.locale);
   const setLocale = useUiStore((s) => s.setLocale);
   const zoom = useUiStore((s) => s.zoom);
@@ -1797,6 +1799,26 @@ export function SettingsPage() {
                     >
                       {t(`appearance.theme.${mode}`)}
                     </button>
+                  ))}
+                </div>
+              }
+            />
+            <Row title={t("appearance.accentLabel")}
+              hint={t("appearance.accentHint")}
+              control={
+                <div className="flex shrink-0 items-center gap-1.5">
+                  {ACCENTS.map((a) => (
+                    <button
+                      key={a}
+                      onClick={() => setAccent(a)}
+                      aria-label={t(`appearance.accent.${a}`)}
+                      title={t(`appearance.accent.${a}`)}
+                      className={cn(
+                        "h-6 w-6 rounded-full ring-1 ring-border transition-transform hover:scale-110",
+                        accent === a && "ring-2 ring-accent",
+                      )}
+                      style={{ backgroundColor: ACCENT_SWATCHES[a] }}
+                    />
                   ))}
                 </div>
               }

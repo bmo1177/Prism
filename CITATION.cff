@@ -1,15 +1,15 @@
 cff-version: 1.2.0
-message: "If you use Open Science Desktop in your research, please cite it as below."
-title: "Open Science Desktop: a local-first, model-agnostic AI research workbench"
+message: "If you use Prism in your research, please cite it as below."
+title: "Prism: light bent into work"
 type: software
 authors:
-  - name: "The Open Science Desktop Contributors"
-repository-code: "https://github.com/ai4s-research/open-science"
-url: "https://openedscience.com"
+  - name: "The Prism Contributors"
+repository-code: "https://github.com/prism-ai/prism"
+url: "https://prism-ai.github.io"
 license: MIT
 version: 0.3.3
 doi: 10.5281/zenodo.21805331
-date-released: "2026-08-04"
+date-released: "2026-08-09"
 keywords:
   - AI for science
   - research workbench

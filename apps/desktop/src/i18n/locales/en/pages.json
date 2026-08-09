@@ -16,7 +16,9 @@
       "openingJupyterLab": "Opening JupyterLab in your browser…",
       "setUpJupyterFirst": "Set up Jupyter first — Settings → MCP servers → Jupyter.",
       "couldNotOpenJupyterLab": "Could not open JupyterLab",
-      "couldNotCreateNotebook": "Could not create notebook"
+      "couldNotCreateNotebook": "Could not create notebook",
+      "deleted": "Notebook deleted",
+      "couldNotDelete": "Could not delete notebook"
     },
     "editor": {
       "backAria": "Back to notebooks",
@@ -33,8 +35,18 @@
       "stopCellTitle": "Stop — restarts this notebook's kernel (variables reset)",
       "stopLabel": "Stop",
       "runLabel": "Run",
-      "addCellLabel": "Add cell"
-    }
+      "addCodeLabel": "Code cell",
+      "addMarkdownLabel": "Markdown section",
+      "markdownCell": "markdown",
+      "markdownPreviewLabel": "Preview",
+      "markdownEditLabel": "Edit",
+      "markdownPlaceholder": "Write Markdown here"
+    },
+    "deleteAria": "Delete {{name}}",
+    "deleteTitle": "Delete this notebook",
+    "confirmDeleteTitle": "Delete notebook",
+    "confirmDeleteBody": "This permanently removes {{name}} from your workspace. The agent may recreate it if it references it. Delete anyway?",
+    "confirmDeleteLabel": "Delete"
   },
   "files": {
     "loading": "Loading…",
@@ -50,7 +62,10 @@
       "copyRelativePath": "Copy relative path",
       "relativePathLabel": "Relative path",
       "openInDefaultApp": "Open in default app"
-    }
+    },
+    "title": "Files",
+    "description": "Every file in your workspace — browse past work across all sessions, open any artifact in its viewer.",
+    "retry": "Retry"
   },
   "skills": {
     "title": "Skills & Agents",

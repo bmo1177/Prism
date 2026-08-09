@@ -21,7 +21,8 @@
   "scheduleKind": {
     "every": "N초마다",
     "cron": "cron 표현식",
-    "at": "타임스탬프로"
+    "at": "타임스탬프로",
+    "event": "이벤트 시"
   },
   "form": {
     "add": "새 작업",
@@ -40,5 +41,15 @@
   "empty": {
     "title": "아직 작업이 없습니다",
     "body": "작업을 만들어 에이전트 실행을 예약하면 설정한 주기로 실행되고 대화 기록에 표시됩니다."
-  }
+  },
+  "event": {
+    "sessionStart": "세션 시작",
+    "workspaceChange": "워크스페이스 변경",
+    "appStartup": "앱 시작"
+  },
+  "relative": {
+    "future": "{label} 후",
+    "past": "{label} 전"
+  },
+  "eventValue": "이벤트: {value}"
 }

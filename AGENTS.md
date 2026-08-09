@@ -1,10 +1,9 @@
-# Craft
+# Prism
 
-Brand name: **Craft** — "A local-first AI workspace that unites cowork, design,
-and science." Forked from Open Science Desktop. Bundle identifier
-`com.craft.desktop`; internal `@ai4s/*` package names are intentionally
-unchanged (renaming them would churn every import and break user data
-continuity).
+Brand name: **Prism** — "Light bent into work. A local-first AI workspace that
+unites cowork, design, and science." Bundle identifier `com.prism.desktop`;
+internal `@ai4s/*` package names are intentionally unchanged (renaming them
+would churn every import and break user data continuity).
 
 Project rules and working context for AI agents (Claude Code, Cursor, Codex, etc.).
 `CLAUDE.md` is a symlink to this file — edit only `AGENTS.md`.

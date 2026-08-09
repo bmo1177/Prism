@@ -24,6 +24,7 @@ import { queryRuns, readRunLog, reproduceRunPrompt, type RunFacet, type RunPage 
 import { openArtifactExternally } from "@/lib/artifactFile";
 import { copyText } from "@/lib/clipboard";
 import { PaneTitlebarInset } from "@/components/inspector/RightPane";
+import { PageHeader } from "@/components/cards/PageHeader";
 import { useUiStore } from "@/lib/store";
 import { cn } from "@/lib/cn";
 import i18n from "@/i18n";
@@ -257,6 +258,7 @@ function RunsView({ sessionId }: { sessionId?: string }) {
   );
 }
 
+
 /** Global Runs view (sidebar) — all runs across every session, like the global
  *  Files browser and Notebooks page. */
 export function RunsPage() {
@@ -264,19 +266,17 @@ export function RunsPage() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-3xl px-8 py-8">
-        <header className="mb-4 flex items-start gap-3">
-          <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-input bg-accent/10 text-accent">
-            <FlaskConical size={17} strokeWidth={1.75} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h1 className="font-serif text-xl leading-tight text-text">{t("title")}</h1>
-            <p className="mt-0.5 text-sm text-muted">
+        <PageHeader
+          icon={<FlaskConical size={18} strokeWidth={1.75} />}
+          title={t("title")}
+          subtitle={
+            <>
               {t("description.prefix")}
               <span className="text-text/70">{t("action.reproduce")}</span>
               {t("description.suffix")}
-            </p>
-          </div>
-        </header>
+            </>
+          }
+        />
         <RunsView />
       </div>
     </div>

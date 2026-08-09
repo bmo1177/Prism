@@ -376,7 +376,7 @@ const browserSession: Session = {
     language: "python",
     code: `import pandas as pd
 import matplotlib.pyplot as plt
-plt.style.use("openscience.mplstyle")  # bundled palette
+plt.style.use("craft.mplstyle")  # bundled palette
 
 df = pd.read_csv("preprints_2026-07-20.csv", parse_dates=["posted"])
 counts = df["subfield"].value_counts().sort_values(ascending=False)

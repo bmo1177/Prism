@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, ExternalLink, NotebookPen, Plus } from "lucide-react";
+import { ChevronDown, ExternalLink, NotebookPen, Plus, Trash2 } from "lucide-react";
 import { addTextToWorkspace, isTauri, jupyterStatus, openJupyterLab, workspaceBase, workspacePath } from "@/lib/tauri";
-import { listNotebooks, type NotebookEntry } from "@/lib/artifactFile";
+import { deleteNotebook, listNotebooks, type NotebookEntry } from "@/lib/artifactFile";
 import { emptyIpynb } from "@/lib/notebook-file";
 import type { KernelLanguage } from "@/lib/kernel";
 import { NotebookEditor } from "@/components/notebook/NotebookEditor";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { PageHeader } from "@/components/cards/PageHeader";
 import { toast } from "@/lib/toast";
 import i18n from "@/i18n";
 
@@ -31,6 +33,9 @@ export function NotebooksPage() {
   // so we show it explicitly (browsing is global, creation is local).
   const [createTarget, setCreateTarget] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  /** Notebook waiting for a destructive-action confirmation. */
+  const [pendingDelete, setPendingDelete] = useState<NotebookEntry | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const refresh = useCallback(async () => {
     setEntries(await listNotebooks("base"));
@@ -84,6 +89,21 @@ export function NotebooksPage() {
     }
   };
 
+  const confirmDelete = async () => {
+    if (!pendingDelete || deleting) return;
+    setDeleting(true);
+    try {
+      await deleteNotebook(pendingDelete.path, "base");
+      toast.success(t("notebooks.toast.deleted"));
+      setPendingDelete(null);
+      await refresh();
+    } catch (err) {
+      toast.error(`${t("notebooks.toast.couldNotDelete")}: ${err instanceof Error ? err.message : String(err)}`);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (open) {
     return (
       <NotebookEditor
@@ -99,66 +119,74 @@ export function NotebooksPage() {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="mx-auto max-w-3xl px-8 py-6">
-        <div className="flex items-center gap-3">
-          <h1 className="font-serif text-xl text-text">{t("notebooks.title")}</h1>
-          <div className="flex-1" />
-          {isTauri && jupyterInstalled && (
-            <button
-              className="flex items-center gap-1.5 rounded-input border border-border bg-surface px-2.5 py-1.5 text-xs text-text transition-colors hover:bg-surface-2 disabled:opacity-50"
-              onClick={() => void openLab()}
-              disabled={openingLab}
-              title={t("notebooks.openJupyterLabTitle")}
-            >
-              <ExternalLink size={13} className="text-muted" />
-              {t("notebooks.openJupyterLab")}
-            </button>
-          )}
-          <div className="relative" ref={menuRef}>
-            <button
-              className="flex items-center gap-1.5 rounded-input bg-accent px-2.5 py-1.5 text-xs font-medium text-accent-fg hover:opacity-90 disabled:opacity-50"
-              onClick={() => {
-                if (!menuOpen) void refreshTarget();
-                setMenuOpen((v) => !v);
-              }}
-              disabled={!isTauri}
-              aria-haspopup="menu"
-              aria-expanded={menuOpen}
-            >
-              <Plus size={13} /> {t("notebooks.newNotebook")} <ChevronDown size={12} className="opacity-80" />
-            </button>
-            {menuOpen && (
-              <div
-                role="menu"
-                className="absolute right-0 z-10 mt-1 w-40 overflow-hidden rounded-card border border-border bg-surface py-1 shadow-lg"
-              >
+      <div className="mx-auto max-w-3xl px-8 py-8">
+        <PageHeader
+          icon={<NotebookPen size={18} strokeWidth={1.75} />}
+          title={t("notebooks.title")}
+          subtitle={
+            <>
+              <span>{t("notebooks.description")}</span>
+              {isTauri && createTarget && (
+                <span className="mt-1 flex items-center gap-1.5 text-xs text-muted">
+                  {t("notebooks.createsIn")}
+                  <span className="max-w-[60%] truncate rounded bg-surface-2 px-1.5 py-0.5 text-[11px] font-mono text-text">
+                    {createTarget}
+                  </span>
+                </span>
+              )}
+            </>
+          }
+          actions={
+            <>
+              {isTauri && jupyterInstalled && (
                 <button
-                  role="menuitem"
-                  className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-text hover:bg-surface-2"
-                  onClick={() => void createNew("python")}
+                  className="flex items-center gap-1.5 rounded-input border border-border bg-surface px-2.5 py-1.5 text-xs text-text transition-colors hover:bg-surface-2 disabled:opacity-50"
+                  onClick={() => void openLab()}
+                  disabled={openingLab}
+                  title={t("notebooks.openJupyterLabTitle")}
                 >
-                  <NotebookPen size={13} className="text-muted" /> {t("notebooks.pythonNotebook")}
+                  <ExternalLink size={13} className="text-muted" />
+                  {t("notebooks.openJupyterLab")}
                 </button>
+              )}
+              <div className="relative" ref={menuRef}>
                 <button
-                  role="menuitem"
-                  className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-text hover:bg-surface-2"
-                  onClick={() => void createNew("r")}
+                  className="flex items-center gap-1.5 rounded-input bg-accent px-2.5 py-1.5 text-xs font-medium text-accent-fg hover:opacity-90 disabled:opacity-50"
+                  onClick={() => {
+                    if (!menuOpen) void refreshTarget();
+                    setMenuOpen((v) => !v);
+                  }}
+                  disabled={!isTauri}
+                  aria-haspopup="menu"
+                  aria-expanded={menuOpen}
                 >
-                  <NotebookPen size={13} className="text-muted" /> {t("notebooks.rNotebook")}
+                  <Plus size={13} /> {t("notebooks.newNotebook")} <ChevronDown size={12} className="opacity-80" />
                 </button>
+                {menuOpen && (
+                  <div
+                    role="menu"
+                    className="absolute right-0 z-10 mt-1 w-40 overflow-hidden rounded-card border border-border bg-surface py-1 shadow-lg"
+                  >
+                    <button
+                      role="menuitem"
+                      className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-text hover:bg-surface-2"
+                      onClick={() => void createNew("python")}
+                    >
+                      <NotebookPen size={13} className="text-muted" /> {t("notebooks.pythonNotebook")}
+                    </button>
+                    <button
+                      role="menuitem"
+                      className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-text hover:bg-surface-2"
+                      onClick={() => void createNew("r")}
+                    >
+                      <NotebookPen size={13} className="text-muted" /> {t("notebooks.rNotebook")}
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
-        <p className="mt-1 text-sm text-muted">{t("notebooks.description")}</p>
-        {isTauri && createTarget && (
-          <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted">
-            {t("notebooks.createsIn")}
-            <span className="max-w-[60%] truncate rounded bg-surface-2 px-1.5 py-0.5 text-[11px] text-text">
-              {createTarget}
-            </span>
-          </p>
-        )}
+            </>
+          }
+        />
 
         <div className="mt-5 space-y-1.5">
           {entries.length === 0 && (
@@ -171,26 +199,49 @@ export function NotebooksPage() {
             const folder = slash >= 0 ? e.path.slice(0, slash) : "";
             const name = slash >= 0 ? e.path.slice(slash + 1) : e.path;
             return (
-              <button
+              <div
                 key={e.path}
-                onClick={() => setOpen({ path: e.path, root: "base" })}
-                className="flex w-full items-center gap-2.5 rounded-card border border-border bg-surface px-4 py-2.5 text-left hover:bg-surface-2"
+                className="group flex w-full items-center gap-2.5 rounded-card border border-border bg-surface px-4 py-2.5 text-left hover:bg-surface-2"
               >
-                <NotebookPen size={15} className="shrink-0 text-muted" />
-                <span className="truncate text-sm text-text">{name}</span>
-                {folder && (
-                  <span className="max-w-[40%] truncate rounded bg-surface-2 px-1.5 py-0.5 text-[11px] text-muted">
-                    {folder}
+                <button
+                  onClick={() => setOpen({ path: e.path, root: "base" })}
+                  className="flex min-w-0 flex-1 items-center gap-2.5 text-left"
+                >
+                  <NotebookPen size={15} className="shrink-0 text-muted" />
+                  <span className="truncate text-sm text-text">{name}</span>
+                  {folder && (
+                    <span className="max-w-[40%] truncate rounded bg-surface-2 px-1.5 py-0.5 text-[11px] text-muted">
+                      {folder}
+                    </span>
+                  )}
+                  <span className="ml-auto shrink-0 text-xs text-muted">
+                    {new Date(e.modified * 1000).toLocaleString(i18n.language)}
                   </span>
+                </button>
+                {isTauri && (
+                  <button
+                    className="hidden shrink-0 rounded p-1 text-muted hover:bg-surface-2 hover:text-error group-hover:block"
+                    aria-label={t("notebooks.deleteAria", { name })}
+                    title={t("notebooks.deleteTitle")}
+                    onClick={() => setPendingDelete(e)}
+                  >
+                    <Trash2 size={14} />
+                  </button>
                 )}
-                <span className="ml-auto shrink-0 text-xs text-muted">
-                  {new Date(e.modified * 1000).toLocaleString(i18n.language)}
-                </span>
-              </button>
+              </div>
             );
           })}
         </div>
       </div>
+      {pendingDelete && (
+        <ConfirmDialog
+          title={t("notebooks.confirmDeleteTitle")}
+          body={t("notebooks.confirmDeleteBody", { name: pendingDelete.path })}
+          confirmLabel={t("notebooks.confirmDeleteLabel")}
+          onConfirm={() => void confirmDelete()}
+          onCancel={() => setPendingDelete(null)}
+        />
+      )}
     </div>
   );
 }

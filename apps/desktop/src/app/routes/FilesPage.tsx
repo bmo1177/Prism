@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import {
   ChevronRight,
   Dna,
+  Files,
   FileText,
   Film,
   FlaskConical,
@@ -25,6 +26,7 @@ import { NotebookEditor } from "@/components/notebook/NotebookEditor";
 import { FilePreviewInspector } from "@/components/inspector/FilePreviewInspector";
 import { FileContextMenu } from "@/components/files/FileContextMenu";
 import { PaneTitlebarInset } from "@/components/inspector/RightPane";
+import { PageHeader } from "@/components/cards/PageHeader";
 import { cn } from "@/lib/cn";
 
 const EXT_LANG: Record<string, string> = {
@@ -150,77 +152,99 @@ export function FilesPage() {
   // page becomes single-pane — the list fills the width, opening a file swaps
   // to a full-width preview, and its Close button returns to the list.
   return (
-    <div className="flex h-full min-h-0">
-      <div
-        className={cn(
-          "flex flex-col border-r border-border",
-          isMobile ? cn("w-full", selected && "hidden") : "w-72 shrink-0",
-        )}
-      >
-        <div className="flex flex-wrap items-center gap-0.5 border-b border-border px-3 py-2.5 text-[13px]">
-          <button
-            className={cn("rounded px-1 hover:bg-surface-2", dir ? "text-link" : "font-medium text-text")}
-            onClick={() => setDir("")}
-            title={basePath ?? undefined}
+    <div className="h-full min-h-0 overflow-y-auto">
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-8">
+        <PageHeader
+          icon={<Files size={17} strokeWidth={1.75} />}
+          title={t("files.title")}
+          subtitle={t("files.description")}
+        />
+        <div className="mt-5 flex min-h-0 flex-col overflow-hidden rounded-card border border-border bg-surface shadow-card sm:flex-row">
+          <div
+            className={cn(
+              "flex min-h-0 flex-col border-border",
+              isMobile ? cn("w-full", selected && "hidden") : "w-72 shrink-0 sm:border-r",
+            )}
           >
-            {baseName(basePath)}
-          </button>
-          {crumbs.map((part, i) => {
-            const to = crumbs.slice(0, i + 1).join("/");
-            const isLast = i === crumbs.length - 1;
-            return (
-              <span key={to} className="flex items-center gap-0.5">
-                <ChevronRight size={13} className="text-muted" />
-                <button
-                  className={cn("rounded px-1 hover:bg-surface-2", isLast ? "font-medium text-text" : "text-link")}
-                  onClick={() => setDir(to)}
-                >
-                  {part}
-                </button>
-              </span>
-            );
-          })}
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto p-2">
-          {entries === null && (
-            <div className="flex items-center gap-2 p-2 text-sm text-muted">
-              <Loader2 size={14} className="animate-spin" /> {t("files.loading")}
-            </div>
-          )}
-          {error && <div className="p-2 text-sm text-error">{error}</div>}
-          {entries && entries.length === 0 && !error && (
-            <div className="p-2 text-sm text-muted">
-              {isTauri || isGatewayWeb ? t("files.folderEmpty") : t("files.explorerUnavailableWeb")}
-            </div>
-          )}
-          {entries?.map((entry) => (
-            <FileContextMenu key={entry.path} entry={entry} root="base">
+            <div className="flex flex-wrap items-center gap-0.5 border-b border-border px-3 py-2.5 text-[13px]">
               <button
-                onClick={() => open(entry)}
-                className={cn(
-                  "flex w-full items-center gap-2 rounded-input px-2 py-1.5 text-left text-[13px] hover:bg-surface-2",
-                  selected?.path === entry.path ? "bg-surface-2 text-text" : "text-text/90",
-                )}
+                aria-current={dir ? undefined : "page"}
+                className={cn("rounded px-1 hover:bg-surface-2", dir ? "text-link" : "font-medium text-text")}
+                onClick={() => setDir("")}
+                title={basePath ?? undefined}
               >
-                {iconFor(entry)}
-                <span className="flex-1 truncate">{entry.name}</span>
-                {!entry.isDir && <span className="shrink-0 text-[11px] text-muted">{humanSize(entry.size)}</span>}
-                {entry.isDir && <ChevronRight size={14} className="shrink-0 text-muted" />}
+                {baseName(basePath)}
               </button>
-            </FileContextMenu>
-          ))}
-        </div>
-      </div>
+              {crumbs.map((part, i) => {
+                const to = crumbs.slice(0, i + 1).join("/");
+                const isLast = i === crumbs.length - 1;
+                return (
+                  <span key={to} className="flex items-center gap-0.5">
+                    <ChevronRight size={13} className="text-muted" />
+                    <button
+                      aria-current={isLast ? "page" : undefined}
+                      className={cn("rounded px-1 hover:bg-surface-2", isLast ? "font-medium text-text" : "text-link")}
+                      onClick={() => setDir(to)}
+                    >
+                      {part}
+                    </button>
+                  </span>
+                );
+              })}
+            </div>
 
-      <div className={cn("min-h-0 flex-1", isMobile && !selected && "hidden")}>
-        {selected ? (
-          <FilePreview key={selected.path} entry={selected} root="base" onClose={() => setSelected(null)} />
-        ) : (
-          <div className="flex h-full items-center justify-center p-8 text-center text-sm text-muted">
-            {t("files.selectFilePrompt")}
+            <div className="min-h-0 flex-1 overflow-y-auto p-2">
+              {entries === null && (
+                <div className="flex items-center gap-2 p-2 text-sm text-muted">
+                  <Loader2 size={14} className="animate-spin" /> {t("files.loading")}
+                </div>
+              )}
+              {error && (
+                <div className="p-3 text-sm text-error" role="alert">
+                  {error}
+                  <button
+                    onClick={() => void load(dir)}
+                    className="mt-1 block rounded-input border border-border px-2 py-1 text-xs text-text hover:bg-surface-2"
+                  >
+                    {t("files.retry")}
+                  </button>
+                </div>
+              )}
+              {entries && entries.length === 0 && !error && (
+                <div className="p-4 text-center text-sm text-muted">
+                  {isTauri || isGatewayWeb ? t("files.folderEmpty") : t("files.explorerUnavailableWeb")}
+                </div>
+              )}
+              {entries?.map((entry) => (
+                <FileContextMenu key={entry.path} entry={entry} root="base">
+                  <button
+                    onClick={() => open(entry)}
+                    aria-current={selected?.path === entry.path ? "true" : undefined}
+                    className={cn(
+                      "flex w-full items-center gap-2 rounded-input px-2 py-1.5 text-left text-[13px] hover:bg-surface-2",
+                      selected?.path === entry.path ? "bg-surface-2 text-text" : "text-text/90",
+                    )}
+                  >
+                    {iconFor(entry)}
+                    <span className="flex-1 truncate">{entry.name}</span>
+                    {!entry.isDir && <span className="shrink-0 text-[11px] text-muted">{humanSize(entry.size)}</span>}
+                    {entry.isDir && <ChevronRight size={14} className="shrink-0 text-muted" />}
+                  </button>
+                </FileContextMenu>
+              ))}
+            </div>
           </div>
-        )}
+
+          <div className={cn("min-h-0 flex-1", isMobile && !selected && "hidden")}>
+            {selected ? (
+              <FilePreview key={selected.path} entry={selected} root="base" onClose={() => setSelected(null)} />
+            ) : (
+              <div className="flex h-full items-center justify-center p-8 text-center text-sm text-muted">
+                {t("files.selectFilePrompt")}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

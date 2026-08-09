@@ -127,6 +127,13 @@ export async function listNotebooks(root?: FileRoot): Promise<NotebookEntry[]> {
   return invoke<NotebookEntry[]>("list_notebooks", { root });
 }
 
+/** Delete a notebook (.ipynb) from the tree `root` points at (desktop only). */
+export async function deleteNotebook(path: string, root?: FileRoot): Promise<void> {
+  if (!isTauri) throw new Error("not running in the desktop app");
+  const { invoke } = await import("@tauri-apps/api/core");
+  await invoke("delete_notebook", { path, root });
+}
+
 export interface DirEntry {
   path: string;
   name: string;

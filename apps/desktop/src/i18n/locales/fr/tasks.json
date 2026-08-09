@@ -21,7 +21,8 @@
   "scheduleKind": {
     "every": "Toutes les x secondes",
     "cron": "Expression cron",
-    "at": "À l'horodatage"
+    "at": "À l'horodatage",
+    "event": "Sur événement"
   },
   "form": {
     "add": "Nouvelle tâche",
@@ -40,5 +41,15 @@
   "empty": {
     "title": "Aucune tâche pour l'instant",
     "body": "Créez une tâche pour planifier une exécution d'agent : elle se déclenche selon votre cadence et apparaît dans l'historique."
-  }
+  },
+  "event": {
+    "sessionStart": "Début de session",
+    "workspaceChange": "Changement d'espace de travail",
+    "appStartup": "Démarrage de l'application"
+  },
+  "relative": {
+    "future": "Dans {label}",
+    "past": "il y a {label}"
+  },
+  "eventValue": "événement : {value}"
 }

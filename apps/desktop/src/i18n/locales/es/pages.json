@@ -16,7 +16,9 @@
       "openingJupyterLab": "Abriendo JupyterLab en tu navegador…",
       "setUpJupyterFirst": "Configura Jupyter primero — Configuración → Servidores MCP → Jupyter.",
       "couldNotOpenJupyterLab": "No se pudo abrir JupyterLab",
-      "couldNotCreateNotebook": "No se pudo crear el cuaderno"
+      "couldNotCreateNotebook": "No se pudo crear el cuaderno",
+      "deleted": "Cuaderno eliminado",
+      "couldNotDelete": "No se pudo eliminar el cuaderno"
     },
     "editor": {
       "backAria": "Volver a los cuadernos",
@@ -33,8 +35,18 @@
       "stopCellTitle": "Detener — reinicia el kernel de este cuaderno (las variables se restablecen)",
       "stopLabel": "Detener",
       "runLabel": "Ejecutar",
-      "addCellLabel": "Añadir celda"
-    }
+      "addCodeLabel": "Celda de código",
+      "addMarkdownLabel": "Sección de Markdown",
+      "markdownCell": "markdown",
+      "markdownPreviewLabel": "Vista previa",
+      "markdownEditLabel": "Editar",
+      "markdownPlaceholder": "Escribe Markdown aquí"
+    },
+    "deleteAria": "Eliminar {{name}}",
+    "deleteTitle": "Eliminar este cuaderno",
+    "confirmDeleteTitle": "Eliminar cuaderno",
+    "confirmDeleteBody": "Esto elimina permanentemente {{name}} de tu espacio de trabajo. El agente podría recrearlo si lo referencia. ¿Eliminar de todos modos?",
+    "confirmDeleteLabel": "Eliminar"
   },
   "files": {
     "loading": "Cargando…",
@@ -50,7 +62,10 @@
       "copyRelativePath": "Copiar ruta relativa",
       "relativePathLabel": "Ruta relativa",
       "openInDefaultApp": "Abrir en la app predeterminada"
-    }
+    },
+    "title": "Archivos",
+    "description": "Todos los archivos de su espacio de trabajo: explore trabajos anteriores de todas las sesiones y abra cualquier artefacto en su visor.",
+    "retry": "Reintentar"
   },
   "skills": {
     "title": "Habilidades y agentes",

@@ -16,7 +16,9 @@
       "openingJupyterLab": "JupyterLab wird im Browser geöffnet…",
       "setUpJupyterFirst": "Richten Sie zuerst Jupyter ein — Einstellungen → MCP-Server → Jupyter.",
       "couldNotOpenJupyterLab": "JupyterLab konnte nicht geöffnet werden",
-      "couldNotCreateNotebook": "Notebook konnte nicht erstellt werden"
+      "couldNotCreateNotebook": "Notebook konnte nicht erstellt werden",
+      "deleted": "Notizbuch gelöscht",
+      "couldNotDelete": "Notizbuch konnte nicht gelöscht werden"
     },
     "editor": {
       "backAria": "Zurück zu Notebooks",
@@ -33,8 +35,18 @@
       "stopCellTitle": "Stopp — startet den Kernel dieses Notebooks neu (Variablen werden zurückgesetzt)",
       "stopLabel": "Stopp",
       "runLabel": "Ausführen",
-      "addCellLabel": "Zelle hinzufügen"
-    }
+      "addCodeLabel": "Code-Zelle",
+      "addMarkdownLabel": "Markdown-Abschnitt",
+      "markdownCell": "markdown",
+      "markdownPreviewLabel": "Vorschau",
+      "markdownEditLabel": "Bearbeiten",
+      "markdownPlaceholder": "Hier Markdown schreiben"
+    },
+    "deleteAria": "{{name}} löschen",
+    "deleteTitle": "Dieses Notizbuch löschen",
+    "confirmDeleteTitle": "Notizbuch löschen",
+    "confirmDeleteBody": "Dadurch wird {{name}} dauerhaft aus Ihrem Arbeitsbereich entfernt. Der Agent kann es neu erstellen, falls er darauf verweist. Trotzdem löschen?",
+    "confirmDeleteLabel": "Löschen"
   },
   "files": {
     "loading": "Wird geladen…",
@@ -50,7 +62,10 @@
       "copyRelativePath": "Relativen Pfad kopieren",
       "relativePathLabel": "Relativer Pfad",
       "openInDefaultApp": "In Standard-App öffnen"
-    }
+    },
+    "title": "Dateien",
+    "description": "Alle Dateien in Ihrem Arbeitsbereich – durchsuchen Sie frühere Arbeiten in allen Sitzungen und öffnen Sie jedes Artefakt in seiner Ansicht.",
+    "retry": "Erneut versuchen"
   },
   "skills": {
     "title": "Skills & Agenten",

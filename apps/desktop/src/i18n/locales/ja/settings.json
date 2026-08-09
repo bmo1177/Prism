@@ -26,6 +26,15 @@
       "in": "拡大",
       "out": "縮小",
       "reset": "リセット"
+    },
+    "accentLabel": "アクセントカラー",
+    "accentHint": "ボタン、リンク、強調に使われます",
+    "accent": {
+      "terracotta": "テラコッタ",
+      "blue": "ブルー",
+      "green": "グリーン",
+      "violet": "バイオレット",
+      "rose": "ローズ"
     }
   },
   "language": {

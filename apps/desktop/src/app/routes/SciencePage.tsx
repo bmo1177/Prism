@@ -8,24 +8,25 @@ import { isGatewayWeb } from "@/lib/webMode";
 import { useRuntimeStore } from "@/lib/runtime";
 import { useLayoutStore } from "@/lib/layout";
 import { useIsMobile } from "@/lib/useIsMobile";
+import { PageHeader } from "@/components/cards/PageHeader";
 
 function SkillCard({ skill, onUse }: { skill: ScienceSkill; onUse: (s: ScienceSkill) => void }) {
   const { t } = useTranslation("pages");
   return (
-    <article className="flex flex-col gap-2 rounded-card border border-border bg-surface p-3.5 shadow-card">
+    <article className="flex flex-col gap-2 rounded-card border border-border bg-surface p-4 shadow-card transition-all hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-pop">
       <div className="flex items-center gap-2">
-        <span className="shrink-0 text-muted">
-          <Atom size={15} strokeWidth={1.75} />
+        <span className="shrink-0 rounded-input bg-surface-2 p-1.5 text-accent">
+          <Atom size={16} strokeWidth={1.75} />
         </span>
-        <h3 className="text-[13.5px] font-medium leading-snug text-text">{skill.title}</h3>
+        <h3 className="text-[14px] font-medium leading-snug text-text">{skill.title}</h3>
         <span className="ml-auto shrink-0 truncate rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[10.5px] text-muted">
           {skill.dir}
         </span>
       </div>
-      <p className="text-xs leading-snug text-muted">{skill.tagline}</p>
+      <p className="mt-1 text-xs leading-relaxed text-muted">{skill.tagline}</p>
       <button
         onClick={() => onUse(skill)}
-        className="mt-auto inline-flex w-fit items-center gap-1.5 rounded-input bg-accent px-2.5 py-1.5 text-[12px] font-medium text-white transition-opacity hover:opacity-90"
+        className="mt-3 inline-flex w-fit items-center gap-1.5 rounded-input bg-accent px-3 py-1.5 text-[12px] font-medium text-accent-fg transition-opacity hover:opacity-90"
       >
         <Sparkles size={13} />
         {t("science.useSkill")}
@@ -84,40 +85,40 @@ export function SciencePage() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-6xl px-6 py-10">
-      <div className="text-center">
-        <div className="text-[10.5px] font-medium uppercase tracking-[0.2em] text-muted">
-          {t("science.eyebrow")}
-        </div>
-        <h1 className="mt-2.5 font-serif text-[26px] leading-tight text-text">
-          {t("science.title")}
-        </h1>
-        <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
-          {t("science.subtitle")}
-        </p>
-      </div>
+        <PageHeader
+          icon={<Atom size={18} strokeWidth={1.75} />}
+          title={t("science.title")}
+          subtitle={t("science.subtitle")}
+        />
 
-      {!isTauri ? (
-        <p className="mx-auto mt-10 max-w-md text-center text-sm text-muted">
-          {t("science.webOnly")}
-        </p>
-      ) : loading ? (
-        <div className="mt-12 grid place-items-center">
-          <Loader2 size={18} className="animate-spin text-muted" />
-        </div>
-      ) : failed ? (
-        <p className="mx-auto mt-10 max-w-md text-center text-sm text-muted">{t("science.error")}</p>
-      ) : skills.length === 0 ? (
-        <p className="mx-auto mt-10 max-w-md text-center text-sm text-muted">
-          {t("science.empty.noSkills")}
-        </p>
-      ) : (
-        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {skills.map((skill) => (
-            <SkillCard key={skill.dir} skill={skill} onUse={useSkill} />
-          ))}
-        </div>
-      )}
+        {!isTauri ? (
+          <p className="mx-auto mt-10 max-w-md text-center text-sm text-muted">
+            {t("science.webOnly")}
+          </p>
+        ) : loading ? (
+          <div className="mt-12 grid place-items-center">
+            <Loader2 size={18} className="animate-spin text-muted" />
+          </div>
+        ) : failed ? (
+          <p className="mx-auto mt-10 max-w-md text-center text-sm text-muted">{t("science.error")}</p>
+        ) : skills.length === 0 ? (
+          <p className="mx-auto mt-10 max-w-md text-center text-sm text-muted">
+            {t("science.empty.noSkills")}
+          </p>
+        ) : (
+          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {skills.map((skill, i) => (
+              <div
+                key={skill.dir}
+                className="card-enter"
+                style={{ animationDelay: `${i * 40}ms` }}
+              >
+                <SkillCard skill={skill} onUse={useSkill} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
 }

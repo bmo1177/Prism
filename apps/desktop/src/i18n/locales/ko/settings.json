@@ -26,6 +26,15 @@
       "in": "확대",
       "out": "축소",
       "reset": "초기화"
+    },
+    "accentLabel": "강조 색상",
+    "accentHint": "버튼, 링크, 강조 표시에 사용됩니다",
+    "accent": {
+      "terracotta": "테라코타",
+      "blue": "파랑",
+      "green": "초록",
+      "violet": "보라",
+      "rose": "로즈"
     }
   },
   "language": {

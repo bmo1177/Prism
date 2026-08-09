@@ -16,7 +16,9 @@
       "openingJupyterLab": "Ouverture de JupyterLab dans votre navigateur…",
       "setUpJupyterFirst": "Configurez d'abord Jupyter — Paramètres → Serveurs MCP → Jupyter.",
       "couldNotOpenJupyterLab": "Impossible d'ouvrir JupyterLab",
-      "couldNotCreateNotebook": "Impossible de créer le notebook"
+      "couldNotCreateNotebook": "Impossible de créer le notebook",
+      "deleted": "Carnet supprimé",
+      "couldNotDelete": "Impossible de supprimer le carnet"
     },
     "editor": {
       "backAria": "Retour aux notebooks",
@@ -33,8 +35,18 @@
       "stopCellTitle": "Arrêter — redémarre le noyau de ce notebook (les variables sont réinitialisées)",
       "stopLabel": "Arrêter",
       "runLabel": "Exécuter",
-      "addCellLabel": "Ajouter une cellule"
-    }
+      "addCodeLabel": "Cellule de code",
+      "addMarkdownLabel": "Section Markdown",
+      "markdownCell": "markdown",
+      "markdownPreviewLabel": "Aperçu",
+      "markdownEditLabel": "Modifier",
+      "markdownPlaceholder": "Écrivez du Markdown ici"
+    },
+    "deleteAria": "Supprimer {{name}}",
+    "deleteTitle": "Supprimer ce carnet",
+    "confirmDeleteTitle": "Supprimer le carnet",
+    "confirmDeleteBody": "Cela supprime définitivement {{name}} de votre espace de travail. L'agent pourrait le recréer s'il y fait référence. Supprimer quand même ?",
+    "confirmDeleteLabel": "Supprimer"
   },
   "files": {
     "loading": "Chargement…",
@@ -50,7 +62,10 @@
       "copyRelativePath": "Copier le chemin relatif",
       "relativePathLabel": "Chemin relatif",
       "openInDefaultApp": "Ouvrir dans l'application par défaut"
-    }
+    },
+    "title": "Fichiers",
+    "description": "Tous les fichiers de votre espace de travail — parcourez les travaux passés de toutes les sessions et ouvrez n'importe quel artefact dans sa visionneuse.",
+    "retry": "Réessayer"
   },
   "skills": {
     "title": "Compétences et agents",

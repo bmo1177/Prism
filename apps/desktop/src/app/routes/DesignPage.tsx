@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Palette, Sparkles } from "lucide-react";
 import {
   designPreviewUrl,
   listDesignTemplates,
@@ -13,6 +13,7 @@ import { useRuntimeStore } from "@/lib/runtime";
 import { useLayoutStore } from "@/lib/layout";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { WORKFLOW_STARTERS } from "@/components/thread/WorkflowStarters";
+import { PageHeader } from "@/components/cards/PageHeader";
 
 /** Prompt for a starter workflow by id — the same lookup the command palette uses. */
 const starterPrompt = (id: string) => WORKFLOW_STARTERS.find((s) => s.id === id)?.prompt ?? "";
@@ -157,8 +158,14 @@ function Section({
         {t(headingKey)}
       </h2>
       <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {templates.map((template) => (
-          <TemplateCard key={template.dir} template={template} onUse={onUse} />
+        {templates.map((template, i) => (
+          <div
+            key={template.dir}
+            className="card-enter"
+            style={{ animationDelay: `${i * 50}ms` }}
+          >
+            <TemplateCard template={template} onUse={onUse} />
+          </div>
         ))}
       </div>
     </section>
@@ -208,17 +215,11 @@ export function DesignPage() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-6xl px-6 py-10">
-      <div className="text-center">
-        <div className="text-[10.5px] font-medium uppercase tracking-[0.2em] text-muted">
-          {t("design.eyebrow")}
-        </div>
-        <h1 className="mt-2.5 font-serif text-[26px] leading-tight text-text">
-          {t("design.title")}
-        </h1>
-        <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
-          {t("design.subtitle")}
-        </p>
-      </div>
+        <PageHeader
+          icon={<Palette size={18} strokeWidth={1.75} />}
+          title={t("design.title")}
+          subtitle={t("design.subtitle")}
+        />
 
       {!isTauri ? (
         <p className="mx-auto mt-10 max-w-md text-center text-sm text-muted">

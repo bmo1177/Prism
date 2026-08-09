@@ -5,6 +5,7 @@ import {
   ChevronDown,
   ChevronRight,
   Folder,
+  FolderTree,
   MoreHorizontal,
   Pencil,
   Pin,
@@ -19,6 +20,7 @@ import { openProjectFolder, renameProject, type ProjectInfo } from "@/lib/tauri"
 import { isGatewayWeb } from "@/lib/webMode";
 import { pathKey } from "@/lib/workspacePath";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { PageHeader } from "@/components/cards/PageHeader";
 
 /** The last path segment (folder name) of an absolute workspace path. */
 function baseName(path: string): string {
@@ -100,9 +102,12 @@ export function ProjectsPage() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-8">
-        <h1 className="font-serif text-2xl leading-tight text-text">{t("projects.heading")}</h1>
+        <PageHeader
+          icon={<FolderTree size={18} strokeWidth={1.75} />}
+          title={t("projects.heading")}
+        />
 
-        <div className="relative mt-5">
+        <div className="relative mt-2">
           <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
           <input
             value={query}

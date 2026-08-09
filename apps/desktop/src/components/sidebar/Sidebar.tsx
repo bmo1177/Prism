@@ -631,25 +631,25 @@ export function Sidebar({ project }: { project: Project }) {
             <NavRow
               icon={<NotebookPen size={16} />}
               label={t("items.notebooks")}
-              onClick={() => navigate("/notebooks")}
+              to="/notebooks"
             />
           )}
           <NavRow
             icon={<FolderTree size={16} />}
             label={t("items.files")}
-            onClick={() => navigate("/files")}
+            to="/files"
           />
           <NavRow
             icon={<FlaskConical size={16} />}
             label={t("items.runs")}
-            onClick={() => navigate("/runs")}
+            to="/runs"
           />
           {/* The science research dashboard reads local notebooks/runs — hidden in the web client. */}
           {!isGatewayWeb && (
             <NavRow
               icon={<Microscope size={16} />}
               label={t("items.research")}
-              onClick={() => navigate("/research")}
+              to="/research"
             />
           )}
           {/* The global provenance trail reads local .openscience files — hidden in the web client. */}
@@ -657,7 +657,7 @@ export function Sidebar({ project }: { project: Project }) {
             <NavRow
               icon={<ScrollText size={16} />}
               label={t("items.provenance")}
-              onClick={() => navigate("/provenance")}
+              to="/provenance"
             />
           )}
           {/* The science gallery lists the bundled core skills — hidden in the web client. */}
@@ -665,26 +665,26 @@ export function Sidebar({ project }: { project: Project }) {
             <NavRow
               icon={<Atom size={16} />}
               label={t("items.science")}
-              onClick={() => navigate("/science")}
+              to="/science"
             />
           )}
           <NavRow
             icon={<Files size={16} />}
             label={t("items.skills")}
-            onClick={() => navigate("/skills")}
+            to="/skills"
           />
           {/* The design gallery previews bundled templates via the local server — hidden in the web client. */}
           {!isGatewayWeb && (
             <NavRow
               icon={<Palette size={16} />}
               label={t("items.design")}
-              onClick={() => navigate("/design")}
+              to="/design"
             />
           )}
           <NavRow
             icon={<CalendarClock size={16} />}
             label={t("items.tasks")}
-            onClick={() => navigate("/tasks")}
+            to="/tasks"
           />
         </nav>
 
@@ -1155,16 +1155,43 @@ function MoreRow({
 function NavRow({
   icon,
   label,
+  to,
   onClick,
 }: {
   icon: React.ReactNode;
   label: string;
-  onClick: () => void;
+  /** Route path — when provided renders a NavLink with active highlighting. */
+  to?: string;
+  /** Fallback for items that navigate programmatically (e.g. "New"). */
+  onClick?: () => void;
 }) {
+  const baseCls = "flex items-center gap-2 rounded-input px-2 py-1 text-[13px] transition-colors";
+  if (to) {
+    return (
+      <NavLink
+        to={to}
+        className={({ isActive }) =>
+          cn(
+            baseCls,
+            isActive
+              ? "bg-accent/15 font-medium text-text ring-1 ring-inset ring-accent/40"
+              : "text-text/90 hover:bg-surface-2",
+          )
+        }
+      >
+        {({ isActive }) => (
+          <>
+            <span className={isActive ? "text-accent" : "text-muted"}>{icon}</span>
+            <span>{label}</span>
+          </>
+        )}
+      </NavLink>
+    );
+  }
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 rounded-input px-2 py-1 text-[13px] text-text hover:bg-surface-2"
+      className={cn(baseCls, "text-text/90 hover:bg-surface-2")}
     >
       <span className="text-muted">{icon}</span>
       <span>{label}</span>

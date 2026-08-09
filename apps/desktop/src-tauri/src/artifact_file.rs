@@ -443,6 +443,34 @@ pub(crate) fn dir_entries(root: &Path, rel: &str) -> Result<Vec<DirEntry>, Strin
     Ok(out)
 }
 
+/// Delete a notebook (.ipynb) from the tree a `root` scope points at. Only
+/// notebooks may be removed through this command — arbitrary workspace files
+/// stay agent-managed. The change lands in the workspace git history like
+/// every other file mutation.
+#[tauri::command(async)]
+pub fn delete_notebook(
+    app: AppHandle,
+    path: String,
+    root: Option<String>,
+) -> Result<(), String> {
+    let scope = scope_root(&app, root.as_deref())?;
+    delete_notebook_at(&scope, &path)?;
+    crate::git_snapshot::request_snapshot(&scope);
+    Ok(())
+}
+
+/// Pure core of `delete_notebook` (tested without an AppHandle).
+pub(crate) fn delete_notebook_at(root: &Path, path: &str) -> Result<(), String> {
+    let full = resolve_under(root, path)?;
+    if full.extension().and_then(|e| e.to_str()) != Some("ipynb") {
+        return Err("only .ipynb notebooks can be deleted".into());
+    }
+    if !full.is_file() {
+        return Err("file not found".into());
+    }
+    std::fs::remove_file(&full).map_err(|e| format!("delete failed: {e}"))
+}
+
 /// Write text to a root-relative path (used to save notebooks). Rejects
 /// absolute paths and any `..` component; missing parent dirs are created.
 #[tauri::command(async)]
@@ -514,20 +542,33 @@ fn attach_paths(ws: &Path, srcs: impl IntoIterator<Item = PathBuf>) -> Result<Ve
 #[tauri::command]
 pub async fn add_files_to_workspace(app: AppHandle) -> Result<Vec<String>, String> {
     use tauri_plugin_dialog::DialogExt;
-    let (tx, rx) = tokio::sync::oneshot::channel();
-    app.dialog().file().pick_files(move |picked| {
-        let _ = tx.send(picked);
-    });
-    let picked = rx.await.map_err(|e| e.to_string())?;
-    let Some(picked) = picked else {
-        return Ok(Vec::new()); // user cancelled
-    };
-    let ws = workspace_dir(&app)?;
-    let srcs = picked
-        .into_iter()
-        .map(|f| f.into_path().map_err(|e| e.to_string()))
-        .collect::<Result<Vec<PathBuf>, String>>()?;
-    attach_paths(&ws, srcs)
+
+    // `pick_files` may run on the main thread; any panic or error there crashes
+    // the command bridge and freezes the frontend. Wrap the whole interaction so
+    // a failure degrades to an empty result (cancel) rather than bringing down
+    // the app.
+    let result: Result<Vec<String>, String> = async {
+        let (tx, rx) = tokio::sync::oneshot::channel();
+        app.dialog().file().pick_files(move |picked| {
+            let _ = tx.send(picked);
+        });
+        let picked = rx.await.map_err(|e| format!("dialog channel closed: {e}"))?;
+        let Some(picked) = picked else {
+            return Ok(Vec::new()); // user cancelled
+        };
+        let ws = workspace_dir(&app)?;
+        let srcs = picked
+            .into_iter()
+            .map(|f| f.into_path().map_err(|e| format!("invalid path: {e}")))
+            .collect::<Result<Vec<PathBuf>, String>>()?;
+        attach_paths(&ws, srcs)
+    }
+    .await;
+
+    result.map_err(|e| {
+        eprintln!("[tauri] add_files_to_workspace failed: {e}");
+        format!("file picker failed: {e}")
+    })
 }
 
 /// Write text content into the workspace under `filename` (deduplicated as
@@ -700,9 +741,9 @@ fn base64_encode(input: &[u8]) -> String {
 #[cfg(test)]
 mod tests {
     use super::{
-        attach_paths, base64_decode, base64_encode, dir_entries, encode_for_preview,
-        exceeds_preview_cap, locate_under, mime_for, open_url, strip_windows_verbatim, unique_name,
-        workspace_relative,
+        attach_paths, base64_decode, base64_encode, delete_notebook_at, dir_entries,
+        encode_for_preview, exceeds_preview_cap, locate_under, mime_for, open_url,
+        strip_windows_verbatim, unique_name, workspace_relative,
     };
     use std::path::{Path, PathBuf};
 
@@ -743,6 +784,28 @@ mod tests {
         // Whitespace in the payload is ignored; a bad char errors.
         assert_eq!(base64_decode("Zm9v\nYmFy").unwrap(), b"foobar");
         assert!(base64_decode("not base64!@#").is_err());
+    }
+
+    #[test]
+    fn delete_notebook_removes_only_ipynb_inside_the_root() {
+        let dir = std::env::temp_dir().join("craft-del-probe");
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(dir.join("nested")).unwrap();
+        let nb = dir.join("nested/a.ipynb");
+        std::fs::write(&nb, "{}").unwrap();
+        std::fs::write(dir.join("keep.txt"), "x").unwrap();
+
+        // A non-notebook path is refused and left in place.
+        assert!(delete_notebook_at(&dir, "keep.txt").is_err());
+        assert!(dir.join("keep.txt").exists());
+        // Escaping paths are rejected.
+        assert!(delete_notebook_at(&dir, "../b.ipynb").is_err());
+        // The notebook itself deletes.
+        delete_notebook_at(&dir, "nested/a.ipynb").unwrap();
+        assert!(!nb.exists());
+        // Missing files error rather than silently pass.
+        assert!(delete_notebook_at(&dir, "nested/a.ipynb").is_err());
+        let _ = std::fs::remove_dir_all(&dir);
     }
 
     #[test]

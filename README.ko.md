@@ -1,8 +1,8 @@
 <div align="center">
 
-[![Open Science Desktop — Local-first AI research workbench](./docs/assets/banner.webp)](https://github.com/ai4s-research/open-science)
+[![Prism — Light bent into work](./docs/assets/banner.webp)](https://github.com/prism-ai/prism)
 
-# Open Science Desktop
+# Prism
 
 **macOS, Windows & Linux용 로컬 우선, 모델 독립 AI 연구 워크벤치.**
 
@@ -39,7 +39,7 @@ Formerly Open Science. Claude Science 및 유사한 AI-for-science 워크벤치�
 - **2026-07-24** — 🪟 **분할 페인 타일링.** 세션을 나란히 배치하고, 페인을 드래그해 재배치하며, 독립적인 화면을 여러 개 유지하고, 페인마다 다른 모델을 사용할 수 있습니다. *(v0.3.0)*
 - **2026-07-21** — 🌐 **어디서나 접속 — 심지어 휴대폰에서도.** 토큰 인증 게이트웨이가 *실제* 데스크톱 UI를 CLI, LAN 내 브라우저, 또는 휴대폰에 제공합니다(기본은 loopback, LAN은 선택적 활성화). 책상에서 실행을 시작하고 완성된 그림과 보고서를 휴대폰에서 확인하세요. *(v0.2.3)*
 - **2026-07-21** — 🧭 **브라우저 제어.** 에이전트가 프로필과 로그인이 유지된 당신의 Chrome을 직접 조작해 당신이 보는 방식 그대로 실시간 웹을 읽거나, 필요할 때 격리된 비공개 브라우저를 사용할 수 있습니다. *(v0.2.3)*
-- **2026-07-09** — 🎉 **ResearchClawBench 1위.** Open Science Desktop은 자율 과학 연구 에이전트를 위한 엔드투엔드 벤치마크 [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/)에서 채점된 작업 평균 기준 1위를 기록했습니다(Pass@1 리더보드).
+- **2026-07-09** — 🎉 **ResearchClawBench 1위.** Craft은 자율 과학 연구 에이전트를 위한 엔드투엔드 벤치마크 [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/)에서 채점된 작업 평균 기준 1위를 기록했습니다(Pass@1 리더보드).
 
 ---
 
@@ -149,7 +149,7 @@ Formerly Open Science. Claude Science 및 유사한 AI-for-science 워크벤치�
 
 ## 설치
 
-[Releases](https://github.com/ai4s-research/open-science/releases/latest)에서 최신 설치 파일을 받으세요.
+[Releases](https://github.com/prism-ai/prism/releases/latest)에서 최신 설치 파일을 받으세요.
 
 - **macOS**: `.dmg` / `.app`, Apple Silicon 및 Intel, macOS 13 Ventura 이상.
 - **Windows**: NSIS `.exe` 및 `.msi`, Windows 10/11 x64.
@@ -162,7 +162,7 @@ Windows에서는 SmartScreen에서 **More info -> Run anyway**를 선택합니�
 ## 소스에서 빌드
 
 ```bash
-git clone https://github.com/ai4s-research/open-science
+git clone https://github.com/prism-ai/prism
 cd open-science
 pnpm install
 bash scripts/dev/fetch-opencode.sh
@@ -201,20 +201,20 @@ pnpm lint
 
 가장 신뢰할 수 있는 구현 로그는 [`PROGRESS.md`](./PROGRESS.md)입니다. 가까운 작업은 Windows 코드 서명, 자동 업데이트, Windows/Linux 검증 확대, 커넥터 강화, 재현성 리뷰 지속입니다. macOS 릴리스는 이미 서명·공증되었습니다. 토론은 [Open Science Discord](https://discord.gg/fWNMDKcd5P)에서도 할 수 있습니다.
 
-[MIT](./LICENSE). Open Science Desktop은 beta 연구 도구입니다. 출력은 초안으로 보고, 공개나 의사결정 전에 숫자, 인용, 코드, 결론을 검증하세요.
+[MIT](./LICENSE). Craft은 beta 연구 도구입니다. 출력은 초안으로 보고, 공개나 의사결정 전에 숫자, 인용, 코드, 결론을 검증하세요.
 
 ## 인용
 
-연구에서 Open Science Desktop을 사용했다면 아래와 같이 인용해 주세요:
+연구에서 Craft을 사용했다면 아래와 같이 인용해 주세요:
 
 ```bibtex
-@software{open_science_desktop,
-  author  = {{The Open Science Desktop Contributors}},
-  title   = {Open Science Desktop: a local-first, model-agnostic AI research workbench},
+@software{prism,
+  author  = {{The Prism Contributors}},
+  title   = {Prism: a local-first, model-agnostic AI research workbench},
   year    = {2026},
   version = {0.3.3},
   doi     = {10.5281/zenodo.21805331},
-  url     = {https://github.com/ai4s-research/open-science},
+  url     = {https://github.com/prism-ai/prism},
   license = {MIT}
 }
 ```

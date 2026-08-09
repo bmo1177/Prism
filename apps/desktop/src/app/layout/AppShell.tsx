@@ -232,7 +232,16 @@ export function AppShell() {
           </div>
         )}
         <div className="min-h-0 flex-1">
-          <Outlet />
+          {/* The key triggers a fresh mount (and thus the CSS page-enter animation)
+              on each route change, but only for non-live routes — the /live surface
+              owns its pane-tree layout and must not re-mount on SSE updates. */}
+          {pageOwnsTitlebar ? (
+            <Outlet />
+          ) : (
+            <div key={pathname} className="page-enter h-full">
+              <Outlet />
+            </div>
+          )}
         </div>
       </main>
       <CommandPalette />

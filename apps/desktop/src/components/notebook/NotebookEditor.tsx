@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
   ExternalLink,
+  Heading1,
   History,
   Loader2,
   NotebookPen,
@@ -19,6 +20,7 @@ import { isGatewayWeb } from "@/lib/webMode";
 import { useRuntimeStore } from "@/lib/runtime";
 import { ProvenancePanel } from "@/components/inspector/ProvenancePanel";
 import { PaneTitlebarInset } from "@/components/inspector/RightPane";
+import { MarkdownViewer } from "@/components/markdown-viewer/MarkdownViewer";
 import { parseIpynb, serializeIpynb, notebookLanguage } from "@/lib/notebook-file";
 import {
   formatExecResult,
@@ -207,6 +209,18 @@ export function NotebookEditor({
   // error renders as "Interrupted", not as a crash.
   const interruptRef = useRef(false);
 
+  // Which non-code cells show rendered output instead of source. Indices are
+  // append-only (deletes remove cells, never renumber), so a Set is safe.
+  const [previewing, setPreviewing] = useState<Set<number>>(() => new Set());
+  const togglePreview = (index: number) => {
+    setPreviewing((p) => {
+      const next = new Set(p);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  };
+
   const run = async (cell: NotebookCell) => {
     if (running !== null) return;
     setRunning(cell.index);
@@ -240,10 +254,11 @@ export function NotebookEditor({
     }
   };
 
-  const addCell = () => {
+  const addCell = (kind: "code" | "markdown") => {
     setCells((c) => {
       const next = (c?.[c.length - 1]?.index ?? 0) + 1;
-      return [...(c ?? []), { index: next, language, code: "" }];
+      const lang = kind === "markdown" ? "markdown" : language;
+      return [...(c ?? []), { index: next, language: lang, code: "" }];
     });
     setSaved(false);
   };
@@ -259,6 +274,7 @@ export function NotebookEditor({
   const onScroll = useScrollMemory(scrollRef, `file:${path}`, cells !== null);
 
   const onCellKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>, cell: NotebookCell) => {
+    if (!isCodeLanguage(cell.language)) return; // markdown cells never run
     if ((e.metaKey || e.ctrlKey || e.shiftKey) && e.key === "Enter") {
       e.preventDefault();
       void run(cell);
@@ -362,7 +378,17 @@ export function NotebookEditor({
             <div key={cell.index} className="group mb-4">
               <div className="mb-1 flex items-center gap-2 text-xs text-muted">
                 <span className="font-mono">[{cell.index}]</span>
-                <span>{cell.language}</span>
+                <span>{isCodeLanguage(cell.language) ? cell.language : t("notebooks.editor.markdownCell")}</span>
+                {!isCodeLanguage(cell.language) && (
+                  <button
+                    className="hidden items-center gap-1 rounded px-1.5 py-0.5 hover:bg-surface-2 hover:text-text group-hover:flex"
+                    onClick={() => togglePreview(cell.index)}
+                  >
+                    {previewing.has(cell.index)
+                      ? t("notebooks.editor.markdownEditLabel")
+                      : t("notebooks.editor.markdownPreviewLabel")}
+                  </button>
+                )}
                 {isCodeLanguage(cell.language) &&
                   (running === cell.index ? (
                     // Always visible while running (not hover-gated): a hung
@@ -395,18 +421,32 @@ export function NotebookEditor({
                   <Trash2 size={11} />
                 </button>
               </div>
-              <textarea
-                value={cell.code}
-                onChange={(e) => update(cell.index, { code: e.target.value })}
-                onKeyDown={(e) => onCellKeyDown(e, cell)}
-                rows={Math.min(Math.max(cell.code.split("\n").length, 1), 14)}
-                spellCheck={false}
-                className={cn(
-                  "w-full resize-none rounded-input border border-border bg-surface p-3 font-mono text-[12.5px] leading-relaxed text-text outline-none focus:border-accent/50",
-                  !isCodeLanguage(cell.language) && "bg-surface-2 text-muted",
-                )}
-                aria-label={`Cell ${cell.index}`}
-              />
+              {isCodeLanguage(cell.language) ? (
+                <textarea
+                  value={cell.code}
+                  onChange={(e) => update(cell.index, { code: e.target.value })}
+                  onKeyDown={(e) => onCellKeyDown(e, cell)}
+                  rows={Math.min(Math.max(cell.code.split("\n").length, 1), 14)}
+                  spellCheck={false}
+                  className="w-full resize-none rounded-input border border-border bg-surface p-3 font-mono text-[12.5px] leading-relaxed text-text outline-none focus:border-accent/50"
+                  aria-label={`Cell ${cell.index}`}
+                />
+              ) : previewing.has(cell.index) ? (
+                <div className="overflow-x-hidden rounded-input border border-border bg-surface p-3">
+                  <MarkdownViewer variant="document">{cell.code}</MarkdownViewer>
+                </div>
+              ) : (
+                <textarea
+                  value={cell.code}
+                  onChange={(e) => update(cell.index, { code: e.target.value })}
+                  onKeyDown={(e) => onCellKeyDown(e, cell)}
+                  rows={Math.min(Math.max(cell.code.split("\n").length, 1), 14)}
+                  spellCheck={false}
+                  placeholder={t("notebooks.editor.markdownPlaceholder")}
+                  className="w-full resize-none rounded-input border border-border bg-surface-2 p-3 text-[13.5px] leading-relaxed text-text outline-none placeholder:text-muted focus:border-accent/50"
+                  aria-label={`Cell ${cell.index}`}
+                />
+              )}
               {cell.output && (
                 <pre className="mt-1.5 whitespace-pre-wrap rounded-input border border-border bg-surface-2 p-3 font-mono text-[12px] text-text">
                   {cell.output}
@@ -422,12 +462,20 @@ export function NotebookEditor({
             </div>
           ))}
           {cells && (
-            <button
-              className="flex items-center gap-1.5 rounded-input border border-dashed border-border px-3 py-1.5 text-xs text-muted hover:bg-surface-2 hover:text-text"
-              onClick={addCell}
-            >
-              <Plus size={12} /> {t("notebooks.editor.addCellLabel")}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                className="flex items-center gap-1.5 rounded-input border border-dashed border-border px-3 py-1.5 text-xs text-muted hover:bg-surface-2 hover:text-text"
+                onClick={() => addCell("code")}
+              >
+                <Plus size={12} /> {t("notebooks.editor.addCodeLabel")}
+              </button>
+              <button
+                className="flex items-center gap-1.5 rounded-input border border-dashed border-border px-3 py-1.5 text-xs text-muted hover:bg-surface-2 hover:text-text"
+                onClick={() => addCell("markdown")}
+              >
+                <Heading1 size={12} /> {t("notebooks.editor.addMarkdownLabel")}
+              </button>
+            </div>
           )}
         </div>
       </div>

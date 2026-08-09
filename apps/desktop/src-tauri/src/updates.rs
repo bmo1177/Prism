@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-const RELEASES_ATOM_URL: &str = "https://github.com/ai4s-research/open-science/releases.atom";
+const RELEASES_ATOM_URL: &str = "https://github.com/prism-ai/prism/releases.atom";
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -97,7 +97,7 @@ mod tests {
 <feed>
   <entry>
     <updated>2026-07-09T13:59:12Z</updated>
-    <link rel="alternate" type="text/html" href="https://github.com/ai4s-research/open-science/releases/tag/v0.1.8"/>
+    <link rel="alternate" type="text/html" href="https://github.com/prism-ai/prism/releases/tag/v0.1.8"/>
     <title>Craft v0.1.0</title>
   </entry>
 </feed>
@@ -107,7 +107,7 @@ mod tests {
             parse_latest_release(atom).unwrap(),
             ReleaseInfo {
                 version: "v0.1.8".into(),
-                url: "https://github.com/ai4s-research/open-science/releases/tag/v0.1.8".into(),
+                url: "https://github.com/prism-ai/prism/releases/tag/v0.1.8".into(),
                 name: Some("Craft v0.1.0".into()),
                 published_at: Some("2026-07-09T13:59:12Z".into()),
             },

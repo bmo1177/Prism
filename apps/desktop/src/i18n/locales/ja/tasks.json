@@ -21,7 +21,8 @@
   "scheduleKind": {
     "every": "n 秒ごと",
     "cron": "cron 式",
-    "at": "タイムスタンプに"
+    "at": "タイムスタンプに",
+    "event": "イベント時"
   },
   "form": {
     "add": "新しいタスク",
@@ -40,5 +41,15 @@
   "empty": {
     "title": "タスクはまだありません",
     "body": "タスクを作成してエージェントの実行を予約すると、設定したペースで起動し、会話履歴に表示されます。"
-  }
+  },
+  "event": {
+    "sessionStart": "セッション開始",
+    "workspaceChange": "ワークスペース変更",
+    "appStartup": "アプリ起動"
+  },
+  "relative": {
+    "future": "{label}後",
+    "past": "{label}前"
+  },
+  "eventValue": "イベント: {value}"
 }

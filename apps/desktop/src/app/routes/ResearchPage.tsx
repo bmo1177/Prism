@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, FlaskConical, Loader2, NotebookPen } from "lucide-react";
+import { ArrowRight, FlaskConical, Loader2, Microscope, NotebookPen } from "lucide-react";
 import { WORKFLOW_STARTERS } from "@/components/thread/WorkflowStarters";
 import { listNotebooks } from "@/lib/artifactFile";
 import { queryRuns } from "@/lib/runs";
@@ -10,6 +10,7 @@ import { isGatewayWeb } from "@/lib/webMode";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { useRuntimeStore } from "@/lib/runtime";
 import { useLayoutStore } from "@/lib/layout";
+import { PageHeader } from "@/components/cards/PageHeader";
 
 /** The four science on-ramps, in the order the welcome screen and palette show. */
 const SCIENCE_IDS = [
@@ -19,8 +20,6 @@ const SCIENCE_IDS = [
   "science-integrity",
 ] as const;
 type ScienceId = (typeof SCIENCE_IDS)[number];
-
-
 
 function StarterCard({
   icon,
@@ -35,15 +34,15 @@ function StarterCard({
 }) {
   const { t } = useTranslation("pages");
   return (
-    <article className="flex flex-col gap-2 rounded-card border border-border bg-surface p-3.5 shadow-card">
+    <article className="flex flex-col gap-2 rounded-card border border-border bg-surface p-4 shadow-card transition-all hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-pop">
       <div className="flex items-center gap-2">
-        <span className="shrink-0 text-muted">{icon}</span>
-        <h3 className="text-[13.5px] font-medium leading-snug text-text">{title}</h3>
+        <span className="shrink-0 rounded-input bg-surface-2 p-1.5 text-accent">{icon}</span>
+        <h3 className="text-[14px] font-medium leading-snug text-text">{title}</h3>
       </div>
-      <p className="text-xs leading-snug text-muted">{description}</p>
+      <p className="mt-1 text-xs leading-relaxed text-muted">{description}</p>
       <button
         onClick={onStart}
-        className="mt-auto inline-flex w-fit items-center gap-1.5 rounded-input bg-accent px-2.5 py-1.5 text-[12px] font-medium text-white transition-opacity hover:opacity-90"
+        className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-input bg-accent px-3 py-1.5 text-[12px] font-medium text-accent-fg transition-opacity hover:opacity-90"
       >
         {t("research.startWorkflow")}
       </button>
@@ -65,14 +64,14 @@ function LabTile({
   return (
     <button
       onClick={onClick}
-      className="flex w-full flex-col items-start gap-1.5 rounded-card border border-border bg-surface px-4 py-3.5 text-left transition-colors hover:bg-surface-2"
+      className="group flex w-full flex-col items-start gap-1.5 rounded-card border border-border bg-surface px-5 py-4 text-left shadow-card transition-all hover:-translate-y-0.5 hover:border-accent/30 hover:bg-surface-2 hover:shadow-pop"
     >
       <div className="flex w-full items-center gap-2">
-        <span className="shrink-0 text-muted">{icon}</span>
-        <span className="text-[13px] font-medium text-text">{title}</span>
-        <ArrowRight size={13} className="ml-auto shrink-0 text-muted" />
+        <span className="shrink-0 rounded-input bg-surface-2 p-1.5 text-accent">{icon}</span>
+        <span className="text-[14px] font-medium text-text">{title}</span>
+        <ArrowRight size={14} className="ml-auto shrink-0 text-muted transition-transform group-hover:translate-x-1 group-hover:text-accent" />
       </div>
-      <span className="text-xs text-muted">{count}</span>
+      <span className="mt-1 text-xs text-muted">{count}</span>
     </button>
   );
 }
@@ -149,31 +148,30 @@ export function ResearchPage() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-6xl px-6 py-10">
-        <div className="text-center">
-          <div className="text-[10.5px] font-medium uppercase tracking-[0.2em] text-muted">
-            {t("research.eyebrow")}
-          </div>
-          <h1 className="mt-2.5 font-serif text-[26px] leading-tight text-text">
-            {t("research.title")}
-          </h1>
-          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
-            {t("research.subtitle")}
-          </p>
-        </div>
+        <PageHeader
+          icon={<Microscope size={18} strokeWidth={1.75} />}
+          title={t("research.title")}
+          subtitle={t("research.subtitle")}
+        />
 
-        <section className="mt-9">
+        <section className="mt-8">
           <h2 className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
             {t("research.sectionWorkflows")}
           </h2>
           <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {starters.map(({ starter, copy }) => (
-              <StarterCard
+            {starters.map(({ starter, copy }, i) => (
+              <div
                 key={starter.id}
-                icon={starter.icon}
-                title={copy.title}
-                description={copy.description}
-                onStart={() => startWorkflow(starter.prompt)}
-              />
+                className="card-enter"
+                style={{ animationDelay: `${i * 40}ms` }}
+              >
+                <StarterCard
+                  icon={starter.icon}
+                  title={copy.title}
+                  description={copy.description}
+                  onStart={() => startWorkflow(starter.prompt)}
+                />
+              </div>
             ))}
           </div>
         </section>
@@ -192,18 +190,22 @@ export function ResearchPage() {
             </div>
           ) : (
             <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
-              <LabTile
-                icon={<NotebookPen size={15} />}
-                title={t("research.openNotebooks")}
-                count={t("research.notebooksCount", { count: notebookCount ?? 0 })}
-                onClick={() => navigate("/notebooks")}
-              />
-              <LabTile
-                icon={<FlaskConical size={15} />}
-                title={t("research.openRuns")}
-                count={t("research.runsCount", { count: runCount ?? 0 })}
-                onClick={() => navigate("/runs")}
-              />
+              <div className="card-enter" style={{ animationDelay: "160ms" }}>
+                <LabTile
+                  icon={<NotebookPen size={15} />}
+                  title={t("research.openNotebooks")}
+                  count={t("research.notebooksCount", { count: notebookCount ?? 0 })}
+                  onClick={() => navigate("/notebooks")}
+                />
+              </div>
+              <div className="card-enter" style={{ animationDelay: "200ms" }}>
+                <LabTile
+                  icon={<FlaskConical size={15} />}
+                  title={t("research.openRuns")}
+                  count={t("research.runsCount", { count: runCount ?? 0 })}
+                  onClick={() => navigate("/runs")}
+                />
+              </div>
             </div>
           )}
         </section>

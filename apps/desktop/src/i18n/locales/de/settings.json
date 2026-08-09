@@ -26,6 +26,15 @@
       "in": "Vergrößern",
       "out": "Verkleinern",
       "reset": "Zurücksetzen"
+    },
+    "accentLabel": "Akzentfarbe",
+    "accentHint": "Für Schaltflächen, Links und Hervorhebungen",
+    "accent": {
+      "terracotta": "Terrakotta",
+      "blue": "Blau",
+      "green": "Grün",
+      "violet": "Violett",
+      "rose": "Rosa"
     }
   },
   "language": {

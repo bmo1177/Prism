@@ -1,8 +1,8 @@
 <div align="center">
 
-[![Open Science Desktop — Local-first AI research workbench](./docs/assets/banner.webp)](https://github.com/ai4s-research/open-science)
+[![Prism — Light bent into work](./docs/assets/banner.webp)](https://github.com/prism-ai/prism)
 
-# Open Science Desktop
+# Prism
 
 **Banco de trabajo de investigación con IA, local-first y agnóstico al modelo, para macOS, Windows & Linux.**
 
@@ -39,7 +39,7 @@ Formerly Open Science. Una alternativa desktop open source a Claude Science y wo
 - **2026-07-24** — 🪟 **Paneles divididos.** Coloca sesiones en mosaico, arrastra paneles para reacomodarlos, mantén varias pantallas independientes y usa un modelo distinto en cada panel. *(v0.3.0)*
 - **2026-07-21** — 🌐 **Acceso desde cualquier lugar — incluso desde tu teléfono.** Un gateway autenticado por token sirve la UI de escritorio *real* a una CLI, un navegador en tu LAN o tu teléfono (loopback por defecto; la LAN es opcional). Inicia una ejecución en tu escritorio y lee la figura y el informe terminados desde tu teléfono. *(v0.2.3)*
 - **2026-07-21** — 🧭 **Control del navegador.** El agente puede manejar tu propio Chrome — con tu perfil y sesiones intactos — para leer la web en vivo como lo harías tú, o un navegador privado aislado cuando lo necesites. *(v0.2.3)*
-- **2026-07-09** — 🎉 **#1 en ResearchClawBench.** Open Science Desktop ocupa el puesto #1 por promedio de tareas puntuadas en [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/), un benchmark end-to-end para agentes autónomos de investigación científica (leaderboard Pass@1).
+- **2026-07-09** — 🎉 **#1 en ResearchClawBench.** Prism ocupa el puesto #1 por promedio de tareas puntuadas en [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/), un benchmark end-to-end para agentes autónomos de investigación científica (leaderboard Pass@1).
 
 ---
 
@@ -149,7 +149,7 @@ Conectores MCP científicos de un clic: búsqueda bibliográfica, bases biomédi
 
 ## Instalación
 
-Descarga la versión más reciente desde [Releases](https://github.com/ai4s-research/open-science/releases/latest).
+Descarga la versión más reciente desde [Releases](https://github.com/prism-ai/prism/releases/latest).
 
 - **macOS**: `.dmg` / `.app`, Apple Silicon e Intel, macOS 13 Ventura o posterior.
 - **Windows**: `.exe` NSIS y `.msi`, Windows 10/11 x64.
@@ -162,7 +162,7 @@ En Windows, usa **More info -> Run anyway** en SmartScreen.
 ## Compilar desde el código
 
 ```bash
-git clone https://github.com/ai4s-research/open-science
+git clone https://github.com/prism-ai/prism
 cd open-science
 pnpm install
 bash scripts/dev/fetch-opencode.sh
@@ -201,20 +201,20 @@ Los archivos del workspace, datos crudos, historial, procedencia, notebooks y ru
 
 El registro de implementación más fiable es [`PROGRESS.md`](./PROGRESS.md). El trabajo cercano se centra en la firma de código en Windows, auto-update, más verificación en Windows/Linux, endurecimiento de conectores y revisión de reproducibilidad. Las releases de macOS ya están firmadas y notarizadas. Para discutir el proyecto, únete al [Open Science Discord](https://discord.gg/fWNMDKcd5P).
 
-[MIT](./LICENSE). Open Science Desktop es tooling beta de investigación: trata las salidas como borradores y verifica números, citas, código y conclusiones antes de publicar o decidir.
+[MIT](./LICENSE). Craft es tooling beta de investigación: trata las salidas como borradores y verifica números, citas, código y conclusiones antes de publicar o decidir.
 
 ## Cita
 
-Si usas Open Science Desktop en tu investigación, cítalo así:
+Si usas Craft en tu investigación, cítalo así:
 
 ```bibtex
-@software{open_science_desktop,
-  author  = {{The Open Science Desktop Contributors}},
-  title   = {Open Science Desktop: a local-first, model-agnostic AI research workbench},
+@software{prism,
+  author  = {{The Prism Contributors}},
+  title   = {Prism: a local-first, model-agnostic AI research workbench},
   year    = {2026},
   version = {0.3.3},
   doi     = {10.5281/zenodo.21805331},
-  url     = {https://github.com/ai4s-research/open-science},
+  url     = {https://github.com/prism-ai/prism},
   license = {MIT}
 }
 ```

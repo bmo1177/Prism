@@ -653,13 +653,23 @@ pub fn delete_project(app: AppHandle, id: String) -> Result<(), String> {
 /// project's own metadata — an app-created project's folder, or an imported
 /// project's external source — so the frontend passes only the id, never a raw
 /// path (no arbitrary-path open).
+///
+/// Errors are caught and logged rather than propagated as a panic, so a broken
+/// opener or missing file-manager portal never crashes the frontend bridge.
 #[tauri::command(async)]
 pub fn open_project_folder(app: AppHandle, id: String) -> Result<(), String> {
-    let base = base_workspace_dir(&app)?;
-    let dir = project_dir_by_id(&base, &id).ok_or("project not found")?;
-    let meta = read_meta(&dir).ok_or("not a project folder")?;
-    let target = meta.source_path.map(PathBuf::from).unwrap_or(dir);
-    crate::artifact_file::os_open(&target)
+    let result: Result<(), String> = (|| {
+        let base = base_workspace_dir(&app)?;
+        let dir = project_dir_by_id(&base, &id).ok_or("project not found")?;
+        let meta = read_meta(&dir).ok_or("not a project folder")?;
+        let target = meta.source_path.map(PathBuf::from).unwrap_or(dir);
+        crate::artifact_file::os_open(&target)
+    })();
+
+    if let Err(ref e) = result {
+        eprintln!("[tauri] open_project_folder failed for id={id}: {e}");
+    }
+    result
 }
 
 #[cfg(test)]

@@ -10,6 +10,7 @@ mod examples;
 mod gateway;
 mod git_snapshot;
 mod goal;
+mod gtk_schema;
 mod harness;
 mod compute;
 mod jupyter;
@@ -41,6 +42,10 @@ use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // Native file dialogs abort (SIGABRT) when the gtk3 GSettings schema
+    // `org.gtk.Settings.FileChooser` is not on XDG_DATA_DIRS (see gtk_schema).
+    // Must run before any GTK/GIO initialization.
+    gtk_schema::ensure_file_chooser_schema();
     tauri::Builder::default()
         // Single instance MUST be the first plugin. A second launch (or a reinstall
         // while the app is still running) focuses the existing window instead of
@@ -64,6 +69,10 @@ pub fn run() {
         .manage(gateway::GatewayState::default())
         .manage(ssh_session::SshState::default())
         .setup(|app| {
+            // Re-run after GTK is loaded by tao/Tauri: the early call at the
+            // top of main() may have no-opped because libgtk-3.so wasn't in
+            // /proc/self/maps yet. Now it is, so the schema can be found.
+            gtk_schema::ensure_file_chooser_schema();
             // Watch the active workspace so changes made outside the app (an
             // external editor, a detached process) still enqueue a debounced
             // snapshot. Re-pointed on every workspace switch in set_workspace.
@@ -161,6 +170,7 @@ pub fn run() {
             artifact_file::add_binary_to_workspace,
             artifact_file::add_paths_to_workspace,
             artifact_file::list_notebooks,
+            artifact_file::delete_notebook,
             artifact_file::list_dir,
             artifact_file::write_workspace_file,
             provenance::record_provenance,

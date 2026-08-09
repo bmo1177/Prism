@@ -26,6 +26,15 @@
       "in": "Acercar",
       "out": "Alejar",
       "reset": "Restablecer"
+    },
+    "accentLabel": "Color de acento",
+    "accentHint": "Se usa en botones, enlaces y resaltados",
+    "accent": {
+      "terracotta": "Terracota",
+      "blue": "Azul",
+      "green": "Verde",
+      "violet": "Violeta",
+      "rose": "Rosa"
     }
   },
   "language": {

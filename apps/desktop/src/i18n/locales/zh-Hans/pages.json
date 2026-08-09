@@ -16,7 +16,9 @@
       "openingJupyterLab": "正在浏览器中打开 JupyterLab…",
       "setUpJupyterFirst": "请先设置 Jupyter — 设置 → MCP 服务器 → Jupyter。",
       "couldNotOpenJupyterLab": "无法打开 JupyterLab",
-      "couldNotCreateNotebook": "无法创建笔记本"
+      "couldNotCreateNotebook": "无法创建笔记本",
+      "deleted": "笔记本已删除",
+      "couldNotDelete": "无法删除笔记本"
     },
     "editor": {
       "backAria": "返回笔记本列表",
@@ -33,8 +35,18 @@
       "stopCellTitle": "停止 — 重启此笔记本的内核（变量将被重置）",
       "stopLabel": "停止",
       "runLabel": "运行",
-      "addCellLabel": "添加单元格"
-    }
+      "addCodeLabel": "代码单元格",
+      "addMarkdownLabel": "Markdown 章节",
+      "markdownCell": "markdown",
+      "markdownPreviewLabel": "预览",
+      "markdownEditLabel": "编辑",
+      "markdownPlaceholder": "在此处编写 Markdown"
+    },
+    "deleteAria": "删除 {{name}}",
+    "deleteTitle": "删除此笔记本",
+    "confirmDeleteTitle": "删除笔记本",
+    "confirmDeleteBody": "这将从工作区中永久删除 {{name}}。如果智能体引用它，可能会重新创建。仍要删除吗？",
+    "confirmDeleteLabel": "删除"
   },
   "files": {
     "loading": "正在加载…",
@@ -50,7 +62,10 @@
       "copyRelativePath": "复制相对路径",
       "relativePathLabel": "相对路径",
       "openInDefaultApp": "用默认应用打开"
-    }
+    },
+    "title": "文件",
+    "description": "工作区中的所有文件——浏览所有会话中的历史工作，并在查看器中打开任意产物。",
+    "retry": "重试"
   },
   "skills": {
     "title": "技能与代理",

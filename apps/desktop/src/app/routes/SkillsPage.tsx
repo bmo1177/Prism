@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Bot, Boxes, Check, Package, Puzzle, X } from "lucide-react";
+import { Bot, Boxes, Check, Files, Package, Puzzle, X } from "lucide-react";
 import { useRuntimeStore } from "@/lib/runtime";
 import { cn } from "@/lib/cn";
 import { isGatewayWeb } from "@/lib/webMode";
+import { PageHeader } from "@/components/cards/PageHeader";
 
 /**
  * Skills, agents, install-a-skill, and detected scientific environment — all real:
@@ -47,13 +48,17 @@ export function SkillsPage() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-3xl px-8 py-8">
-        <h1 className="font-serif text-xl text-text">{t("skills.title")}</h1>
-        <p className="mt-1 text-sm text-muted">
-          {t("skills.description.prefix")}
-          {/* eslint-disable-next-line i18next/no-literal-string -- literal filesystem path, not prose */}
-          <span className="font-mono">.opencode/skills/</span>
-          {t("skills.description.suffix")}
-        </p>
+        <PageHeader
+          icon={<Files size={18} strokeWidth={1.75} />}
+          title={t("skills.title")}
+          subtitle={
+            <>
+              {t("skills.description.prefix")}
+              <span className="font-mono text-xs">.opencode/skills/</span>
+              {t("skills.description.suffix")}
+            </>
+          }
+        />
 
         {/* Install a skill (#1) */}
         <Section title={t("skills.install.sectionTitle")} icon={<Boxes size={15} />}>

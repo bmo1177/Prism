@@ -26,6 +26,15 @@
       "in": "Zoom avant",
       "out": "Zoom arrière",
       "reset": "Réinitialiser"
+    },
+    "accentLabel": "Couleur d'accent",
+    "accentHint": "Utilisée pour les boutons, liens et surlignages",
+    "accent": {
+      "terracotta": "Terre cuite",
+      "blue": "Bleu",
+      "green": "Vert",
+      "violet": "Violet",
+      "rose": "Rose"
     }
   },
   "language": {

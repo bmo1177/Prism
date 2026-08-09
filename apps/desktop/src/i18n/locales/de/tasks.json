@@ -21,7 +21,8 @@
   "scheduleKind": {
     "every": "Alle x Sekunden",
     "cron": "Cron-Ausdruck",
-    "at": "Zu Zeitstempel"
+    "at": "Zu Zeitstempel",
+    "event": "Bei Ereignis"
   },
   "form": {
     "add": "Neue Aufgabe",
@@ -40,5 +41,15 @@
   "empty": {
     "title": "Noch keine Aufgaben",
     "body": "Erstelle eine Aufgabe, um eine Agent-Ausführung zu planen — sie läuft nach deinem Rhythmus und erscheint in der Konversationshistorie."
-  }
+  },
+  "event": {
+    "sessionStart": "Sitzungsstart",
+    "workspaceChange": "Arbeitsbereichsänderung",
+    "appStartup": "App-Start"
+  },
+  "relative": {
+    "future": "In {label}",
+    "past": "vor {label}"
+  },
+  "eventValue": "Ereignis: {value}"
 }

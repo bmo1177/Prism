@@ -6,7 +6,23 @@ export type Theme = "light" | "warm" | "dark";
 
 export const THEMES: readonly Theme[] = ["light", "warm", "dark"];
 
+/** Accent color presets (Settings → Appearance). Each is re-tuned per theme
+ *  in index.css; these swatches are what the picker buttons display. */
+export type Accent = "terracotta" | "blue" | "green" | "violet" | "rose";
+
+export const ACCENTS: readonly Accent[] = ["terracotta", "blue", "green", "violet", "rose"];
+
+/** Display color for each accent in the picker (the warm-theme value). */
+export const ACCENT_SWATCHES: Record<Accent, string> = {
+  terracotta: "#c15f3c",
+  blue: "#2563eb",
+  green: "#0f8a5f",
+  violet: "#6d4fc1",
+  rose: "#d4486e",
+};
+
 const THEME_KEY = "ai4s.theme.v2";
+const ACCENT_KEY = "ai4s.accent.v1";
 /** Two-theme era key: its "light" was the warm paper palette, now called "warm". */
 const LEGACY_THEME_KEY = "ai4s.theme";
 const SIDEBAR_WIDTH_KEY = "ai4s.sidebar.width";
@@ -37,6 +53,12 @@ function initialTheme(): Theme {
   return prefersDark ? "dark" : "light";
 }
 
+function initialAccent(): Accent {
+  if (typeof window === "undefined") return "terracotta";
+  const saved = window.localStorage.getItem(ACCENT_KEY);
+  return (ACCENTS as readonly string[]).includes(saved ?? "") ? (saved as Accent) : "terracotta";
+}
+
 function initialSidebarWidth(): number {
   if (typeof window === "undefined") return SIDEBAR_DEFAULT;
   const saved = Number(window.localStorage.getItem(SIDEBAR_WIDTH_KEY));
@@ -64,6 +86,8 @@ function initialZoom(): number {
 
 interface UiState {
   theme: Theme;
+  /** Accent color preset (see ACCENTS); applied as data-accent on <html>. */
+  accent: Accent;
   /** Active UI locale (BCP-47). Persisted; mirrors the `theme` pattern. */
   locale: string;
   inspectorOpen: boolean;
@@ -86,6 +110,7 @@ interface UiState {
   composerDraft: string | null;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
+  setAccent: (accent: Accent) => void;
   setLocale: (locale: string) => void;
   setInspectorOpen: (open: boolean) => void;
   setInspectorWidth: (width: number) => void;
@@ -103,6 +128,7 @@ interface UiState {
 
 export const useUiStore = create<UiState>((set, get) => ({
   theme: initialTheme(),
+  accent: initialAccent(),
   locale: detectInitialLocale(),
   inspectorOpen: true,
   sidebarCollapsed:
@@ -116,6 +142,10 @@ export const useUiStore = create<UiState>((set, get) => ({
     set({ theme });
   },
   toggleTheme: () => get().setTheme(THEMES[(THEMES.indexOf(get().theme) + 1) % THEMES.length]),
+  setAccent: (accent) => {
+    if (typeof window !== "undefined") window.localStorage.setItem(ACCENT_KEY, accent);
+    set({ accent });
+  },
   setLocale: (locale) => {
     if (typeof window !== "undefined") window.localStorage.setItem(LOCALE_KEY, locale);
     set({ locale });

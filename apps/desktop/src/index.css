@@ -18,7 +18,7 @@
   --zoom: 1;
 }
 
-/* Warm — the original paper palette, and the default theme. */
+/* Warm - the original paper palette, and the default theme. */
 :root,
 [data-theme="warm"] {
   --bg: #f7f5ef;
@@ -34,7 +34,7 @@
   --warn: #c98a2b;
   --ok: #4b8b5b;
   --error: #c0564b;
-  /* Chart design system (P1-5) — validated categorical hues + chart chrome,
+  /* Chart design system (P1-5) - validated categorical hues + chart chrome,
      the single source of truth shared with @ai4s/shared and the matplotlib
      style. Light surface = --surface (#ffffff). */
   --series-1: #2a78d6;
@@ -61,7 +61,7 @@
   --hl-deletion-bg: #ffebe9;
 }
 
-/* Light — clean white with neutral (cool) grays and a blue accent (the warm
+/* Light - clean white with neutral (cool) grays and a blue accent (the warm
    terracotta belongs to the warm theme); same chart hues as warm since both
    sit on a white chart surface. */
 [data-theme="light"] {
@@ -102,7 +102,7 @@
   --hl-deletion-bg: #ffebe9;
 }
 
-/* Dark — neutral-cool like light, so it shares light's blue accent (stepped
+/* Dark - neutral-cool like light, so it shares light's blue accent (stepped
    up for the dark surface; dark text on the filled accent keeps contrast). */
 [data-theme="dark"] {
   --bg: #16151a;
@@ -143,6 +143,77 @@
   --hl-deletion-bg: rgba(248, 81, 73, 0.18);
 }
 
+/* Accent color presets (Settings → Appearance). Each accent re-tunes both
+   --accent and --accent-fg per theme so the filled accent keeps contrast on
+   light, warm, and dark surfaces. Specificity beats the theme blocks above
+   ([data-theme="x"] is (0,1,0); these are (0,2,1)). data-accent is set by
+   ThemeProvider from the persisted ui store. */
+:root[data-accent="terracotta"][data-theme="warm"],
+:root[data-accent="terracotta"]:not([data-theme]) {
+  --accent: #c15f3c;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="terracotta"][data-theme="light"] {
+  --accent: #c15f3c;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="terracotta"][data-theme="dark"] {
+  --accent: #d97757;
+  --accent-fg: #16151a;
+}
+:root[data-accent="blue"][data-theme="warm"],
+:root[data-accent="blue"]:not([data-theme]) {
+  --accent: #2a6fdb;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="blue"][data-theme="light"] {
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="blue"][data-theme="dark"] {
+  --accent: #4d9df6;
+  --accent-fg: #16151a;
+}
+:root[data-accent="green"][data-theme="warm"],
+:root[data-accent="green"]:not([data-theme]) {
+  --accent: #0f8a5f;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="green"][data-theme="light"] {
+  --accent: #0f8a5f;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="green"][data-theme="dark"] {
+  --accent: #3fbf86;
+  --accent-fg: #16151a;
+}
+:root[data-accent="violet"][data-theme="warm"],
+:root[data-accent="violet"]:not([data-theme]) {
+  --accent: #7a5ac9;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="violet"][data-theme="light"] {
+  --accent: #6d4fc1;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="violet"][data-theme="dark"] {
+  --accent: #a58bf0;
+  --accent-fg: #16151a;
+}
+:root[data-accent="rose"][data-theme="warm"],
+:root[data-accent="rose"]:not([data-theme]) {
+  --accent: #c2416a;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="rose"][data-theme="light"] {
+  --accent: #d4486e;
+  --accent-fg: #ffffff;
+}
+:root[data-accent="rose"][data-theme="dark"] {
+  --accent: #f2789b;
+  --accent-fg: #16151a;
+}
+
 html,
 body,
 #root {
@@ -156,6 +227,33 @@ body {
   font-family: Inter, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* Focus: one coherent ring for every focusable element. Components that
+   manage their own focus affordance (Radix menus highlight on data-[highlighted],
+   rename inputs show a border) still inherit this where they don't opt out. */
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 2px;
+}
+
+/* Browser surfaces belong to the design system too: text selection carries
+   the accent, the caret matches the accent, and native form accents (checkbox,
+   radio, range) use the theme's accent instead of the OS blue. */
+::selection {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+input,
+textarea,
+select {
+  caret-color: var(--accent);
+}
+
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"] {
+  accent-color: var(--accent);
 }
 
 /* Sidebar background. With window vibrancy (macOS desktop app, data-vibrancy
@@ -218,7 +316,7 @@ body {
 }
 
 /* One-shot attention pulse for the reasoning-effort slider when a model that
-   supports it is picked — so it's clear where the effort control is. */
+   supports it is picked - so it's clear where the effort control is. */
 @keyframes effort-flash {
   0%,
   100% {
@@ -323,6 +421,40 @@ body {
   animation: fade-in 150ms ease-out 150ms backwards;
 }
 
+/* Page-level entrance: a short upward slide combined with a fade so navigating
+   between routes feels purposeful rather than instant or jarring. The 200ms
+   duration is fast enough for power users and perceptible enough for new ones. */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.page-enter {
+  animation: page-enter 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Staggered child entrance for gallery grids — each child slides in with a
+   small offset so the grid feels assembled, not popped. Use with
+   `style={{ animationDelay: i * 40 + 'ms' }}` on each card. */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.card-enter {
+  animation: card-enter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* App chrome is not a document. Right-clicking a sidebar row or a Screen tab
    used to select its label (WebKit selects the word under the cursor before
    opening its menu), leaving stray highlight behind. Chrome opts out of
@@ -336,7 +468,7 @@ textarea,
 }
 
 /* While a pane is being dragged (see lib/dragPane), forcefully suppress text
-   selection everywhere — the conversation's message text sets its own
+   selection everywhere - the conversation's message text sets its own
    `user-select`, which a body-level `user-select:none` can't override. */
 .pane-dragging,
 .pane-dragging * {

@@ -21,7 +21,8 @@
   "scheduleKind": {
     "every": "Cada x segundos",
     "cron": "Expresión cron",
-    "at": "En marca de tiempo"
+    "at": "En marca de tiempo",
+    "event": "En evento"
   },
   "form": {
     "add": "Nueva tarea",
@@ -40,5 +41,15 @@
   "empty": {
     "title": "Aún no hay tareas",
     "body": "Crea una tarea para programar una ejecución de agente: se dispara según tu ritmo y aparece en el historial de conversaciones."
-  }
+  },
+  "event": {
+    "sessionStart": "Inicio de sesión",
+    "workspaceChange": "Cambio de espacio de trabajo",
+    "appStartup": "Inicio de la aplicación"
+  },
+  "relative": {
+    "future": "En {label}",
+    "past": "hace {label}"
+  },
+  "eventValue": "evento: {value}"
 }

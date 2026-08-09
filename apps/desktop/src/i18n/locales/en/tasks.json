@@ -19,9 +19,12 @@
     "cronInvalid": "That cron expression is not valid."
   },
   "scheduleKind": {
+    "daily": "Daily at",
+    "weekday": "Weekdays at",
     "every": "Every N seconds",
     "cron": "Cron expression",
-    "at": "At timestamp"
+    "at": "At timestamp",
+    "event": "On event"
   },
   "form": {
     "add": "New task",
@@ -31,6 +34,7 @@
     "prompt": "Prompt",
     "promptPlaceholder": "What should the agent do when this task fires?",
     "schedule": "Schedule",
+    "time": "Time",
     "value": "Value",
     "create": "Create task",
     "everyPlaceholder": "e.g. 3600 = every hour",
@@ -40,5 +44,15 @@
   "empty": {
     "title": "No tasks yet",
     "body": "Create a task to schedule an agent run — it fires on your cadence and shows up in the conversation history."
-  }
+  },
+  "event": {
+    "sessionStart": "Session start",
+    "workspaceChange": "Workspace change",
+    "appStartup": "App startup"
+  },
+  "relative": {
+    "future": "In {label}",
+    "past": "{label} ago"
+  },
+  "eventValue": "event: {value}"
 }

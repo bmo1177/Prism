@@ -1,15 +1,15 @@
 <div align="center">
 
-[![Open Science Desktop — Local-first AI research workbench](./docs/assets/banner.webp)](https://github.com/ai4s-research/open-science)
+[![Prism — Light bent into work](./docs/assets/banner.webp)](https://github.com/prism-ai/prism)
 
-# Open Science Desktop
+# Prism
 
-**Local-first, model-agnostic AI research workbench for macOS, Windows & Linux.**
+**Local-first, model-agnostic AI workbench for macOS, Windows & Linux.**
 
-Formerly Open Science. An open-source desktop alternative to Claude Science and
-similar AI-for-science workbenches — built with Tauri, MCP, agent skills, and
-reproducible artifacts. It connects agents, notebooks, files, figures, reports,
-runs, and review into one auditable desktop workflow.
+One beam in, every wavelength out. An open-source desktop workbench built with
+Tauri, MCP, agent skills, and reproducible artifacts. It refracts your questions
+across agents, notebooks, files, figures, reports, and review — each a different
+color of the same thought.
 
 <p>
   <b>English</b> ·
@@ -44,7 +44,7 @@ runs, and review into one auditable desktop workflow.
 - **2026-07-24** — 🪟 **Split-pane tiling.** Tile sessions side by side, drag panes to re-dock them, keep several independent Screens, and run a different model in each pane. *(v0.3.0)*
 - **2026-07-21** — 🌐 **Access from anywhere — even your phone.** A token-authenticated gateway serves the *real* desktop UI to a CLI, a browser on your LAN, or your phone (loopback by default; LAN is opt-in). Start a run at your desk and read the finished figure and report on your phone. *(v0.2.3)*
 - **2026-07-21** — 🧭 **Browser control.** The agent can drive your own Chrome — profile and logins intact — to read the live web the way you do, or an isolated private browser on demand. *(v0.2.3)*
-- **2026-07-09** — 🎉 **#1 on ResearchClawBench.** Open Science Desktop ranks #1 by scored-task average on [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/), an end-to-end benchmark for autonomous scientific research agents (Pass@1 leaderboard).
+- **2026-07-09** — 🎉 **#1 on ResearchClawBench.** Craft ranks #1 by scored-task average on [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/), an end-to-end benchmark for autonomous scientific research agents (Pass@1 leaderboard).
 
 ---
 
@@ -211,12 +211,12 @@ You can also add any local or remote MCP server from Settings. See
 [`docs/CONNECT_YOUR_TOOLS.md`](./docs/CONNECT_YOUR_TOOLS.md).
 
 For a neutral positioning note, see
-[`Open Science Desktop vs OpenScience`](./docs/open-science-desktop-vs-openscience.md).
+[`Craft vs OpenScience`](./docs/open-science-desktop-vs-openscience.md).
 
 ## Install
 
 Download the latest installer from the
-[Releases page](https://github.com/ai4s-research/open-science/releases/latest).
+[Releases page](https://github.com/prism-ai/prism/releases/latest).
 
 - **macOS**: `.dmg` / `.app`, Apple Silicon and Intel, macOS 13 Ventura or later.
 - **Windows**: NSIS `.exe` and `.msi`, Windows 10/11 x64.
@@ -245,7 +245,7 @@ Prerequisites:
 - macOS, Windows, or Linux system dependencies required by Tauri
 
 ```bash
-git clone https://github.com/ai4s-research/open-science
+git clone https://github.com/prism-ai/prism
 cd open-science
 pnpm install
 
@@ -315,16 +315,16 @@ join the [Open Science Discord](https://discord.gg/fWNMDKcd5P) or the
 
 ## Citation
 
-If you use Open Science Desktop in your research, please cite it:
+If you use Craft in your research, please cite it:
 
 ```bibtex
-@software{open_science_desktop,
-  author  = {{The Open Science Desktop Contributors}},
-  title   = {Open Science Desktop: a local-first, model-agnostic AI research workbench},
+@software{prism,
+  author  = {{The Prism Contributors}},
+  title   = {Prism: light bent into work},
   year    = {2026},
   version = {0.3.3},
   doi     = {10.5281/zenodo.21805331},
-  url     = {https://github.com/ai4s-research/open-science},
+  url     = {https://github.com/prism-ai/prism},
   license = {MIT}
 }
 ```
@@ -336,5 +336,5 @@ GitHub's **"Cite this repository"** button (top of the repo page, generated from
 
 [MIT](./LICENSE). Bundled third-party skills and connectors keep their own licenses.
 
-> Open Science Desktop is beta research tooling. Treat outputs as drafts: verify numbers,
+> Prism is beta research tooling. Treat outputs as drafts: verify numbers,
 > citations, code, and conclusions before publication or decision-making.

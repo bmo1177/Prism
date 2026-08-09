@@ -1,4 +1,7 @@
 # Progress
+2026-08-08 19:50 · standardized-page-headers: standardized navigation and surface headers across all main routes (SciencePage, ResearchPage, SkillsPage, NotebooksPage, HistoryPage, ProjectsPage, RunsPage, TasksPage) using the PageHeader component, added card elevation and staggered entrance animations to gallery grids, and confirmed full-stack typecheck (0 errors).
+
+2026-08-08 18:25 · notebook-delete-markdown-accent: three user-facing features shipped and verified live. Notebook delete: tauri delete_notebook command + pure delete_notebook_at core (ipynb-only, escape-safe, git snapshot after delete, unit test green), deleteNotebook frontend wrapper, per-row delete button (desktop-only) confirmed via in-app ConfirmDialog ("This permanently removes …") + "Notebook deleted" toast, 7-locale i18n. Markdown sections: NotebookEditor now adds code or markdown cells ("+ Code cell" / "+ Markdown section"), markdown cells get a Preview/Edit toggle rendering via MarkdownViewer (verified: markdown heading renders; cell count 2→3 after add), ctrl+enter never runs markdown cells, ipynb round-trip already covered by tests. Theme accents: Accent type + ACCENTS/ACCENT_SWATCHES in store (persisted ai4s.accent.v1), data-accent attr from ThemeProvider, per-accent-per-theme --accent/--accent-fg overrides in index.css, Settings → Appearance swatch row (verified: clicking Green sets data-accent=green and persists). Full stack green: typecheck 0, eslint clean, 871/871 vitest, cargo test delete_notebook green, release binary rebuilt + OCR-verified (full sidebar, Tasks page, runtime connect OK).
 
 2026-08-08 12:20 · nexus-honest: made the Nexus unified API truthful on the primary platform — NexusClient now builds its own OpenCode client from `openCodeUrl` (URL-only hosted-platform construction, forwarding the gateway token) and `discoverSkills()` delegates to the live OpenCode registry via the client instead of silently no-op'ing through an unconfigured skill service; docs/rfc/remote-access-gateway.md gained the runs + provenance contract rows (the web-parity truth). Full stack green: typecheck 0 errors, eslint clean, 871/871 vitest (1 new URL-construction test), cargo clippy clean, cargo test 192/192.
 
@@ -130,11 +133,11 @@ Since neither maintainer has a 2FA cluster to test on, the interaction is exerci
 
 2026-08-01 08:45 · fix(release): pruned source, declarations, source maps and documentation from the bundled OpenCode plugin SDK while preserving production modules and licenses, reducing the goal-plugin resource from 62 MiB to 19 MiB and a real ARM DMG from 125.3 MiB to 80.7 MiB; a 24 MiB dependency ceiling, runtime-entry imports, offline OpenCode health/SSE/tool checks, the production desktop build, 762 frontend tests and lint pass.
 
-2026-08-01 07:11 · release: published Open Science Desktop v0.3.1 as the latest GitHub Release with six cross-platform installers; both Apple Silicon and Intel DMGs are Developer ID signed, notarized and stapled, the public release URL returns HTTP 200, and all uploaded assets have GitHub-recorded SHA-256 digests.
+2026-08-01 07:11 · release: published Craft v0.3.1 as the latest GitHub Release with six cross-platform installers; both Apple Silicon and Intel DMGs are Developer ID signed, notarized and stapled, the public release URL returns HTTP 200, and all uploaded assets have GitHub-recorded SHA-256 digests.
 
 2026-08-01 06:53 · fix(release): the asynchronous notarization finalizer now addresses draft releases by release ID, because GitHub's release-by-tag endpoint returns 404 for an existing draft; the first real v0.3.1 queue run reproduced the failure before downloading or mutating any queued asset, and workflow syntax, expressions and diff checks pass after the fix.
 
-2026-08-01 06:33 · chore(release): prepared v0.3.1 from the current master with every package, Tauri, Cargo and citation version synchronized, the GitHub Release title aligned to the Open Science Desktop brand, and the complete two-stage macOS App/DMG notarization path enabled; 762 frontend tests, typecheck, lint, Cargo metadata, workflow validation and diff checks pass.
+2026-08-01 06:33 · chore(release): prepared v0.3.1 from the current master with every package, Tauri, Cargo and citation version synchronized, the GitHub Release title aligned to the Craft brand, and the complete two-stage macOS App/DMG notarization path enabled; 762 frontend tests, typecheck, lint, Cargo metadata, workflow validation and diff checks pass.
 
 2026-07-31 03:30 · security(deps): the brace-expansion override now covers the 2.x line too, correcting the 2026-07-29 22:55 entry above, which pinned only 1.x and asserted "the 2.x/5.x copies other packages need are untouched". GHSA-3jxr-9vmj-r5cp carries THREE affected ranges, not one — `< 1.1.16`, `>= 2.0.0, < 2.1.2`, and `>= 3.0.0, < 5.0.7` — so the 2.1.1 this tree carried (via readdir-glob → minimatch@5) was in range the whole time; only the 1.x and 5.x resolutions were actually clear. A second override pins the 2.x line to 2.1.4, leaving 1.1.17 and 5.0.7 as they were, and every resolution in the lockfile is now outside all three ranges. Dependabot alert #4 still reports the `< 1.1.16` range and has not been re-evaluated since it was raised (created 07-29 04:04Z, `updated_at` never moved, while the 1.x fix landed 07-30 05:54Z), so it was never evidence about 2.x either way — the affected-range list is. Also pruned two orphaned copies (1.1.15, 2.1.1) left in the local pnpm virtual store, unreferenced by the lockfile and unlinked by any package. 762 frontend tests, typecheck and lint pass.
 
@@ -394,7 +397,7 @@ Since neither maintainer has a 2FA cluster to test on, the interaction is exerci
 
 2026-07-10 10:45 · feat(projects): project concept shipped — a project is a named shared-workspace folder under the base dir, marked only by `.openscience/project.json` (no registry/DB); sessions group under it by their `directory`. Sidebar gains a Projects section (collapsible groups, inline create + double-click rename, per-project new session); loose dated-folder sessions unchanged; same-project concurrency allowed and git snapshots now name the session that made them. All tests pass (447 FE + 87 Rust); DMG rebuilt.
 
-2026-07-10 07:35 · docs(citation): repo is now academically citable — CITATION.cff + a citation section in all 7 READMEs (team authorship "The Open Science Desktop Contributors"); Zenodo↔GitHub archiving enabled, first DOI mints on the next release (then: add the badge + doi field, and sync the cff version each release). Sibling repo ai4s-skills shipped v0.1.0 the same way and already has DOI 10.5281/zenodo.21297455.
+2026-07-10 07:35 · docs(citation): repo is now academically citable — CITATION.cff + a citation section in all 7 READMEs (team authorship "The Craft Contributors"); Zenodo↔GitHub archiving enabled, first DOI mints on the next release (then: add the badge + doi field, and sync the cff version each release). Sibling repo ai4s-skills shipped v0.1.0 the same way and already has DOI 10.5281/zenodo.21297455.
 
 2026-07-10 04:04 · release: v0.1.9 published (network-proxy setting, connection self-heal, #6 #7 #8 #9 fixes) — all 8 platform installers built by CI.
 
@@ -430,11 +433,11 @@ Since neither maintainer has a 2FA cluster to test on, the interaction is exerci
 
 2026-07-09 08:14 · feat(updates): added 24-hour-throttled GitHub Release update checks with manual checking, dismissible Settings badge, improved language switching UI, tests, and verified web/Tauri builds.
 
-2026-07-09 06:00 · release(v0.1.8): bumped version to 0.1.8 and tagged; CI builds macOS/Windows/Linux installers into a draft GitHub Release. Covers the full i18n rollout (7 UI languages) and Open Science Desktop rebrand since v0.1.7.
+2026-07-09 06:00 · release(v0.1.8): bumped version to 0.1.8 and tagged; CI builds macOS/Windows/Linux installers into a draft GitHub Release. Covers the full i18n rollout (7 UI languages) and Craft rebrand since v0.1.7.
 
-2026-07-09 05:40 · docs(brand): updated the Open Science Desktop tagline and GitHub description/topics to include Linux alongside macOS and Windows.
+2026-07-09 05:40 · docs(brand): updated the Craft tagline and GitHub description/topics to include Linux alongside macOS and Windows.
 
-2026-07-09 04:02 · docs(brand): repositioned the project as Open Science Desktop in README/agent metadata, added a neutral OpenScience comparison page, and updated the GitHub repo description/topics.
+2026-07-09 04:02 · docs(brand): repositioned the project as Craft in README/agent metadata, added a neutral OpenScience comparison page, and updated the GitHub repo description/topics.
 
 2026-07-09 03:25 · chore(ignore): removed tracked docs/superpowers planning artifacts and ignored docs/superpowers/ to keep local superpowers files out of git.
 
@@ -764,3 +767,4 @@ Since neither maintainer has a 2FA cluster to test on, the interaction is exerci
 2026-07-02 07:04 · Initialized project skeleton: monorepo directory tree (apps / packages / runtime / docs / examples / scripts), AGENTS.md + CLAUDE.md symlink, README, MIT LICENSE, .gitignore, and English PRD + TECHNICAL_DESIGN docs. No build tooling yet.
 
 2026-08-07 23:00 Fixed page scrolling (DesignPage/SciencePage/ResearchPage), replaced blocking dialog calls with async oneshot channels, added event-triggered tasks and datetime-local picker to TasksPage.
+2026-08-08 18:06 · Root-caused two blockers: missing tauri "custom-protocol" feature (regressed in 468275b) made every build boot the dev URL (localhost:5173) → "Connection refused"; added it back plus a gtk_schema shim (gtk_schema.rs) that points GSETTINGS_SCHEMA_DIR at gtk3's FileChooser schema on NixOS, fixing the open-folder/attach crash (SIGABRT).

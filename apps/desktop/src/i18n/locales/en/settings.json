@@ -26,6 +26,15 @@
       "in": "Zoom in",
       "out": "Zoom out",
       "reset": "Reset"
+    },
+    "accentLabel": "Accent color",
+    "accentHint": "Used for buttons, links, and highlights",
+    "accent": {
+      "terracotta": "Terracotta",
+      "blue": "Blue",
+      "green": "Green",
+      "violet": "Violet",
+      "rose": "Rose"
     }
   },
   "language": {

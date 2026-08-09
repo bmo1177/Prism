@@ -7,6 +7,7 @@ import {
   ArchiveRestore,
   Download,
   FolderInput,
+  History,
   Loader2,
   MessageSquare,
   MoreHorizontal,
@@ -26,6 +27,7 @@ import { isTauri, pickFolder, writeExportFile } from "@/lib/tauri";
 import { toast } from "@/lib/toast";
 import { pathKey, samePath } from "@/lib/workspacePath";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { PageHeader } from "@/components/cards/PageHeader";
 
 /** Rows fetched per request. The server answers a 200-row page in ~10 ms at
  *  5k sessions, so this is about how far the list grows per click, not about
@@ -218,30 +220,30 @@ export function HistoryPage() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-8">
-        <div className="flex items-start gap-3">
-          <h1 className="min-w-0 flex-1 font-serif text-2xl leading-tight text-text">
-            {t("history.pageHeading")}
-          </h1>
-          {/* Export writes files into a folder the user picks — desktop only. */}
-          {isTauri && canWrite && (
-            <button
-              onClick={() => setConfirmExport(true)}
-              disabled={exported !== null}
-              className="flex shrink-0 items-center gap-1.5 rounded-input border border-border px-2.5 py-1.5 text-xs text-text hover:bg-surface-2 disabled:opacity-50"
-            >
-              {exported !== null ? (
-                <Loader2 size={13} className="animate-spin" />
-              ) : (
-                <Download size={13} />
-              )}
-              {exported !== null
-                ? t("history.exportProgress", { count: exported })
-                : t("history.export")}
-            </button>
-          )}
-        </div>
+        <PageHeader
+          icon={<History size={18} strokeWidth={1.75} />}
+          title={t("history.pageHeading")}
+          actions={
+            isTauri && canWrite && (
+              <button
+                onClick={() => setConfirmExport(true)}
+                disabled={exported !== null}
+                className="flex shrink-0 items-center gap-1.5 rounded-input border border-border px-2.5 py-1.5 text-xs text-text hover:bg-surface-2 disabled:opacity-50"
+              >
+                {exported !== null ? (
+                  <Loader2 size={13} className="animate-spin" />
+                ) : (
+                  <Download size={13} />
+                )}
+                {exported !== null
+                  ? t("history.exportProgress", { count: exported })
+                  : t("history.export")}
+              </button>
+            )
+          }
+        />
 
-        <div className="relative mt-5">
+        <div className="relative mt-2">
           <Search
             size={15}
             className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
