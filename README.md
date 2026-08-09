@@ -1,15 +1,14 @@
 <div align="center">
 
-[![Prism — Light bent into work](./docs/assets/banner.webp)](https://github.com/prism-ai/prism)
+[![Prism — Light bent into work](./docs/assets/banner.webp)](https://github.com/bmo1177/Prism)
 
 # Prism
 
 **Local-first, model-agnostic AI workbench for macOS, Windows & Linux.**
 
-One beam in, every wavelength out. An open-source desktop workbench built with
-Tauri, MCP, agent skills, and reproducible artifacts. It refracts your questions
-across agents, notebooks, files, figures, reports, and review — each a different
-color of the same thought.
+One beam in, every wavelength out. Prism refracts your questions across agents,
+notebooks, files, figures, reports, and review — each a different color of the
+same thought. Built with Tauri, MCP, agent skills, and reproducible artifacts.
 
 <p>
   <b>English</b> ·
@@ -23,15 +22,11 @@ color of the same thought.
 
 <p>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
-  <a href="https://doi.org/10.5281/zenodo.21351225"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21351225-1682D4" alt="DOI"></a>
+  <a href="https://doi.org/10.5281/zenodo.21805331"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21805331-1682D4" alt="DOI"></a>
   <a href="https://internscience.github.io/ResearchClawBench-Home/"><img src="https://img.shields.io/badge/%F0%9F%8F%86%20%231-ResearchClawBench-FFB300" alt="#1 on ResearchClawBench"></a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platforms">
   <img src="https://img.shields.io/badge/i18n-7%20languages-5B8DEF" alt="7 interface languages">
   <img src="https://img.shields.io/badge/built%20with-Tauri%202%20%2B%20React-24C8DB" alt="Built with Tauri + React">
-  <img src="https://img.shields.io/badge/runtime-OpenCode-success" alt="OpenCode runtime">
-  <a href="https://discord.gg/fWNMDKcd5P"><img src="https://img.shields.io/badge/Join-Discord-5865F2" alt="Join Discord"></a>
-  <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
-  <a href="https://linux.do"><img src="https://img.shields.io/badge/Join-linux.do-orange" alt="linux.do"></a>
 </p>
 
 </div>
@@ -40,11 +35,12 @@ color of the same thought.
 
 ## News
 
+- **2026-08-09** — 🌈 **Introducing Prism.** Reborn from Open Science Desktop — same powerful engine, new identity. Light bent into work.
 - **2026-08-01** — 🗂️ **Projects, memory, and full history.** Group sessions into named projects (import an existing repo *in place*, no copying), give the agent persistent global and project memory, and reach every past conversation through a searchable history with archive, restore, and export. *(v0.3.1)*
 - **2026-07-24** — 🪟 **Split-pane tiling.** Tile sessions side by side, drag panes to re-dock them, keep several independent Screens, and run a different model in each pane. *(v0.3.0)*
 - **2026-07-21** — 🌐 **Access from anywhere — even your phone.** A token-authenticated gateway serves the *real* desktop UI to a CLI, a browser on your LAN, or your phone (loopback by default; LAN is opt-in). Start a run at your desk and read the finished figure and report on your phone. *(v0.2.3)*
 - **2026-07-21** — 🧭 **Browser control.** The agent can drive your own Chrome — profile and logins intact — to read the live web the way you do, or an isolated private browser on demand. *(v0.2.3)*
-- **2026-07-09** — 🎉 **#1 on ResearchClawBench.** Craft ranks #1 by scored-task average on [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/), an end-to-end benchmark for autonomous scientific research agents (Pass@1 leaderboard).
+- **2026-07-09** — 🎉 **#1 on ResearchClawBench.** Prism ranks #1 by scored-task average on [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/), an end-to-end benchmark for autonomous scientific research agents (Pass@1 leaderboard).
 
 ---
 
@@ -69,7 +65,7 @@ color of the same thought.
 exploration, literature survey, hypothesis, experiment code, analysis, figures, and
 write-up, in one continuous, auditable session.
 
-- **Autonomous research agents** — the bundled `ai4s-agent` chains specialist skills
+- **Autonomous research agents** — the bundled agent runtime chains specialist skills
   end to end (explore → survey → experiment → write), and each stage drops a real,
   inspectable artifact into your workspace, not just a chat reply.
 - **Everything traces back** — figures, tables, reports, notebooks, and run outputs
@@ -78,7 +74,7 @@ write-up, in one continuous, auditable session.
 - **Local-first and yours** — sessions, data, provenance, notebooks, and run records
   live in local folders on your machine. Nothing leaves by default.
 - **Model-agnostic runtime** — the UI talks through `packages/sdk` to a bundled,
-  pinned OpenCode sidecar. Bring your own model; providers, skills, and MCP servers
+  pinned sidecar. Bring your own model; providers, skills, and MCP servers
   stay pluggable.
 - **Reproducible by construction** — local, SSH/Slurm, Modal, and notebook-batch runs
   are captured as reproducible run records, not loose terminal scrollback.
@@ -146,7 +142,7 @@ at your desk and read the finished figure and report on your phone.
 
 **The research loop, as skills.** One meta-skill runs the full pipeline; each stage
 is a self-contained skill that produces a real, gradeable artifact — runnable on any
-model OpenCode supports:
+model the runtime supports:
 
 | Skill | Role | Primary output |
 | --- | --- | --- |
@@ -166,7 +162,7 @@ office/document skills below.
 | Area | Current state |
 | --- | --- |
 | Desktop shell | Tauri 2 + React + TypeScript + Vite, with macOS, Windows, and Linux desktop builds. |
-| Runtime | Bundled OpenCode sidecar, auto-started by the app, isolated from the user's own OpenCode config/data. |
+| Runtime | Bundled sidecar, auto-started by the app, isolated from the user's own config/data. |
 | Projects | Named project workspaces that group their sessions; import an existing folder in place (never copied) or adopt one already inside the workspace; move an existing session into a project. |
 | Sessions | Multi-session chat/history, dated workspace folders, searchable history with archive/restore/export, `@` file and `#` conversation references, `/` commands, and `!` shell mode. |
 | Layout | N-ary split-pane tiling with drag-to-dock, independent Screens, per-pane model and reasoning effort, and cross-screen pane drag. |
@@ -179,20 +175,19 @@ office/document skills below.
 | Browser control | The agent drives your own Chrome — profile and login state preserved — reading pages through the accessibility tree, or an isolated/private browser on demand. |
 | Notebooks | Real `.ipynb` files, Python and R notebook creation, local kernel execution, managed Jupyter environment via bundled `uv`, and an Open JupyterLab action. |
 | Runs | Append-only run logs, global SQLite run index, search/facets/pagination, local/remote surfaces, output links, logs, and reproduce prompts. |
-| Provenance | `.openscience/provenance.jsonl` tracks file versions and links produced artifacts back to the run or edit that created them. |
+| Provenance | Workspace provenance tracking links produced artifacts back to the run or edit that created them. |
 | Review | Traceability, statistics-integrity, domain-check, large-file, publication-figure, remote-compute, and Modal run skills are bundled as first-party skills. |
 | Viewers | PDF, image, video, HTML, Markdown, code, CSV/TSV tables with charts, DOCX, XLSX, PPTX, molecules, 3D meshes, genome tracks, FITS, DOS/DOSCAR, EIGENVAL bands, qcode, anomaly maps, and phase files. |
-| Models | OpenCode provider catalog, OAuth/API-key provider flows, custom OpenAI-compatible endpoints, and local/provider-specific options supported by OpenCode. |
-| Interface languages | English, Simplified Chinese, Japanese, Spanish, German, French, and Korean. Portuguese (Brazil) and Arabic are registered but not selectable yet. |
+| Models | Provider catalog, OAuth/API-key provider flows, custom OpenAI-compatible endpoints, and local/provider-specific options. |
+| Interface languages | English, Simplified Chinese, Japanese, Spanish, German, French, and Korean. |
 
 ## Skills and connectors
 
 Bundled skills are fetched for builds and releases instead of being committed into
 git history:
 
-- `ai4s-skills` pack from `ai4s-research/ai4s-skills`.
-- Office/document skills from the Apache-2.0 `anthropics/skills` repository:
-  `docx`, `pdf`, `pptx`, and `xlsx`.
+- `ai4s-skills` pack.
+- Office/document skills: `docx`, `pdf`, `pptx`, and `xlsx`.
 - First-party core skills in `runtime/skills/core/`:
   `traceability-review`, `stats-integrity`, `domain-check`, `large-file`,
   `publication-figures`, `remote-compute`, and `modal-run`.
@@ -210,17 +205,14 @@ One-click science MCP connectors currently include:
 You can also add any local or remote MCP server from Settings. See
 [`docs/CONNECT_YOUR_TOOLS.md`](./docs/CONNECT_YOUR_TOOLS.md).
 
-For a neutral positioning note, see
-[`Craft vs OpenScience`](./docs/open-science-desktop-vs-openscience.md).
-
 ## Install
 
 Download the latest installer from the
-[Releases page](https://github.com/prism-ai/prism/releases/latest).
+[Releases page](https://github.com/bmo1177/Prism/releases/latest).
 
 - **macOS**: `.dmg` / `.app`, Apple Silicon and Intel, macOS 13 Ventura or later.
 - **Windows**: NSIS `.exe` and `.msi`, Windows 10/11 x64.
-- **Linux**: `.deb` and `.rpm` on x86_64 Linux.
+- **Linux**: `.deb`, `.rpm`, and AppImage on x86_64 Linux.
 
 The macOS packages are Developer ID signed, notarized, and stapled, so they open
 normally — no `xattr` workaround needed. Windows and Linux builds are not signed yet.
@@ -230,9 +222,12 @@ normally — no `xattr` workaround needed. Windows and Linux builds are not sign
 **Linux**:
 
 ```bash
-sudo apt install ./Open.Science_*.deb
+sudo apt install ./Prism_*.deb
 # or
-sudo rpm -i Open.Science-*.rpm
+sudo rpm -i Prism-*.rpm
+# or make the AppImage executable and run it directly
+chmod +x Prism_*.AppImage
+./Prism_*.AppImage
 ```
 
 ## Build from source
@@ -245,8 +240,8 @@ Prerequisites:
 - macOS, Windows, or Linux system dependencies required by Tauri
 
 ```bash
-git clone https://github.com/prism-ai/prism
-cd open-science
+git clone https://github.com/bmo1177/Prism
+cd Prism
 pnpm install
 
 # Fetch pinned sidecars and bundled skills. These are git-ignored.
@@ -274,7 +269,7 @@ pnpm lint
 - Command execution, file deletion, dependency installation, and remote connections
   are human-approved flows in the desktop app.
 - Provider credentials are written to app-private runtime config, not to the
-  workspace, provenance, git, exports, or global OpenCode config.
+  workspace, provenance, git, exports, or global config.
 - Settings includes a plain-language data-flow view explaining what can be sent to
   the selected model provider.
 
@@ -283,7 +278,7 @@ pnpm lint
 | Path | Purpose |
 | --- | --- |
 | `apps/desktop/` | Tauri + React desktop app. |
-| `packages/sdk/` | `OpenCodeClient`; keeps the UI from calling OpenCode directly. |
+| `packages/sdk/` | Client wrapper; keeps the UI from calling the runtime directly. |
 | `packages/shared/` | Shared domain types and chart palette. |
 | `packages/ui/` | Shared UI package. |
 | `runtime/skills/core/` | First-party scientific skills. |
@@ -309,13 +304,11 @@ reproducibility review. macOS releases are already signed and notarized.
 ## Contributing
 
 Issues and PRs are welcome. Keep changes minimal and verifiable, follow
-[`AGENTS.md`](./AGENTS.md), and run the checks before opening a PR. For discussion,
-join the [Open Science Discord](https://discord.gg/fWNMDKcd5P) or the
-[linux.do](https://linux.do) community.
+[`AGENTS.md`](./AGENTS.md), and run the checks before opening a PR.
 
 ## Citation
 
-If you use Craft in your research, please cite it:
+If you use Prism in your research, please cite it:
 
 ```bibtex
 @software{prism,
@@ -324,7 +317,7 @@ If you use Craft in your research, please cite it:
   year    = {2026},
   version = {0.3.3},
   doi     = {10.5281/zenodo.21805331},
-  url     = {https://github.com/prism-ai/prism},
+  url     = {https://github.com/bmo1177/Prism},
   license = {MIT}
 }
 ```
