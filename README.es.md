@@ -16,9 +16,11 @@ Funciona en macOS, Windows y Linux.
   <a href="../README.md"><b>English</b></a> ·
   <a href="./README.zh.md">简体中文</a> ·
   <a href="./README.ja.md">日本語</a> ·
+  <b>Español</b> ·
   <a href="./README.de.md">Deutsch</a> ·
   <a href="./README.fr.md">Français</a> ·
-  <a href="./README.ko.md">한국어</a>
+  <a href="./README.ko.md">한국어</a> ·
+  <a href="./README.ar.md">العربية</a>
 </p>
 
 </div>

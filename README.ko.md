@@ -4,18 +4,19 @@
 
 # Prism
 
-**macOS, Windows & Linux용 로컬 우선, 모델 독립 AI 연구 워크벤치.**
+**빛이 일로 굽어진다.**
 
-Formerly Open Science. Claude Science 및 유사한 AI-for-science 워크벤치의 오픈소스 데스크톱 대안으로, Tauri, MCP, agent skills, 재현 가능한 산출물을 기반으로 합니다. 에이전트, 노트북, 파일, 그림, 보고서, 실행 기록, 리뷰를 하나의 감사 가능한 데스크톱 워크플로로 연결합니다.
+하나의 빛이 들어가면 모든 스펙트럼이 나온다. Prism은 로컬 우선, 모델 독립 AI 워크벤치로, 에이전트, 노트북, 파일, 그림, 보고서, 리뷰에 질문을 굽힌다 — 각각은 같은 생각의 다른 색깔.
 
 <p>
-  <a href="./README.md">English</a> ·
+  <a href="../README.md"><b>English</b></a> ·
   <a href="./README.zh.md">简体中文</a> ·
   <a href="./README.ja.md">日本語</a> ·
   <a href="./README.es.md">Español</a> ·
   <a href="./README.de.md">Deutsch</a> ·
   <a href="./README.fr.md">Français</a> ·
-  <b>한국어</b>
+  <b>한국어</b> ·
+  <a href="./README.ar.md">العربية</a>
 </p>
 
 <p>

@@ -9,13 +9,14 @@
 Formerly Open Science. Eine quelloffene Desktop-Alternative zu Claude Science und ähnlichen AI-for-science-Workbenches, gebaut mit Tauri, MCP, agent skills und reproduzierbaren Artefakten. Agenten, Notebooks, Dateien, Abbildungen, Berichte, Läufe und Reviews werden zu einem auditierbaren Desktop-Workflow verbunden.
 
 <p>
-  <a href="./README.md">English</a> ·
+  <a href="../README.md"><b>English</b></a> ·
   <a href="./README.zh.md">简体中文</a> ·
   <a href="./README.ja.md">日本語</a> ·
   <a href="./README.es.md">Español</a> ·
   <b>Deutsch</b> ·
   <a href="./README.fr.md">Français</a> ·
-  <a href="./README.ko.md">한국어</a>
+  <a href="./README.ko.md">한국어</a> ·
+  <a href="./README.ar.md">العربية</a>
 </p>
 
 <p>
