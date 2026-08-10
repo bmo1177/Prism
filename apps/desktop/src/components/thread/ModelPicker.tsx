@@ -372,7 +372,7 @@ export function ModelPicker({ sessionId }: { sessionId?: string } = {}) {
               className={cn(
                 "flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[11px]",
                 isActiveFilter(chip.value)
-                  ? "bg-accent/15 text-accent"
+                  ? "bg-focus/12 text-focus"
                   : "text-muted hover:bg-surface-2 hover:text-text",
               )}
               onClick={() => setFilter(chip.value)}

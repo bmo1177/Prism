@@ -2859,6 +2859,34 @@ export function toolPresentation(
   }
 }
 
+/** Some OpenCode providers echo the user's prompt at the start of the
+ *  assistant's text part. Find the last user message in the thread and strip
+ *  it from the beginning of the assistant text if present — the user already
+ *  sees their own message in the conversation. */
+function stripEchoedPrompt(blocks: ThreadBlock[], text: string): string {
+  let lastUserText = "";
+  for (let i = blocks.length - 1; i >= 0; i--) {
+    const b = blocks[i];
+    if (b.kind === "user" && b.text) {
+      lastUserText = b.text.trim();
+      break;
+    }
+  }
+  if (!lastUserText) return text;
+  const trimmed = text.trimStart();
+  if (trimmed.startsWith(lastUserText)) {
+    const stripped = trimmed.slice(lastUserText.length).trimStart();
+    return stripped;
+  }
+  // Partial echo: the response may start with a prefix of the prompt.
+  for (let len = Math.min(lastUserText.length, trimmed.length); len > 10; len--) {
+    if (trimmed.startsWith(lastUserText.slice(0, len))) {
+      return trimmed.slice(len).trimStart();
+    }
+  }
+  return text;
+}
+
 export function foldEvent(
   state: FoldState,
   event: OpenCodeEvent,
@@ -2868,8 +2896,11 @@ export function foldEvent(
   const index = { ...state.index };
   switch (event.type) {
     case "text.updated": {
+      // Some providers echo the user's prompt at the start of the assistant's
+      // text — strip it so the answer doesn't repeat what the user already sees.
+      const deduped = stripEchoedPrompt(blocks, event.text);
       // A ```review fence in the agent's text becomes a structured reviewer card.
-      const { clean, review } = splitReview(event.text);
+      const { clean, review } = splitReview(deduped);
       const key = `text:${event.partId}`;
       if (key in index) blocks[index[key]] = { kind: "agent", markdown: clean };
       else {
@@ -3105,7 +3136,8 @@ export function historyToThread(messages: HistoryMessage[], commands?: CommandIn
     } else {
       for (const p of m.parts) {
         if (p.type === "text" && p.text?.trim()) {
-          const { clean, review } = splitReview(p.text);
+          const deduped = stripEchoedPrompt(blocks, p.text);
+          const { clean, review } = splitReview(deduped);
           if (clean) blocks.push({ kind: "agent", markdown: clean });
           if (review) blocks.push(review);
         }

@@ -213,7 +213,7 @@ function Leaf({
         "relative h-full min-h-0 w-full min-w-0",
         // A soft inset ring marks the focused pane; unfocused panes dim slightly.
         // A lone pane needs neither (nothing to contrast against).
-        solo ? "" : focused ? "ring-1 ring-inset ring-accent/50" : "opacity-[0.97]",
+        solo ? "" : focused ? "ring-1 ring-inset ring-focus/40 shadow-glow" : "opacity-[0.97]",
       )}
     >
       {/* GroupTabs owns the window titlebar on desktop, so panes never do.

@@ -19,7 +19,7 @@ export function PageHeader({
 }) {
   return (
     <header className={cn("mb-6 flex items-start gap-3", className)}>
-      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-input bg-accent/10 text-accent shadow-[0_1px_3px_0_rgba(0,0,0,0.07),0_0_0_1px_color-mix(in_srgb,var(--accent)_15%,transparent)]">
+      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-input bg-surface-3/60 text-focus shadow-[0_1px_2px_var(--depth-shallow),0_0_0_1px_var(--border-faint)]">
         {icon}
       </div>
       <div className="min-w-0 flex-1">

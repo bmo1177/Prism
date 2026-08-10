@@ -4,14 +4,14 @@ import { useRuntimeStore } from "@/lib/runtime";
 import { cn } from "@/lib/cn";
 
 const RUNTIME_TONE: Record<RuntimeStatus, string> = {
-  ready: "bg-ok",
+  ready: "bg-focus",
   connecting: "bg-warn",
   error: "bg-error",
   offline: "bg-muted",
 };
 
 const MODEL_TONE: Record<ModelStatus, string> = {
-  connected: "bg-ok",
+  connected: "bg-focus",
   disconnected: "bg-muted",
   error: "bg-error",
 };

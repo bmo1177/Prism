@@ -18,22 +18,30 @@
   --zoom: 1;
 }
 
-/* Warm - the original paper palette, and the default theme. */
+/* Warm - calm surface layer: soft warm-gray with subtle depth, the default
+   theme. Inspired by the mesophotic descent: the surface is a quiet, lit
+   plane; depth increases as you move inward. */
 :root,
 [data-theme="warm"] {
-  --bg: #f7f5ef;
+  --bg: #f6f5f1;
   --surface: #ffffff;
-  --surface-2: #f2efe7;
-  --border: #e7e3da;
-  --border-faint: #efece5;
-  --text: #2a2723;
-  --muted: #8c877d;
+  --surface-2: #f0eeea;
+  --surface-3: #e8e6e1;
+  --border: #e2dfd9;
+  --border-faint: #eceae6;
+  --text: #2c2a27;
+  --muted: #8d887e;
   --accent: #c15f3c;
   --accent-fg: #ffffff;
   --link: #2a6fdb;
   --warn: #c98a2b;
   --ok: #4b8b5b;
   --error: #c0564b;
+  --focus-ring: #0d9488;
+  --depth-glow: #0d9488;
+  --depth-shallow: rgba(30, 40, 45, 0.03);
+  --depth-mid: rgba(30, 40, 45, 0.06);
+  --depth-deep: rgba(20, 30, 35, 0.10);
   /* Chart design system (P1-5) - validated categorical hues + chart chrome,
      the single source of truth shared with @ai4s/shared and the matplotlib
      style. Light surface = --surface (#ffffff). */
@@ -45,7 +53,7 @@
   --series-6: #e34948;
   --series-7: #e87ba4;
   --series-8: #eb6834;
-  --chart-grid: #e7e3da;
+  --chart-grid: #e2dfd9;
   --chart-axis: #cbc6bb;
   /* Code highlighting (GitHub-light hues; see .hljs-* rules below). */
   --hl-keyword: #cf222e;
@@ -61,23 +69,28 @@
   --hl-deletion-bg: #ffebe9;
 }
 
-/* Light - clean white with neutral (cool) grays and a blue accent (the warm
-   terracotta belongs to the warm theme); same chart hues as warm since both
-   sit on a white chart surface. */
+/* Light - thermocline layer: cool blue-gray working depth. Calm, airy,
+   focused. Same chart hues as warm since both sit on a white chart surface. */
 [data-theme="light"] {
-  --bg: #ffffff;
+  --bg: #f8f9fb;
   --surface: #ffffff;
-  --surface-2: #f4f4f6;
-  --border: #e6e6ea;
-  --border-faint: #f0f0f3;
-  --text: #1f1f24;
-  --muted: #8a8a93;
+  --surface-2: #f1f3f7;
+  --surface-3: #e7eaf0;
+  --border: #e2e5eb;
+  --border-faint: #eceef3;
+  --text: #1e2128;
+  --muted: #888d96;
   --accent: #2563eb;
   --accent-fg: #ffffff;
   --link: #2a6fdb;
   --warn: #c98a2b;
   --ok: #4b8b5b;
   --error: #c0564b;
+  --focus-ring: #0d9488;
+  --depth-glow: #0d9488;
+  --depth-shallow: rgba(20, 35, 50, 0.03);
+  --depth-mid: rgba(20, 35, 50, 0.06);
+  --depth-deep: rgba(15, 25, 40, 0.09);
   --series-1: #2a78d6;
   --series-2: #1baf7a;
   --series-3: #eda100;
@@ -86,7 +99,7 @@
   --series-6: #e34948;
   --series-7: #e87ba4;
   --series-8: #eb6834;
-  --chart-grid: #e6e6ea;
+  --chart-grid: #e2e5eb;
   --chart-axis: #c9c9cf;
   /* Code highlighting (GitHub-light hues; see .hljs-* rules below). */
   --hl-keyword: #cf222e;
@@ -102,23 +115,29 @@
   --hl-deletion-bg: #ffebe9;
 }
 
-/* Dark - neutral-cool like light, so it shares light's blue accent (stepped
-   up for the dark surface; dark text on the filled accent keeps contrast). */
+/* Dark - deep layer: the mesophotic depths. Ink-blue ground with luminous
+   surfaces. The deepest workspace — content glows against the abyss. */
 [data-theme="dark"] {
-  --bg: #16151a;
-  --surface: #1e1d24;
-  --surface-2: #26252d;
-  --border: #33313c;
-  --border-faint: #25242b;
-  --text: #ece9e2;
-  --muted: #9a958c;
+  --bg: #0f1117;
+  --surface: #181b24;
+  --surface-2: #1e222d;
+  --surface-3: #252a37;
+  --border: #2a2f3d;
+  --border-faint: #1c2029;
+  --text: #e8e6df;
+  --muted: #8c8a84;
   --accent: #4d9df6;
-  --accent-fg: #16151a;
+  --accent-fg: #0f1117;
   --link: #7aa5f0;
   --warn: #d7a24a;
   --ok: #6bb07d;
   --error: #d47a70;
-  /* Same hues stepped for the dark chart surface (--surface #1e1d24). */
+  --focus-ring: #2dd4bf;
+  --depth-glow: #2dd4bf;
+  --depth-shallow: rgba(0, 0, 0, 0.15);
+  --depth-mid: rgba(0, 0, 0, 0.25);
+  --depth-deep: rgba(0, 0, 0, 0.40);
+  /* Same hues stepped for the dark chart surface (--surface #181b24). */
   --series-1: #3987e5;
   --series-2: #199e70;
   --series-3: #c98500;
@@ -127,8 +146,8 @@
   --series-6: #e66767;
   --series-7: #d55181;
   --series-8: #d95926;
-  --chart-grid: #33313c;
-  --chart-axis: #4a4753;
+  --chart-grid: #2a2f3d;
+  --chart-axis: #3d4250;
   /* Code highlighting (GitHub-dark hues; see .hljs-* rules below). */
   --hl-keyword: #ff7b72;
   --hl-entity: #d2a8ff;
@@ -143,75 +162,105 @@
   --hl-deletion-bg: rgba(248, 81, 73, 0.18);
 }
 
-/* Accent color presets (Settings → Appearance). Each accent re-tunes both
-   --accent and --accent-fg per theme so the filled accent keeps contrast on
-   light, warm, and dark surfaces. Specificity beats the theme blocks above
-   ([data-theme="x"] is (0,1,0); these are (0,2,1)). data-accent is set by
-   ThemeProvider from the persisted ui store. */
+/* Accent color presets (Settings → Appearance). Each accent re-tunes
+   --accent, --accent-fg, --focus-ring, and --depth-glow per theme so the
+   filled accent keeps contrast and the depth cues stay harmonious. Specificity
+   beats the theme blocks above ([data-theme="x"] is (0,1,0); these are (0,2,1)).
+   data-accent is set by ThemeProvider from the persisted ui store. */
 :root[data-accent="terracotta"][data-theme="warm"],
 :root[data-accent="terracotta"]:not([data-theme]) {
   --accent: #c15f3c;
   --accent-fg: #ffffff;
+  --focus-ring: #b4552f;
+  --depth-glow: #c15f3c;
 }
 :root[data-accent="terracotta"][data-theme="light"] {
   --accent: #c15f3c;
   --accent-fg: #ffffff;
+  --focus-ring: #b4552f;
+  --depth-glow: #c15f3c;
 }
 :root[data-accent="terracotta"][data-theme="dark"] {
   --accent: #d97757;
-  --accent-fg: #16151a;
+  --accent-fg: #0f1117;
+  --focus-ring: #e08a6a;
+  --depth-glow: #d97757;
 }
 :root[data-accent="blue"][data-theme="warm"],
 :root[data-accent="blue"]:not([data-theme]) {
   --accent: #2a6fdb;
   --accent-fg: #ffffff;
+  --focus-ring: #2a6fdb;
+  --depth-glow: #2a6fdb;
 }
 :root[data-accent="blue"][data-theme="light"] {
   --accent: #2563eb;
   --accent-fg: #ffffff;
+  --focus-ring: #2563eb;
+  --depth-glow: #2563eb;
 }
 :root[data-accent="blue"][data-theme="dark"] {
   --accent: #4d9df6;
-  --accent-fg: #16151a;
+  --accent-fg: #0f1117;
+  --focus-ring: #6aadf8;
+  --depth-glow: #4d9df6;
 }
 :root[data-accent="green"][data-theme="warm"],
 :root[data-accent="green"]:not([data-theme]) {
   --accent: #0f8a5f;
   --accent-fg: #ffffff;
+  --focus-ring: #0d9488;
+  --depth-glow: #0d9488;
 }
 :root[data-accent="green"][data-theme="light"] {
   --accent: #0f8a5f;
   --accent-fg: #ffffff;
+  --focus-ring: #0d9488;
+  --depth-glow: #0d9488;
 }
 :root[data-accent="green"][data-theme="dark"] {
   --accent: #3fbf86;
-  --accent-fg: #16151a;
+  --accent-fg: #0f1117;
+  --focus-ring: #2dd4bf;
+  --depth-glow: #2dd4bf;
 }
 :root[data-accent="violet"][data-theme="warm"],
 :root[data-accent="violet"]:not([data-theme]) {
   --accent: #7a5ac9;
   --accent-fg: #ffffff;
+  --focus-ring: #7a5ac9;
+  --depth-glow: #7a5ac9;
 }
 :root[data-accent="violet"][data-theme="light"] {
   --accent: #6d4fc1;
   --accent-fg: #ffffff;
+  --focus-ring: #6d4fc1;
+  --depth-glow: #6d4fc1;
 }
 :root[data-accent="violet"][data-theme="dark"] {
   --accent: #a58bf0;
-  --accent-fg: #16151a;
+  --accent-fg: #0f1117;
+  --focus-ring: #b8a0f8;
+  --depth-glow: #a58bf0;
 }
 :root[data-accent="rose"][data-theme="warm"],
 :root[data-accent="rose"]:not([data-theme]) {
   --accent: #c2416a;
   --accent-fg: #ffffff;
+  --focus-ring: #c2416a;
+  --depth-glow: #c2416a;
 }
 :root[data-accent="rose"][data-theme="light"] {
   --accent: #d4486e;
   --accent-fg: #ffffff;
+  --focus-ring: #d4486e;
+  --depth-glow: #d4486e;
 }
 :root[data-accent="rose"][data-theme="dark"] {
   --accent: #f2789b;
-  --accent-fg: #16151a;
+  --accent-fg: #0f1117;
+  --focus-ring: #f590ae;
+  --depth-glow: #f2789b;
 }
 
 html,
@@ -229,11 +278,13 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Focus: one coherent ring for every focusable element. Components that
-   manage their own focus affordance (Radix menus highlight on data-[highlighted],
-   rename inputs show a border) still inherit this where they don't opt out. */
+/* Focus: one coherent ring for every focusable element. Uses --focus-ring
+   (teal-green by default) for a calm, distinct affordance separate from the
+   accent color. Components that manage their own focus affordance (Radix menus
+   highlight on data-[highlighted], rename inputs show a border) still inherit
+   this where they don't opt out. */
 :focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline: 2px solid color-mix(in srgb, var(--focus-ring) 60%, transparent);
   outline-offset: 2px;
 }
 
@@ -241,7 +292,7 @@ body {
    the accent, the caret matches the accent, and native form accents (checkbox,
    radio, range) use the theme's accent instead of the OS blue. */
 ::selection {
-  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  background: color-mix(in srgb, var(--focus-ring) 18%, transparent);
 }
 
 input,
@@ -256,12 +307,14 @@ input[type="range"] {
   accent-color: var(--accent);
 }
 
-/* Sidebar background. With window vibrancy (macOS desktop app, data-vibrancy
-   set by ThemeProvider) the page under the sidebar goes transparent and the
-   sidebar turns slightly translucent, letting the blurred desktop tint
-   through; everywhere else it stays an opaque surface. */
+/* Sidebar background — the "surface" layer of the mesophotic descent. With
+   window vibrancy (macOS desktop app, data-vibrancy set by ThemeProvider) the
+   page under the sidebar goes transparent and the sidebar turns slightly
+   translucent, letting the blurred desktop tint through; everywhere else it
+   stays an opaque surface. */
 .sidebar-surface {
   background: var(--surface);
+  box-shadow: inset -1px 0 0 0 var(--border-faint);
 }
 [data-vibrancy] body {
   background: transparent;
@@ -271,10 +324,33 @@ input[type="range"] {
    itself follows the in-app theme via setWindowTheme (needs the
    core:window:allow-set-theme capability). */
 [data-vibrancy] .sidebar-surface {
-  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  background: color-mix(in srgb, var(--bg) 60%, transparent);
 }
 [data-vibrancy][data-theme="dark"] .sidebar-surface {
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+}
+
+/* Depth layers — the mesophotic descent system. Each layer represents a
+   deeper level of focus, with increasing shadow and subtle surface darkening. */
+.depth-shallow {
+  background: var(--surface);
+  box-shadow: 0 1px 3px var(--depth-shallow);
+}
+.depth-mid {
+  background: var(--surface);
+  box-shadow: 0 2px 8px var(--depth-mid), 0 1px 2px var(--depth-shallow);
+}
+.depth-deep {
+  background: var(--surface-2);
+  box-shadow: 0 4px 16px var(--depth-mid), 0 1px 3px var(--depth-shallow);
+}
+
+/* Active panel edge glow — a subtle teal luminous border for the focused
+   workspace panel, evoking bioluminescence in deep water. */
+.depth-glow-active {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--depth-glow) 25%, transparent),
+    0 0 12px color-mix(in srgb, var(--depth-glow) 10%, transparent);
 }
 
 /* Native <select> chrome (metallic bezel + arrow) clashes with the flat
@@ -421,13 +497,13 @@ input[type="range"] {
   animation: fade-in 150ms ease-out 150ms backwards;
 }
 
-/* Page-level entrance: a short upward slide combined with a fade so navigating
-   between routes feels purposeful rather than instant or jarring. The 200ms
-   duration is fast enough for power users and perceptible enough for new ones. */
+/* Page-level entrance: a gentle rise and fade so navigating between routes
+   feels calm and deliberate — like descending through water. The curve is
+   softer than a standard ease-out, with a longer tail for weight. */
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -435,16 +511,16 @@ input[type="range"] {
   }
 }
 .page-enter {
-  animation: page-enter 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: page-enter 280ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
-/* Staggered child entrance for gallery grids — each child slides in with a
-   small offset so the grid feels assembled, not popped. Use with
-   `style={{ animationDelay: i * 40 + 'ms' }}` on each card. */
+/* Staggered child entrance for gallery grids — each child drifts up gently
+   so the grid feels assembled, not popped. Use with
+   `style={{ animationDelay: i * 50 + 'ms' }}` on each card. */
 @keyframes card-enter {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.98);
+    transform: translateY(10px) scale(0.985);
   }
   to {
     opacity: 1;
@@ -452,7 +528,36 @@ input[type="range"] {
   }
 }
 .card-enter {
-  animation: card-enter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: card-enter 320ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* Subtle breathing glow for active/working states — evokes the slow pulse
+   of deep-sea bioluminescence. Used on running session indicators. */
+@keyframes breathe-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--depth-glow) 0%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 8px 2px color-mix(in srgb, var(--depth-glow) 30%, transparent);
+  }
+}
+.breathe-glow {
+  animation: breathe-glow 3s ease-in-out infinite;
+}
+
+/* Gentle ripple for content reveals — a soft expansion from center */
+@keyframes ripple-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.ripple-in {
+  animation: ripple-in 240ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 /* App chrome is not a document. Right-clicking a sidebar row or a Screen tab

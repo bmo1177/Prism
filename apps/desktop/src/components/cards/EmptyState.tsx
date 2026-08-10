@@ -25,7 +25,7 @@ export function EmptyState({
         className,
       )}
     >
-      {icon && <div className="mb-1 text-muted">{icon}</div>}
+      {icon && <div className="mb-1 text-focus/70">{icon}</div>}
       <div className="text-base font-medium text-text">{title}</div>
       {hint && <div className="max-w-sm text-sm leading-relaxed text-muted">{hint}</div>}
       {action && <div className="mt-2">{action}</div>}

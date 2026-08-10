@@ -191,7 +191,7 @@ export function AppShell() {
           aria-hidden
         />
       )}
-      <main className="flex min-w-0 flex-1 flex-col bg-bg">
+      <main className="flex min-w-0 flex-1 flex-col bg-bg depth-mid">
         {/* Mobile top bar: a hamburger to open the drawer. Skipped on pages that
             own their header (live/example sessions already render a toggle) so
             the two don't stack. */}

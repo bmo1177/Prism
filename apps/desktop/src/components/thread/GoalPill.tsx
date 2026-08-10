@@ -90,7 +90,7 @@ export function GoalPill({
       title={tooltip}
       className={cn(
         "flex min-w-0 shrink items-center gap-1.5 rounded-full border py-0.5 pl-2 pr-1 text-xs",
-        status === "active" && "border-accent/30 bg-accent/10 text-text",
+        status === "active" && "border-focus/25 bg-focus/8 text-text",
         status === "unmet" && "border-error/30 bg-error/10 text-text",
         limited && "border-warn/30 bg-warn/10 text-text",
         status === "complete" && "border-ok/30 bg-ok/10 text-text",

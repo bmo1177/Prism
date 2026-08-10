@@ -3,6 +3,7 @@
 let
   rustupPkg = pkgs.rustup;
   tauriDeps = with pkgs; [
+    gcc
     webkitgtk_4_1
     libsoup_3
     gtk3
@@ -21,6 +22,8 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     # Rust toolchain managed by rustup (stable installed globally on the host)
     rustup
+    # C compiler for build scripts (cc linker)
+    gcc
     # Tauri Linux system libraries
   ] ++ tauriDeps;
 

@@ -688,7 +688,7 @@ export function Composer({
               ? "border-link/60"
               : "border-border",
         // Dragging a file over the window: highlight the composer as the target.
-        dragOver && "border-accent ring-2 ring-accent/40",
+        dragOver && "border-focus ring-2 ring-focus/35",
       )}
     >
       {refOpen && (
@@ -855,7 +855,7 @@ export function Composer({
       <div className="flex flex-wrap items-center gap-1.5 pt-1">
         {command ? (
           <span
-            className="flex h-7 shrink-0 items-center gap-1 rounded-input bg-accent/15 pl-2 pr-1 font-mono text-xs text-accent"
+            className="flex h-7 shrink-0 items-center gap-1 rounded-input bg-focus/10 pl-2 pr-1 font-mono text-xs text-focus"
             title={t("composer.command.chipTitle")}
           >
             /{command}

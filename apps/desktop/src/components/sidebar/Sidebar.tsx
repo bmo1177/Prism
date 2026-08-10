@@ -462,21 +462,20 @@ export function Sidebar({ project }: { project: Project }) {
           }
         }}
         className={cn(
-          // The selected row was only a shade of the hover background, which
-          // several themes made near-invisible (#63): give it the accent tint,
-          // an inset accent ring and medium weight so it reads at a glance.
-          "flex items-center gap-2 rounded-input py-1 pl-2 pr-8 text-[13px] hover:bg-surface-2",
+          "flex items-center gap-2 rounded-input py-1 pl-2 pr-8 text-[13px] transition-all duration-200 hover:bg-surface-2",
           location.pathname === row.to
-            ? "bg-accent/15 font-medium text-text ring-1 ring-inset ring-accent/40"
+            ? "bg-surface-3/80 font-medium text-text shadow-glow"
             : "text-text/90",
         )}
       >
         {running ? (
-          <Loader2
-            size={12}
-            className="shrink-0 animate-spin text-accent"
-            aria-label={t("history.running")}
-          />
+          <span className="shrink-0 breathe-glow">
+            <Loader2
+              size={12}
+              className="animate-spin text-focus"
+              aria-label={t("history.running")}
+            />
+          </span>
         ) : (
           <span
             className={cn(
@@ -532,7 +531,7 @@ export function Sidebar({ project }: { project: Project }) {
         // `select-none`: the rail is chrome, so a right-click (or a sloppy drag)
         // must not leave its labels highlighted. Inline rename inputs opt back
         // in via the global rule in index.css.
-        className="sidebar-surface flex h-full select-none flex-col border-r border-border"
+        className="sidebar-surface flex h-full select-none flex-col"
         style={{ width: railWidth }}
       >
         {/* The strip clears the traffic lights and hosts the collapse button just
@@ -596,11 +595,7 @@ export function Sidebar({ project }: { project: Project }) {
               title={t("sidebar.home")}
               className="flex min-w-0 items-baseline gap-1.5 outline-none"
             >
-              <img src={logo} alt="" className="h-[18px] w-auto shrink-0 self-center" />
-              {/* eslint-disable-next-line i18next/no-literal-string -- product brand name, not translated across locales (see AGENTS.md) */}
-              <div className="truncate font-serif text-[17px] font-semibold leading-none tracking-tight text-text">
-                Craft
-              </div>
+              <img src={logo} alt="Prism" className="h-[18px] w-auto shrink-0 self-center" />
             </button>
             {!overlayTitlebar && (
               <button
@@ -1165,7 +1160,7 @@ function NavRow({
   /** Fallback for items that navigate programmatically (e.g. "New"). */
   onClick?: () => void;
 }) {
-  const baseCls = "flex items-center gap-2 rounded-input px-2 py-1 text-[13px] transition-colors";
+  const baseCls = "flex items-center gap-2 rounded-input px-2 py-1 text-[13px] transition-all duration-200";
   if (to) {
     return (
       <NavLink
@@ -1174,14 +1169,14 @@ function NavRow({
           cn(
             baseCls,
             isActive
-              ? "bg-accent/15 font-medium text-text ring-1 ring-inset ring-accent/40"
+              ? "bg-surface-3/70 font-medium text-text shadow-glow"
               : "text-text/90 hover:bg-surface-2",
           )
         }
       >
         {({ isActive }) => (
           <>
-            <span className={isActive ? "text-accent" : "text-muted"}>{icon}</span>
+            <span className={isActive ? "text-focus" : "text-muted"}>{icon}</span>
             <span>{label}</span>
           </>
         )}
