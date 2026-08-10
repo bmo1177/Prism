@@ -313,8 +313,8 @@ input[type="range"] {
    translucent, letting the blurred desktop tint through; everywhere else it
    stays an opaque surface. */
 .sidebar-surface {
-  background: var(--surface);
-  box-shadow: inset -1px 0 0 0 var(--border-faint);
+  background: var(--surface-2);
+  box-shadow: inset -1px 0 0 0 var(--border);
 }
 [data-vibrancy] body {
   background: transparent;
@@ -324,10 +324,10 @@ input[type="range"] {
    itself follows the in-app theme via setWindowTheme (needs the
    core:window:allow-set-theme capability). */
 [data-vibrancy] .sidebar-surface {
-  background: color-mix(in srgb, var(--bg) 60%, transparent);
+  background: color-mix(in srgb, var(--surface-2) 65%, transparent);
 }
 [data-vibrancy][data-theme="dark"] .sidebar-surface {
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  background: color-mix(in srgb, var(--surface-2) 85%, transparent);
 }
 
 /* Depth layers — the mesophotic descent system. Each layer represents a
@@ -349,8 +349,16 @@ input[type="range"] {
    workspace panel, evoking bioluminescence in deep water. */
 .depth-glow-active {
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--depth-glow) 25%, transparent),
-    0 0 12px color-mix(in srgb, var(--depth-glow) 10%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--depth-glow) 20%, transparent),
+    0 0 10px color-mix(in srgb, var(--depth-glow) 8%, transparent);
+}
+
+/* Sidebar active item — a soft luminous pill */
+.sidebar-active {
+  background: color-mix(in srgb, var(--depth-glow) 8%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--depth-glow) 15%, transparent),
+    0 1px 4px color-mix(in srgb, var(--depth-glow) 6%, transparent);
 }
 
 /* Native <select> chrome (metallic bezel + arrow) clashes with the flat

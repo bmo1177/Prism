@@ -462,10 +462,10 @@ export function Sidebar({ project }: { project: Project }) {
           }
         }}
         className={cn(
-          "flex items-center gap-2 rounded-input py-1 pl-2 pr-8 text-[13px] transition-all duration-200 hover:bg-surface-2",
+          "flex items-center gap-2 rounded-input py-1.5 pl-2 pr-8 text-[13px] transition-all duration-200 hover:bg-surface-3/50",
           location.pathname === row.to
-            ? "bg-surface-3/80 font-medium text-text shadow-glow"
-            : "text-text/90",
+            ? "sidebar-active font-semibold text-text"
+            : "text-text/75",
         )}
       >
         {running ? (
@@ -556,7 +556,7 @@ export function Sidebar({ project }: { project: Project }) {
         )}
         {inSettings && (
           <>
-            <div className={cn("px-3 pb-2", overlayTitlebar ? "pt-0" : "pt-3")}>
+            <div className={cn("px-4 pb-2", overlayTitlebar ? "pt-0" : "pt-3")}>
               <button
                 onClick={() => navigate("/live")}
                 className="flex w-full items-center gap-2 rounded-input px-2 py-1.5 text-[13px] text-muted transition-colors hover:bg-surface-2 hover:text-text"
@@ -586,16 +586,19 @@ export function Sidebar({ project }: { project: Project }) {
         )}
         {!inSettings && (
         <>
-        <div className={cn("px-4 pb-3", overlayTitlebar ? "pt-1" : "pt-4")}>
-          <div className="flex min-w-0 items-baseline gap-1.5">
-            {/* Brand = home: clicking the logo/name returns to the main page. */}
+        {/* ── Brand header ── */}
+        <div className={cn("shrink-0 px-4 pb-3", overlayTitlebar ? "pt-1.5" : "pt-4")}>
+          <div className="flex items-center gap-2.5">
             <button
               onClick={() => navigate("/live")}
               aria-label={t("sidebar.home")}
               title={t("sidebar.home")}
-              className="flex min-w-0 items-baseline gap-1.5 outline-none"
+              className="group flex min-w-0 items-center gap-2.5 rounded-input px-1.5 py-1 outline-none transition-all hover:bg-surface-2/70"
             >
-              <img src={logo} alt="Prism" className="h-[18px] w-auto shrink-0 self-center" />
+              <img src={logo} alt="Prism" className="h-[22px] w-auto shrink-0" />
+              <span className="font-serif text-[16px] font-bold leading-none tracking-tight text-text/80 transition-colors group-hover:text-text">
+                Prism
+              </span>
             </button>
             {!overlayTitlebar && (
               <button
@@ -604,7 +607,7 @@ export function Sidebar({ project }: { project: Project }) {
                 title={t("sidebar.collapseTitle", {
                   shortcut: isMac ? "⌘B" : "Ctrl+B",
                 })}
-                className="ml-auto self-center rounded p-1 text-text hover:bg-surface-2"
+                className="ml-auto shrink-0 rounded p-1.5 text-muted/70 transition-colors hover:bg-surface-2 hover:text-text"
               >
                 <PanelLeft size={14} strokeWidth={1.5} />
               </button>
@@ -612,7 +615,9 @@ export function Sidebar({ project }: { project: Project }) {
           </div>
         </div>
 
-        <nav className="flex flex-col px-3">
+        {/* ── Workspace nav ── */}
+        <nav className="flex flex-col gap-0.5 px-3 pb-2">
+          <p className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-widest text-muted/50">Workspace</p>
           {/* A read-only web token can't create sessions — hide the entry. */}
           {!webReadOnly && (
             <NavRow
@@ -683,19 +688,32 @@ export function Sidebar({ project }: { project: Project }) {
           />
         </nav>
 
-        <div className="mt-4 flex-1 overflow-y-auto px-3 pb-2">
-          <div className="flex items-center gap-1 px-0.5 py-1">
+        {/* ── Sessions ── */}
+        <div className="mx-3 border-b border-faint" />
+
+        <div className="flex-1 overflow-y-auto px-3 pb-2 pt-3">
+          <div className="flex items-center justify-between px-1 pb-2">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted/50">Sessions</p>
+            <button
+              onClick={() => navigate("/projects")}
+              title={t("projects.seeAll")}
+              className="rounded px-1.5 py-0.5 text-[10px] font-medium text-muted transition-colors hover:bg-surface-2 hover:text-text"
+            >
+              See all
+            </button>
+          </div>
+          <div className="flex items-center gap-1 px-0.5 pb-1.5">
             <button
               onClick={() => navigate("/projects")}
               title={t("projects.seeAll")}
               className={cn(
-                "group/head flex min-w-0 flex-1 items-center gap-1.5 rounded-input px-1.5 py-1 text-[13px] font-medium outline-none hover:bg-surface-2",
+                "group/head flex min-w-0 flex-1 items-center gap-1.5 rounded-input px-1.5 py-1 text-[12px] font-medium outline-none hover:bg-surface-2",
                 location.pathname === "/projects" ? "text-text" : "text-muted hover:text-text",
               )}
             >
-              <FolderTree size={14} className="shrink-0" />
+              <FolderTree size={13} className="shrink-0" />
               <span className="flex-1 truncate text-left">{t("projects.heading")}</span>
-              <ChevronRight size={13} className="shrink-0 opacity-60 transition-transform group-hover/head:translate-x-0.5" />
+              <ChevronRight size={12} className="shrink-0 opacity-50 transition-transform group-hover/head:translate-x-0.5" />
             </button>
             {/* Creating/importing a project needs local FS access — hidden in web. */}
             <DropdownMenu.Root>
@@ -828,12 +846,12 @@ export function Sidebar({ project }: { project: Project }) {
                     <button
                       onClick={() => toggleProject(p.id)}
                       aria-expanded={open}
-                      className="flex w-full items-center gap-1.5 rounded-input py-1 pl-1 pr-10 text-[13px] text-text hover:bg-surface-2"
+                      className="flex w-full items-center gap-1.5 rounded-input py-1.5 pl-1 pr-10 text-[13px] text-text transition-colors hover:bg-surface-2/70"
                     >
                       <ChevronRight
                         size={11}
                         className={cn(
-                          "shrink-0 text-muted transition-transform duration-150",
+                          "shrink-0 text-muted/70 transition-transform duration-150",
                           open && "rotate-90",
                         )}
                       />
@@ -842,7 +860,7 @@ export function Sidebar({ project }: { project: Project }) {
                           size={14}
                           className={cn(
                             "shrink-0",
-                            active ? "text-accent" : "text-muted",
+                            active ? "text-focus" : "text-muted/70",
                           )}
                         />
                       ) : (
@@ -850,7 +868,7 @@ export function Sidebar({ project }: { project: Project }) {
                           size={14}
                           className={cn(
                             "shrink-0",
-                            active ? "text-accent" : "text-muted",
+                            active ? "text-focus" : "text-muted/70",
                           )}
                         />
                       )}
@@ -964,19 +982,19 @@ export function Sidebar({ project }: { project: Project }) {
           {exampleRows.map(sessionRow)}
         </div>
 
-        <div className="border-t border-border px-3 py-3">
+        <div className="shrink-0 border-t border-faint px-3 py-3">
           <StatusPills />
           <button
-            className="relative mt-2 flex items-center gap-2 rounded-input px-2 py-1 text-[13px] text-muted hover:bg-surface-2 hover:text-text"
+            className="group/settings relative mt-2 flex w-full items-center gap-2.5 rounded-input px-2.5 py-1.5 text-[13px] text-muted transition-colors hover:bg-surface-2/70 hover:text-text"
             onClick={() => navigate("/settings")}
             aria-label={t("sidebar.settings")}
           >
-            <Settings size={15} />
+            <Settings size={15} className="transition-transform group-hover/settings:rotate-45" />
             <span>{t("sidebar.settings")}</span>
             {showUpdateBadge && (
               <span
                 aria-hidden="true"
-                className="ml-auto h-2 w-2 rounded-full bg-error shadow-[0_0_0_2px_var(--color-surface)]"
+                className="ml-auto h-2 w-2 rounded-full bg-focus breathe-glow"
               />
             )}
           </button>
@@ -1160,7 +1178,7 @@ function NavRow({
   /** Fallback for items that navigate programmatically (e.g. "New"). */
   onClick?: () => void;
 }) {
-  const baseCls = "flex items-center gap-2 rounded-input px-2 py-1 text-[13px] transition-all duration-200";
+  const baseCls = "flex w-full items-center gap-2.5 rounded-input px-2.5 py-1.5 text-[13px] transition-all duration-200";
   if (to) {
     return (
       <NavLink
@@ -1169,15 +1187,15 @@ function NavRow({
           cn(
             baseCls,
             isActive
-              ? "bg-surface-3/70 font-medium text-text shadow-glow"
-              : "text-text/90 hover:bg-surface-2",
+              ? "sidebar-active font-semibold text-text"
+              : "text-text/75 hover:bg-surface-3/50 hover:text-text",
           )
         }
       >
         {({ isActive }) => (
           <>
-            <span className={isActive ? "text-focus" : "text-muted"}>{icon}</span>
-            <span>{label}</span>
+            <span className={cn("transition-colors", isActive ? "text-focus" : "text-muted/70")}>{icon}</span>
+            <span className="truncate">{label}</span>
           </>
         )}
       </NavLink>
@@ -1186,10 +1204,10 @@ function NavRow({
   return (
     <button
       onClick={onClick}
-      className={cn(baseCls, "text-text/90 hover:bg-surface-2")}
+      className={cn(baseCls, "text-text/75 hover:bg-surface-3/50 hover:text-text")}
     >
-      <span className="text-muted">{icon}</span>
-      <span>{label}</span>
+      <span className="text-muted/70">{icon}</span>
+      <span className="truncate">{label}</span>
     </button>
   );
 }
