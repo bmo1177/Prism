@@ -61,7 +61,7 @@ import {
   ContextMenuSeparator,
   ContextMenuSub,
 } from "@/components/ui/ContextMenu";
-import logo from "@/assets/logo.webp";
+
 
 interface Row {
   id: string;
@@ -462,10 +462,10 @@ export function Sidebar({ project }: { project: Project }) {
           }
         }}
         className={cn(
-          "flex items-center gap-2 rounded-input py-1.5 pl-2 pr-8 text-[13px] transition-all duration-200 hover:bg-surface-3/50",
+          "flex items-center gap-2 rounded-md py-1 pl-2 pr-8 text-[13px] leading-none transition-colors duration-150 hover:bg-surface-3/40",
           location.pathname === row.to
-            ? "sidebar-active font-semibold text-text"
-            : "text-text/75",
+            ? "bg-surface-3/60 text-text"
+            : "text-muted",
         )}
       >
         {running ? (
@@ -614,93 +614,34 @@ export function Sidebar({ project }: { project: Project }) {
           </div>
         </div>
 
-        {/* ── Workspace nav ── */}
-        <nav className="flex flex-col gap-0.5 px-3 pb-2">
-          <p className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-widest text-muted/50">Workspace</p>
-          {/* A read-only web token can't create sessions — hide the entry. */}
+        {/* ── Navigation ── */}
+        <nav className="flex flex-col gap-px px-2">
           {!webReadOnly && (
-            <NavRow
-              icon={<Plus size={16} />}
-              label={t("items.new")}
-              onClick={startNew}
-            />
+            <NavRow icon={<Plus size={14} />} label={t("items.new")} onClick={startNew} />
           )}
-          {/* Notebook execution needs a local kernel — hidden in the web client. */}
           {!isGatewayWeb && (
-            <NavRow
-              icon={<NotebookPen size={16} />}
-              label={t("items.notebooks")}
-              to="/notebooks"
-            />
+            <NavRow icon={<NotebookPen size={14} />} label={t("items.notebooks")} to="/notebooks" />
           )}
-          <NavRow
-            icon={<FolderTree size={16} />}
-            label={t("items.files")}
-            to="/files"
-          />
-          <NavRow
-            icon={<FlaskConical size={16} />}
-            label={t("items.runs")}
-            to="/runs"
-          />
-          {/* The science research dashboard reads local notebooks/runs — hidden in the web client. */}
+          <NavRow icon={<FolderTree size={14} />} label={t("items.files")} to="/files" />
+          <NavRow icon={<FlaskConical size={14} />} label={t("items.runs")} to="/runs" />
           {!isGatewayWeb && (
-            <NavRow
-              icon={<Microscope size={16} />}
-              label={t("items.research")}
-              to="/research"
-            />
+            <NavRow icon={<Microscope size={14} />} label={t("items.research")} to="/research" />
           )}
-          {/* The global provenance trail reads local .openscience files — hidden in the web client. */}
           {!isGatewayWeb && (
-            <NavRow
-              icon={<ScrollText size={16} />}
-              label={t("items.provenance")}
-              to="/provenance"
-            />
+            <NavRow icon={<ScrollText size={14} />} label={t("items.provenance")} to="/provenance" />
           )}
-          {/* The science gallery lists the bundled core skills — hidden in the web client. */}
           {!isGatewayWeb && (
-            <NavRow
-              icon={<Atom size={16} />}
-              label={t("items.science")}
-              to="/science"
-            />
+            <NavRow icon={<Atom size={14} />} label={t("items.science")} to="/science" />
           )}
-          <NavRow
-            icon={<Files size={16} />}
-            label={t("items.skills")}
-            to="/skills"
-          />
-          {/* The design gallery previews bundled templates via the local server — hidden in the web client. */}
+          <NavRow icon={<Files size={14} />} label={t("items.skills")} to="/skills" />
           {!isGatewayWeb && (
-            <NavRow
-              icon={<Palette size={16} />}
-              label={t("items.design")}
-              to="/design"
-            />
+            <NavRow icon={<Palette size={14} />} label={t("items.design")} to="/design" />
           )}
-          <NavRow
-            icon={<CalendarClock size={16} />}
-            label={t("items.tasks")}
-            to="/tasks"
-          />
+          <NavRow icon={<CalendarClock size={14} />} label={t("items.tasks")} to="/tasks" />
         </nav>
 
         {/* ── Sessions ── */}
-        <div className="mx-3 border-b border-faint" />
-
-        <div className="flex-1 overflow-y-auto px-3 pb-2 pt-3">
-          <div className="flex items-center justify-between px-1 pb-2">
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted/50">Sessions</p>
-            <button
-              onClick={() => navigate("/projects")}
-              title={t("projects.seeAll")}
-              className="rounded px-1.5 py-0.5 text-[10px] font-medium text-muted transition-colors hover:bg-surface-2 hover:text-text"
-            >
-              See all
-            </button>
-          </div>
+        <div className="flex-1 overflow-y-auto px-2 pb-2 pt-1">
           <div className="flex items-center gap-1 px-0.5 pb-1.5">
             <button
               onClick={() => navigate("/projects")}
@@ -1177,7 +1118,7 @@ function NavRow({
   /** Fallback for items that navigate programmatically (e.g. "New"). */
   onClick?: () => void;
 }) {
-  const baseCls = "flex w-full items-center gap-2.5 rounded-input px-2.5 py-1.5 text-[13px] transition-all duration-200";
+  const baseCls = "flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] leading-none transition-colors duration-150";
   if (to) {
     return (
       <NavLink
@@ -1186,14 +1127,14 @@ function NavRow({
           cn(
             baseCls,
             isActive
-              ? "sidebar-active font-semibold text-text"
-              : "text-text/75 hover:bg-surface-3/50 hover:text-text",
+              ? "bg-surface-3/60 text-text"
+              : "text-muted hover:bg-surface-3/40 hover:text-text",
           )
         }
       >
         {({ isActive }) => (
           <>
-            <span className={cn("transition-colors", isActive ? "text-focus" : "text-muted/70")}>{icon}</span>
+            <span className={cn("transition-colors", isActive ? "text-text" : "text-muted/60")}>{icon}</span>
             <span className="truncate">{label}</span>
           </>
         )}
@@ -1203,9 +1144,9 @@ function NavRow({
   return (
     <button
       onClick={onClick}
-      className={cn(baseCls, "text-text/75 hover:bg-surface-3/50 hover:text-text")}
+      className={cn(baseCls, "text-muted hover:bg-surface-3/40 hover:text-text")}
     >
-      <span className="text-muted/70">{icon}</span>
+      <span className="text-muted/60">{icon}</span>
       <span className="truncate">{label}</span>
     </button>
   );
