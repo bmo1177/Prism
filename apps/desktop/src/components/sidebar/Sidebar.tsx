@@ -595,7 +595,6 @@ export function Sidebar({ project }: { project: Project }) {
               title={t("sidebar.home")}
               className="group flex min-w-0 items-center gap-2.5 rounded-input px-1.5 py-1 outline-none transition-all hover:bg-surface-2/70"
             >
-              <img src={logo} alt="Prism" className="h-[22px] w-auto shrink-0" />
               <span className="font-serif text-[16px] font-bold leading-none tracking-tight text-text/80 transition-colors group-hover:text-text">
                 Prism
               </span>
