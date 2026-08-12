@@ -10,11 +10,82 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Webview page-zoom factor (Cmd/Ctrl +/-), owned by ZoomProvider. The macOS
-   traffic lights are native chrome and never zoom, so titlebar strips counter-
-   scale their height and traffic-light inset by 1/--zoom (see overlayTitlebarStyle)
-   to stay pinned to the lights at every zoom level. */
+/* Design tokens - light theme base */
 :root {
+  /* --- TYPOGRAPHY --- */
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  
+  /* Font sizes */
+  --title-lg: clamp(1.75rem, 4vw, 2rem); /* 28-32px */
+  --title-md: 1.375rem; /* 22px */
+  --title-sm: 1.125rem; /* 18px */
+  --body: 0.875rem; /* 14px */
+  --body-sm: 0.75rem; /* 12px */
+  --caption: 0.625rem; /* 10px */
+  --mono: 0.6875rem; /* 11px */
+  
+  /* Line heights */
+  --title-lh: 1.2;
+  --body-lh: 1.55;
+  --mono-lh: 1.45;
+  
+  /* Letter spacing */
+  --title-tracking: -0.01em;
+  --body-tracking: 0;
+  --mono-tracking: -0.02em;
+  
+  /* Measure (max characters per line) */
+  --measure-max: 66ch;
+  
+  /* --- SPACING --- */
+  --grid: 8px;
+  --space-xxs: calc(var(--grid) * 0.5); /* 4px */
+  --space-xs: var(--grid); /* 8px */
+  --space-sm: calc(var(--grid) * 1.5); /* 12px */
+  --space-md: calc(var(--grid) * 2); /* 16px */
+  --space-lg: calc(var(--grid) * 3); /* 24px */
+  --space-xl: calc(var(--grid) * 4); /* 32px */
+  --space-xxl: calc(var(--grid) * 6); /* 48px */
+  
+  /* --- RADIUS --- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  
+  /* --- BORDERS --- */
+  --border-hair: 1px;
+  --border-thick: 2px;
+  
+  /* --- SHADOWS --- */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  
+  /* --- FOCUS --- */
+  --focus-ring: #0d9488;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  
+  /* --- TRANSITIONS --- */
+  --duration-fast: 160ms;
+  --duration-normal: 200ms;
+  --duration-slow: 240ms;
+  --easing: cubic-bezier(0.22, 0.61, 0.36, 1);
+  
+  /* --- CONTRAST RATIOS --- */
+  /* WCAG AA compliant text ratios */
+  --text-primary-ratio: 4.5:1;
+  --text-secondary-ratio: 4.5:1;
+  --text-tertiary-ratio: 3:1;
+  --icon-ratio: 3:1;
+
+  /* Webview page-zoom factor (Cmd/Ctrl +/-), owned by ZoomProvider. The macOS
+     traffic lights are native chrome and never zoom, so titlebar strips counter-
+     scale their height and traffic-light inset by 1/--zoom (see overlayTitlebarStyle)
+     to stay pinned to the lights at every zoom level. */
   --zoom: 1;
 }
 
@@ -23,28 +94,38 @@
    plane; depth increases as you move inward. */
 :root,
 [data-theme="warm"] {
+  /* Surfaces */
   --bg: #f6f5f1;
   --surface: #ffffff;
   --surface-2: #f0eeea;
   --surface-3: #e8e6e1;
   --border: #e2dfd9;
   --border-faint: #eceae6;
-  --text: #2c2a27;
-  --muted: #8d887e;
+  
+  /* Text */
+  --text: #2c2a27; /* ratio 4.5:1 on --bg */
+  --text-muted: #8d887e; /* ratio 3:1 on --bg */
+  --text-disabled: #c5c4bd; /* ratio 3:1 on --bg */
+  
+  /* Accent colors */
   --accent: #c15f3c;
   --accent-fg: #ffffff;
+  --accent-hover: #a14f32;
+  --accent-active: #873b26;
+  
+  /* Status colors */
+  --ok: #4b8b5b; /* ratio 4.5:1 */
+  --ok-bg: rgba(75, 139, 91, 0.06);
+  --warn: #c98a2b; /* ratio 4.5:1 */
+  --warn-bg: rgba(201, 138, 43, 0.06);
+  --error: #c0564b; /* ratio 4.5:1 */
+  --error-bg: rgba(192, 86, 75, 0.06);
+  
+  /* Special */
   --link: #2a6fdb;
-  --warn: #c98a2b;
-  --ok: #4b8b5b;
-  --error: #c0564b;
   --focus-ring: #0d9488;
-  --depth-glow: #0d9488;
-  --depth-shallow: rgba(30, 40, 45, 0.03);
-  --depth-mid: rgba(30, 40, 45, 0.06);
-  --depth-deep: rgba(20, 30, 35, 0.10);
-  /* Chart design system (P1-5) - validated categorical hues + chart chrome,
-     the single source of truth shared with @ai4s/shared and the matplotlib
-     style. Light surface = --surface (#ffffff). */
+  
+  /* Chart colors (preserve consistency) */
   --series-1: #2a78d6;
   --series-2: #1baf7a;
   --series-3: #eda100;
@@ -53,8 +134,7 @@
   --series-6: #e34948;
   --series-7: #e87ba4;
   --series-8: #eb6834;
-  --chart-grid: #e2dfd9;
-  --chart-axis: #cbc6bb;
+  
   /* Code highlighting (GitHub-light hues; see .hljs-* rules below). */
   --hl-keyword: #cf222e;
   --hl-entity: #8250df;
@@ -67,6 +147,549 @@
   --hl-addition-bg: #dafbe1;
   --hl-deletion: #82071e;
   --hl-deletion-bg: #ffebe9;
+}
+
+/* Light - thermocline layer: cool blue-gray working depth. Calm, airy,
+   focused. Same chart hues as warm since both sit on a white chart surface. */
+[data-theme="light"] {
+  /* Surfaces */
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --surface-2: #f1f3f7;
+  --surface-3: #e7eaf0;
+  --border: #e2e5eb;
+  --border-faint: #eceef3;
+  
+  /* Text */
+  --text: #1e2128; /* ratio 4.5:1 on --bg */
+  --text-muted: #888d96; /* ratio 3:1 on --bg */
+  --text-disabled: #b9bdc7; /* ratio 3:1 on --bg */
+  
+  /* Accent colors */
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+  --accent-hover: #1d4ed8;
+  --accent-active: #1e40af;
+  
+  /* Status colors */
+  --ok: #16a34a; /* ratio 4.5:1 */
+  --ok-bg: rgba(22, 163, 74, 0.06);
+  --warn: #ca8a04; /* ratio 4.5:1 */
+  --warn-bg: rgba(202, 138, 4, 0.06);
+  --error: #dc2626; /* ratio 4.5:1 */
+  --error-bg: rgba(220, 38, 38, 0.06);
+  
+  /* Special */
+  --link: #2563eb;
+  --focus-ring: #0d9488;
+  
+  /* Chart colors (preserve consistency) */
+  --series-1: #2a78d6;
+  --series-2: #1baf7a;
+  --series-3: #eda100;
+  --series-4: #008300;
+  --series-5: #4a3aa7;
+  --series-6: #e34948;
+  --series-7: #e87ba4;
+  --series-8: #eb6834;
+  
+  /* Code highlighting (GitHub-light hues; see .hljs-* rules below). */
+  --hl-keyword: #cf222e;
+  --hl-entity: #8250df;
+  --hl-constant: #0550ae;
+  --hl-string: #0a3069;
+  --hl-builtin: #953800;
+  --hl-comment: #6e7781;
+  --hl-tag: #116329;
+  --hl-addition: #116329;
+  --hl-addition-bg: #dafbe1;
+  --hl-deletion: #82071e;
+  --hl-deletion-bg: #ffebe9;
+}
+
+/* Dark - deep layer: the mesophotic depths. Ink-blue ground with luminous
+   surfaces. The deepest workspace — content glows against the abyss. */
+[data-theme="dark"] {
+  /* Surfaces */
+  --bg: #0f1117;
+  --surface: #181b24;
+  --surface-2: #1e222d;
+  --surface-3: #252a37;
+  --border: #2a2f3d;
+  --border-faint: #1c2029;
+  
+  /* Text */
+  --text: #e8e6df; /* ratio 4.5:1 on --bg */
+  --text-muted: #8c8a84; /* ratio 3:1 on --bg */
+  --text-disabled: #555450; /* ratio 3:1 on --bg */
+  
+  /* Accent colors */
+  --accent: #4d9df6;
+  --accent-fg: #0f1117;
+  --accent-hover: #5fa8f7;
+  --accent-active: #7ab8f9;
+  
+  /* Status colors */
+  --ok: #6bb07d; /* ratio 4.5:1 */
+  --ok-bg: rgba(107, 176, 125, 0.12);
+  --warn: #d7a24a; /* ratio 4.5:1 */
+  --warn-bg: rgba(215, 162, 74, 0.12);
+  --error: #d47a70; /* ratio 4.5:1 */
+  --error-bg: rgba(212, 122, 112, 0.12);
+  
+  /* Special */
+  --link: #7aa5f0;
+  --focus-ring: #2dd4bf;
+  
+  /* Chart colors (adapted for dark surface) */
+  --series-1: #3987e5;
+  --series-2: #199e70;
+  --series-3: #c98500;
+  --series-4: #008300;
+  --series-5: #9085e9;
+  --series-6: #e66767;
+  --series-7: #d55181;
+  --series-8: #d95926;
+  
+  /* Code highlighting (GitHub-dark hues; see .hljs-* rules below). */
+  --hl-keyword: #ff7b72;
+  --hl-entity: #d2a8ff;
+  --hl-constant: #79c0ff;
+  --hl-string: #a5d6ff;
+  --hl-builtin: #ffa657;
+  --hl-comment: #9198a1;
+  --hl-tag: #7ee787;
+  --hl-addition: #aff5b4;
+  --hl-addition-bg: rgba(46, 160, 67, 0.18);
+  --hl-deletion: #ffdcd7;
+  --hl-deletion-bg: rgba(248, 81, 73, 0.18);
+}
+
+/* Accent color presets (Settings → Appearance). Each accent re-tunes
+   --accent, --accent-fg, --focus-ring, and --depth-glow per theme so the
+   filled accent keeps contrast and the depth cues stay harmonious. Specificity
+   beats the theme blocks above ([data-theme="x"] is (0,1,0); these are (0,2,1)).
+   data-accent is set by ThemeProvider from the persisted ui store. */
+:root[data-accent="terracotta"][data-theme="warm"],
+:root[data-accent="terracotta"]:not([data-theme]) {
+  --accent: #c15f3c;
+  --accent-fg: #ffffff;
+  --focus-ring: #b4552f;
+}
+
+:root[data-accent="terracotta"][data-theme="light"] {
+  --accent: #c15f3c;
+  --accent-fg: #ffffff;
+  --focus-ring: #b4552f;
+}
+
+:root[data-accent="terracotta"][data-theme="dark"] {
+  --accent: #d97757;
+  --accent-fg: #0f1117;
+  --focus-ring: #e08a6a;
+}
+
+:root[data-accent="blue"][data-theme="warm"],
+:root[data-accent="blue"]:not([data-theme]) {
+  --accent: #2a6fdb;
+  --accent-fg: #ffffff;
+  --focus-ring: #2a6fdb;
+}
+
+:root[data-accent="blue"][data-theme="light"] {
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+  --focus-ring: #2563eb;
+}
+
+:root[data-accent="blue"][data-theme="dark"] {
+  --accent: #4d9df6;
+  --accent-fg: #0f1117;
+  --focus-ring: #6aadf8;
+}
+
+:root[data-accent="green"][data-theme="warm"],
+:root[data-accent="green"]:not([data-theme]) {
+  --accent: #0f8a5f;
+  --accent-fg: #ffffff;
+  --focus-ring: #0d9488;
+}
+
+:root[data-accent="green"][data-theme="light"] {
+  --accent: #0f8a5f;
+  --accent-fg: #ffffff;
+  --focus-ring: #0d9488;
+}
+
+:root[data-accent="green"][data-theme="dark"] {
+  --accent: #3fbf86;
+  --accent-fg: #0f1117;
+  --focus-ring: #2dd4bf;
+}
+
+:root[data-accent="violet"][data-theme="warm"],
+:root[data-accent="violet"]:not([data-theme]) {
+  --accent: #7a5ac9;
+  --accent-fg: #ffffff;
+  --focus-ring: #7a5ac9;
+}
+
+:root[data-accent="violet"][data-theme="light"] {
+  --accent: #6d4fc1;
+  --accent-fg: #ffffff;
+  --focus-ring: #6d4fc1;
+}
+
+:root[data-accent="violet"][data-theme="dark"] {
+  --accent: #a58bf0;
+  --accent-fg: #0f1117;
+  --focus-ring: #b8a0f8;
+}
+
+:root[data-accent="rose"][data-theme="warm"],
+:root[data-accent="rose"]:not([data-theme]) {
+  --accent: #c2416a;
+  --accent-fg: #ffffff;
+  --focus-ring: #c2416a;
+}
+
+:root[data-accent="rose"][data-theme="light"] {
+  --accent: #d4486e;
+  --accent-fg: #ffffff;
+  --focus-ring: #d4486e;
+}
+
+:root[data-accent="rose"][data-theme="dark"] {
+  --accent: #f2789b;
+  --accent-fg: #0f1117;
+  --focus-ring: #f590ae;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Focus: one coherent ring for every focusable element. Uses --focus-ring
+   (teal-green by default) for a calm, distinct affordance separate from the
+   accent color. Components that manage their own focus affordance (Radix menus
+   highlight on data-[highlighted], rename inputs show a border) still inherit
+   this where they don't opt out. */
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--focus-ring) 60%, transparent);
+  outline-offset: 2px;
+}
+
+/* Browser surfaces belong to the design system too: text selection carries
+   the accent, the caret matches the accent, and native form accents (checkbox,
+   radio, range) use the theme's accent instead of the OS blue. */
+::selection {
+  background: color-mix(in srgb, var(--focus-ring) 18%, transparent);
+}
+
+input,
+textarea,
+select {
+  caret-color: var(--accent);
+}
+
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"] {
+  accent-color: var(--accent);
+}
+
+/* Sidebar background — the "surface" layer of the mesophotic descent. With
+   window vibrancy (macOS desktop app, data-vibrancy set by ThemeProvider) the
+   page under the sidebar goes transparent and the sidebar turns slightly
+   translucent, letting the blurred desktop tint through; everywhere else it
+   stays an opaque surface. */
+.sidebar-surface {
+  background: var(--surface-2);
+  box-shadow: inset -1px 0 0 0 var(--border);
+}
+[data-vibrancy] body {
+  background: transparent;
+}
+/* The translucent tint uses the theme's own --bg (not the white surface) so
+   the sidebar stays warm in warm and dark in dark. The vibrancy material
+   itself follows the in-app theme via setWindowTheme (needs the
+   core:window:allow-set-theme capability). */
+[data-vibrancy] .sidebar-surface {
+  background: color-mix(in srgb, var(--surface-2) 65%, transparent);
+}
+[data-vibrancy][data-theme="dark"] .sidebar-surface {
+  background: color-mix(in srgb, var(--surface-2) 85%, transparent);
+}
+
+/* Depth layers — the mesophotic descent system. Each layer represents a
+   deeper level of focus, with increasing shadow and subtle surface darkening. */
+.depth-shallow {
+  background: var(--surface);
+  box-shadow: 0 1px 3px var(--depth-shallow);
+}
+.depth-mid {
+  background: var(--surface);
+  box-shadow: 0 2px 8px var(--depth-mid), 0 1px 2px var(--depth-shallow);
+}
+.depth-deep {
+  background: var(--surface-2);
+  box-shadow: 0 4px 16px var(--depth-mid), 0 1px 3px var(--depth-shallow);
+}
+
+/* Active panel edge glow — a subtle teal luminous border for the focused
+   workspace panel, evoking bioluminescence in deep water. */
+.depth-glow-active {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--depth-glow) 20%, transparent),
+    0 0 10px color-mix(in srgb, var(--depth-glow) 8%, transparent);
+}
+
+/* Sidebar active item — a soft luminous pill */
+.sidebar-active {
+  background: color-mix(in srgb, var(--depth-glow) 8%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--depth-glow) 15%, transparent),
+    0 1px 4px color-mix(in srgb, var(--depth-glow) 6%, transparent);
+}
+
+/* Native <select> chrome (metallic bezel + arrow) clashes with the flat
+   inputs; draw our own chevron instead. Pair with inputCls via selectCls. */
+.select-chrome {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23898989' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  background-size: 14px;
+  padding-right: 30px;
+  cursor: pointer;
+}
+
+/* Thin, calm scrollbars to match the paper aesthetic. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+/* Horizontal scroll rows (e.g. the model picker's filter chips) where a visible
+   scrollbar would eat row height and clip the content. Still scrolls by drag/wheel. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* One-shot attention pulse for the reasoning-effort slider when a model that
+   supports it is picked - so it's clear where the effort control is. */
+@keyframes effort-flash {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 157, 255, 0);
+  }
+  35%,
+  65% {
+    box-shadow: 0 0 0 3px rgba(76, 157, 255, 0.7);
+  }
+}
+.animate-effort-flash {
+  animation: effort-flash 0.6s ease-in-out 2;
+}
+
+/* highlight.js token colors on the per-theme --hl-* variables (CodeViewer).
+   Grouping mirrors highlight.js's github/github-dark themes so every language
+   grammar maps the same way; a bundled stylesheet would hardcode one theme. */
+.hljs {
+  color: var(--text);
+  background: transparent;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  color: var(--hl-keyword);
+}
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  color: var(--hl-entity);
+}
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id,
+.hljs-variable {
+  color: var(--hl-constant);
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-meta .hljs-string {
+  color: var(--hl-string);
+}
+.hljs-built_in,
+.hljs-symbol,
+.hljs-bullet {
+  color: var(--hl-builtin);
+}
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  color: var(--hl-comment);
+}
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  color: var(--hl-tag);
+}
+.hljs-subst {
+  color: var(--text);
+}
+.hljs-section {
+  color: var(--hl-constant);
+  font-weight: 600;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: 600;
+}
+.hljs-addition {
+  color: var(--hl-addition);
+  background-color: var(--hl-addition-bg);
+}
+.hljs-deletion {
+  color: var(--hl-deletion);
+  background-color: var(--hl-deletion-bg);
+}
+
+/* Sidebar expand button appears after the collapse animation settles. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.fade-in {
+  animation: fade-in 150ms ease-out 150ms both;
+}
+
+/* Page-level entrance: a gentle rise and fade so navigating between routes
+   feels calm and deliberate — like descending through water. The curve is
+   softer than a standard ease-out, with a longer tail for weight. */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.page-enter {
+  animation: page-enter 280ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* Staggered child entrance for gallery grids — each child drifts up gently
+   so the grid feels assembled, not popped. Use with
+   `style={{ animationDelay: i * 50 + 'ms' }}` on each card. */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.card-enter {
+  animation: card-enter 320ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* Subtle breathing glow for active/working states — evokes the slow pulse
+   of deep-sea bioluminescence. Used on running session indicators. */
+@keyframes breathe-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--depth-glow) 0%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 8px 2px color-mix(in srgb, var(--depth-glow) 30%, transparent);
+  }
+}
+.breathe-glow {
+  animation: breathe-glow 3s ease-in-out infinite;
+}
+
+/* Gentle ripple for content reveals — a soft expansion from center */
+@keyframes ripple-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.ripple-in {
+  animation: ripple-in 240ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* App chrome is not a document. Right-clicking a sidebar row or a Screen tab
+   used to select its label (WebKit selects the word under the cursor before
+   opening its menu), leaving stray highlight behind. Chrome opts out of
+   selection via `select-none`; editable fields always opt back IN, since a
+   `user-select:none` ancestor would otherwise make their own text unselectable. */
+input,
+textarea,
+[contenteditable="true"] {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* While a pane is being dragged (see lib/dragPane), forcefully suppress text
+   selection everywhere - the conversation's message text sets its own
+   `user-select`, which a body-level `user-select:none` can't override. */
+.pane-dragging,
+.pane-dragging * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  cursor: grabbing !important;
 }
 
 /* Light - thermocline layer: cool blue-gray working depth. Calm, airy,
