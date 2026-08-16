@@ -1,6 +1,6 @@
 ---
 name: domain-check
-description: Use whenever you write or run scientific analysis code (physics, earth/geo, biology, chemistry, or social science) in this workspace — before executing it and again after generating results. Runs a deterministic domain-correctness gate that catches code which runs but is scientifically wrong (unit/dimension mismatch, Euclidean distance on lat/lon without a CRS, 0-based/1-based coordinate and strand errors, impossible SMILES valence, uncorrected multiple comparisons, averaging a categorical code). Surfaces structured findings; never claims the code is correct.
+description: Use whenever you write or run scientific analysis code (physics, earth/geo, biology, chemistry, materials science, or social science) in this workspace — before executing it and again after generating results. Runs a deterministic domain-correctness gate that catches code which runs but is scientifically wrong (unit/dimension mismatch, Euclidean distance on lat/lon without a CRS, 0-based/1-based coordinate and strand errors, impossible SMILES valence, fractional-coordinate/POSCAR structure errors, uncorrected multiple comparisons, averaging a categorical code). Surfaces structured findings; never claims the code is correct.
 ---
 
 # Domain-correctness gate
@@ -51,6 +51,20 @@ It prints exactly one ` ```review ` fenced JSON block on stdout.
   N/O/S) and, being authoritative, clears molecules a heuristic would
   wrongly flag. Without RDKit it falls back to a stdlib bond-counter (carbon
   >4, over-bonded halogen; bails on bracket atoms for precision).
+- **materials · frac-coords** — a Euclidean norm/distance computed directly on
+  fractional coordinates (`frac_coords`, `direct`, `scaled_positions`, …) with
+  no cartesian conversion anywhere — Direct coords are fractions of the lattice
+  vectors, not Cartesian Angstroms.
+- **materials · poscar** — a POSCAR structure block written from memory
+  (assigned to a `poscar`/`structure`-named variable, or passed to
+  `Structure.from_str`/`Poscar.from_string`) that does not parse (counts not
+  summing to the coordinate rows, bad scale, coplanar lattice, Direct
+  coordinates far outside 0–1). **If pymatgen is installed it is the
+  authoritative judge** — `Poscar.from_string` round-trips the grammar, the
+  same way RDKit judges SMILES; without it, a stdlib structural check stands in.
+- **materials · poscar-read** — a POSCAR *file* read with `skip=5`: VASP-5
+  POSCARs carry species, counts and a Direct/Cartesian line after the lattice,
+  so coordinates start at line 7+ and `skip=5` misaligns every row.
 - **social · multiple-comparisons** — a significance test (`ttest_ind`,
   `pearsonr`, `f_oneway`, `chi2_contingency`, …) run inside a loop or ≥3 times
   with no `multipletests`/FDR/Bonferroni correction anywhere — the inflated
@@ -61,9 +75,9 @@ It prints exactly one ` ```review ` fenced JSON block on stdout.
   `groupby('gender')` key is correct usage and is not flagged.
 
 Rules favour precision: an unrecognized unit, arithmetic with no discipline
-signal, a SMILES using bracket atoms (which carry their own valence/charge), a
-single significance test, or a categorical used only as a groupby key is left
-silent rather than flagged.
+signal, a SMILES using bracket atoms (which carry their own valence/charge),
+fractional coordinates in non-structure code, a single significance test, or a
+categorical used only as a groupby key is left silent rather than flagged.
 
 ## Reporting findings
 

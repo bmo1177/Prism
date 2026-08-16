@@ -247,6 +247,112 @@ class SocialScience(unittest.TestCase):
         self.assertNotIn("social · categorical", tags("m = df['income'].mean()\n"))
 
 
+POSCAR_OK = (
+    'poscar = """\n'
+    "Si\n"
+    "1.0\n"
+    "0.0 2.7 2.7\n"
+    "2.7 0.0 2.7\n"
+    "2.7 2.7 0.0\n"
+    "Si\n"
+    "1\n"
+    "Direct\n"
+    "0.0 0.0 0.0\n"
+    '"""\n'
+)
+
+
+class Materials(unittest.TestCase):
+    def test_frac_coords_distance_without_conversion(self):
+        # norm() on fractional coordinates with no lattice conversion anywhere
+        # — the materials analog of Euclidean distance on lat/lon.
+        src = (
+            "import numpy as np\n"
+            "from pymatgen.core import Structure\n"
+            "frac = structure.frac_coords\n"
+            "d = np.linalg.norm(frac[0] - frac[1])\n"
+        )
+        self.assertIn("materials · frac-coords", tags(src))
+
+    def test_frac_distance_with_cartesian_conversion_ok(self):
+        src = (
+            "import numpy as np\n"
+            "from pymatgen.core import Structure\n"
+            "cart = structure.lattice.get_cartesian_coords(structure.frac_coords)\n"
+            "d = np.linalg.norm(cart[0] - cart[1])\n"
+        )
+        self.assertNotIn("materials", tags(src))
+
+    def test_frac_norm_without_materials_context_ok(self):
+        # A non-structure 'frac' (e.g. a share of a total) must stay silent.
+        src = "import numpy as np\nfrac = 0.25\nx = np.linalg.norm(frac - 0.1)\n"
+        self.assertNotIn("materials", tags(src))
+
+    def test_poscar_counts_mismatch_flagged(self):
+        # Counts claim 2 atoms but only 1 coordinate row follows.
+        blk = POSCAR_OK.replace("\n1\n", "\n2\n")
+        self.assertIn("materials · poscar", tags(blk))
+
+    def test_poscar_direct_coords_out_of_range(self):
+        # A Direct header with Cartesian-magnitude coordinates is unphysical.
+        blk = POSCAR_OK.replace("0.0 0.0 0.0", "4.9 0.0 0.0")
+        self.assertIn("materials · poscar", tags(blk))
+
+    def test_valid_poscar_silent(self):
+        self.assertNotIn("materials · poscar", tags(POSCAR_OK))
+
+    def test_from_str_arg_judged(self):
+        # Structure.from_str(s) with a broken block is judged the same way.
+        blk = POSCAR_OK.replace("\n1\n", "\n4\n")
+        src = 'from pymatgen.core import Structure\ns = Structure.from_str(' + repr(blk.split('"""')[1]) + ', fmt="POSCAR")\n'
+        self.assertIn("materials · poscar", tags(src))
+
+    def test_skip_five_read_misaligns(self):
+        src = (
+            "import numpy as np\n"
+            "poscar = np.loadtxt('POSCAR', skiprows=5)\n"
+        )
+        self.assertIn("materials · poscar-read", tags(src))
+
+    def test_correct_skip_silent(self):
+        src = (
+            "import numpy as np\n"
+            "poscar = np.loadtxt('POSCAR', skiprows=8)\n"
+            "lattice = poscar[:3, :]\n"
+        )
+        self.assertNotIn("materials", tags(src))
+
+    def test_skip_five_without_poscar_file_ok(self):
+        # skip=5 on a non-POSCAR file is not the misalignment failure class.
+        src = "import numpy as np\ndata = np.loadtxt('table.dat', skiprows=5)\n"
+        self.assertNotIn("materials", tags(src))
+
+
+class MaterialsPymatgen(unittest.TestCase):
+    """When pymatgen is available it is authoritative on the POSCAR grammar —
+    it catches what the static check misses and clears what it would wrongly
+    flag. `_pymatgen_verdict` is patched to drive all three states without
+    pymatgen installed."""
+
+    def test_pymatgen_invalid_flags_what_static_misses(self):
+        blk = POSCAR_OK.replace("\n1\n", "\n2\n")  # static-compatible counts
+        with unittest.mock.patch.object(dc, "_pymatgen_verdict", lambda s: "invalid"):
+            self.assertIn("materials · poscar", tags(blk))
+
+    def test_pymatgen_valid_suppresses_static_false_positive(self):
+        # A deliberately-weird block pymatgen would legitimately parse: the
+        # authority overrides the static heuristic -> no finding.
+        blk = POSCAR_OK.replace("0.0 0.0 0.0", "0.5 0.5 0.5")
+        with unittest.mock.patch.object(dc, "_pymatgen_verdict", lambda s: "valid"):
+            self.assertNotIn("materials · poscar", tags(blk))
+
+    def test_static_used_when_pymatgen_absent(self):
+        blk = POSCAR_OK.replace("\n1\n", "\n2\n")
+        with unittest.mock.patch.object(dc, "_pymatgen_verdict", lambda s: None):
+            self.assertIn("materials · poscar", tags(blk))
+            self.assertNotIn("materials · poscar", tags(POSCAR_OK))
+
+
 class Driver(unittest.TestCase):
     def test_run_emits_contract(self):
         # end-to-end: temp file -> run() -> review contract shape.

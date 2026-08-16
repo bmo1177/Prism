@@ -522,6 +522,256 @@ def check_chemistry(ctx: Ctx) -> list[Finding]:
 
 
 # --------------------------------------------------------------------------- #
+# Materials science — crystal structures (POSCAR / fractional coordinates)
+# --------------------------------------------------------------------------- #
+
+# Fractional-coordinate markers: Direct/scaled positions are fractions of the
+# lattice vectors, NOT Cartesian Angstroms — feeding them to a plain Euclidean
+# norm/distance is the materials analog of the earth CRS error. Only names that
+# are unambiguous *fractional-coordinate* tokens count (a bare "frac" variable
+# in non-materials code is not flagged).
+_FRAC_MARK = re.compile(
+    r"(?:^|_)(?:frac(?:_coords?)?|direct|scaled_positions)$|^scaled$|_scaled$|"
+    r"_sites_frac$",
+    re.IGNORECASE,
+)
+_DIST_FRAC_FUNCS = {"norm", "distance", "distances", "dist", "euclidean",
+                    "cdist", "pdist"}
+# Any cartesian/metric conversion anywhere in the file clears the rule (same
+# philosophy as the biology strand rule).
+_FRAC_TO_CART = re.compile(
+    r"cart_coord|cartesian|from_frac|to_cartesian|get_cartesian|"
+    r"frac_to_cart|lattice\s*[.@(]|@\s*(?:lattice|matrix|cell)",
+    re.IGNORECASE,
+)
+# Materials vocabulary that confirms fractional coords belong to a crystal
+# structure (precision gate for the frac rule).
+_MATERIALS_CTX = re.compile(
+    r"\b(?:POSCAR|pymatgen|Poscar|Structure|struc\b|lattice|supercell|slab|"
+    r"cell)\b",
+    re.IGNORECASE,
+)
+# Variable names that mark a string literal as a structure block.
+_POSCAR_VARS = re.compile(r"(?:^|_)(?:poscar|structure|struc)$", re.IGNORECASE)
+_POSCAR_PARSE_FUNCS = {"from_str", "from_string"}
+
+
+def _frac_marked(name: str) -> bool:
+    return bool(_FRAC_MARK.search(name))
+
+
+def _poscar_shape(text: str) -> bool:
+    """Lenient grammar probe used only to decide 'is this string a POSCAR
+    block': a numeric scale row followed by three 3-float lattice rows. This
+    gates every literal check so non-structure strings are never judged."""
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+    if len(lines) < 8:  # comment, scale, lattice x3, species, counts, header
+        return False
+    try:
+        float(lines[1].split()[0])
+        for ln in lines[2:5]:
+            if len(ln.split()) < 3:
+                return False
+            for tok in ln.split()[:3]:
+                float(tok)
+    except ValueError:
+        return False
+    return True
+
+
+def _poscar_problem(text: str) -> str | None:
+    """Static POSCAR structural check (stdlib-only fallback used when pymatgen
+    is absent): scale factor, three 3-float lattice rows with nonzero cell
+    volume, integer species counts summing to the coordinate rows, and Direct
+    coordinates inside a sane fractional range. Returns a human description of
+    the first structural problem found, else None."""
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+    try:
+        scale = float(lines[1].split()[0])
+    except (IndexError, ValueError):
+        return f"scale factor line {lines[1]!r} is not a number"
+    if not scale or scale <= 0:
+        return f"scale factor {lines[1]!r} must be a positive number"
+    lattice: list[list[float]] = []
+    for ln in lines[2:5]:
+        toks = ln.split()
+        if len(toks) < 3:
+            return f"lattice row {ln!r} needs three numbers"
+        try:
+            lattice.append([float(t) for t in toks[:3]])
+        except ValueError:
+            return f"lattice row {ln!r} is not numeric"
+    a, b, c = lattice
+    vol = (a[1] * b[2] - a[2] * b[1]) * c[0] \
+        + (a[2] * b[0] - a[0] * b[2]) * c[1] \
+        + (a[0] * b[1] - a[1] * b[0]) * c[2]
+    if abs(vol) < 1e-8:
+        return "lattice vectors are coplanar (zero cell volume) — a lattice row is likely wrong"
+    counts_row = None
+    for j in range(5, min(len(lines), 8)):
+        toks = lines[j].split()
+        if toks and all(t.isdigit() for t in toks):
+            counts_row = j
+            break
+    if counts_row is None:
+        return "no integer species-counts row found after the lattice"
+    counts = [int(t) for t in lines[counts_row].split()]
+    if any(n < 1 for n in counts):
+        return f"species counts {lines[counts_row]!r} contain a zero or negative count"
+    total = sum(counts)
+    j = counts_row + 1
+    if j < len(lines) and lines[j].lower().startswith("selective"):
+        j += 1
+    if j >= len(lines) or not lines[j].lower().startswith(("direct", "cartesian")):
+        return f"line {lines[j]!r} is neither a Direct nor a Cartesian header"
+    mode = lines[j].lower()
+    j += 1
+    coords: list[list[float]] = []
+    for ln in lines[j:]:
+        toks = ln.split()
+        if len(toks) < 3:
+            break
+        try:
+            coords.append([float(t) for t in toks[:3]])
+        except ValueError:
+            break
+    if len(coords) != total:
+        return (f"{total} atom{'s' if total != 1 else ''} claimed in the counts "
+                f"but {len(coords)} coordinate row{'s' if len(coords) != 1 else ''} found")
+    if mode.startswith("direct"):
+        for x, y, z in coords:
+            if not all(-2.0 <= v <= 3.0 for v in (x, y, z)):
+                return (f"Direct coordinate ({x}, {y}, {z}) lies far outside the "
+                        "fractional range — fractional coordinates must sit near "
+                        "0–1 (Cartesian values read under a Direct header are "
+                        "the classic form of this)")
+    return None
+
+
+def _pymatgen_verdict(text: str) -> str | None:
+    """Authoritative POSCAR validity via pymatgen when it is installed:
+    "valid" | "invalid" | None (not importable → caller falls back to the
+    static structural check). Poscar.from_string round-trips the grammar, so it
+    catches counts mismatches, bad scale factors and coplanar lattices — and,
+    being authoritative, clears blocks the static heuristic would wrongly flag.
+    Mirrors the RDKit judge in the chemistry gate."""
+    try:
+        from pymatgen.io.vasp import Poscar  # type: ignore
+    except ImportError:
+        return None
+    try:
+        poscar = Poscar.from_string(text)
+        if poscar.structure is None:
+            return "invalid"
+    except Exception:
+        return "invalid"
+    return "valid"
+
+
+def _poscar_finding(ctx: Ctx, lineno: int, text: str, detail: str) -> Finding:
+    first = next((ln for ln in text.splitlines() if ln.strip()), "")
+    return Finding(
+        "error", "materials · poscar",
+        "Structure block does not parse as a crystal structure (POSCAR)",
+        ctx.snippet(lineno)
+        + f"\n  block `{first[:40]!r}…` — {detail}. Geometry written from "
+        "memory rarely round-trips; load it via pymatgen "
+        "(Poscar.from_string / Structure.from_str) instead of hand-writing a "
+        "POSCAR, and fix the block before running.",
+    )
+
+
+def _poscar_block_finding(ctx: Ctx, lineno: int, text: str) -> Finding | None:
+    """Judge one POSCAR block: pymatgen authoritative when installed, static
+    structural check otherwise — the SMILES→RDKit pattern applied to the
+    materials round-trip."""
+    verdict = _pymatgen_verdict(text)
+    if verdict == "invalid":
+        return _poscar_finding(ctx, lineno, text,
+                               "pymatgen rejects this block")
+    if verdict == "valid":
+        return None  # authoritative: no finding, even if the heuristic flags
+    detail = _poscar_problem(text)
+    return _poscar_finding(ctx, lineno, text, detail) if detail else None
+
+
+def check_materials(ctx: Ctx) -> list[Finding]:
+    out: list[Finding] = []
+    src = ctx.src
+
+    # (1) Euclidean norm/distance on fractional coordinates, with no cartesian
+    #     conversion anywhere in the file.
+    if ctx.tree is not None and _MATERIALS_CTX.search(src):
+        for node in ast.walk(ctx.tree):
+            if not (isinstance(node, ast.Call)
+                    and _call_name(node) in _DIST_FRAC_FUNCS):
+                continue
+            names = _names_in(node)
+            if any(_frac_marked(n) for n in names) and not _FRAC_TO_CART.search(src):
+                out.append(Finding(
+                    "error", "materials · frac-coords",
+                    "Euclidean distance on fractional coordinates",
+                    ctx.snippet(ctx.line_of(node))
+                    + "\n  Direct/scaled coordinates are fractions of the "
+                    "lattice vectors, not Cartesian Angstroms — a plain norm/"
+                    "distance on them is wrong. Multiply by the lattice matrix "
+                    "first (np.dot(frac, lattice), or "
+                    "structure.lattice.get_cartesian_coords).",
+                ))
+
+    # (2) POSCAR text blocks: assigned to a *poscar/structure-named target, or
+    #     passed to Structure.from_str / Poscar.from_string. Judged by pymatgen
+    #     when installed, static structure check otherwise.
+    if ctx.tree is not None:
+        for node in ast.walk(ctx.tree):
+            if isinstance(node, ast.Assign):
+                if not (isinstance(node.value, ast.Constant)
+                        and isinstance(node.value.value, str)):
+                    continue
+                text = node.value.value
+                if not _poscar_shape(text):
+                    continue
+                named = any(
+                    isinstance(t, ast.Name) and _POSCAR_VARS.search(t.id)
+                    for t in node.targets
+                )
+                if named:
+                    f = _poscar_block_finding(ctx, ctx.line_of(node), text)
+                    if f:
+                        out.append(f)
+            if isinstance(node, ast.Call) \
+                    and _call_name(node) in _POSCAR_PARSE_FUNCS:
+                for arg in node.args:
+                    if isinstance(arg, ast.Constant) \
+                            and isinstance(arg.value, str) \
+                            and _poscar_shape(arg.value):
+                        f = _poscar_block_finding(ctx, ctx.line_of(node), arg.value)
+                        if f:
+                            out.append(f)
+
+    # (3) POSCAR file reads: `skip=5` lands on the species/counts/Direct
+    #     header lines (line 6+) and misaligns every coordinate.
+    if re.search(r"POSCAR|\.vasp", src, re.IGNORECASE):
+        m = re.search(r"\bskip(?:rows?)?\s*=\s*5\b", src) or re.search(
+            r"\benumerate\([^\n]*start\s*=\s*5\b", src)
+        if m:
+            ln = src[: m.start()].count("\n") + 1
+            out.append(Finding(
+                "warn", "materials · poscar-read",
+                "POSCAR read with skip=5 misaligns the VASP-5 header",
+                ctx.snippet(ln)
+                + "\n  VASP-5 POSCARs carry species, counts and a "
+                "Direct/Cartesian line *after* the lattice — coordinates start "
+                "at line 7+ (8 with a species row). skip=5 parses the header "
+                "rows as data, so every coordinate is silently wrong. Skip to "
+                "the first coordinate row, or use "
+                "pymatgen.io.vasp.Poscar.from_file.",
+            ))
+
+    return out
+
+
+# --------------------------------------------------------------------------- #
 # Social science — statistical method validity
 # --------------------------------------------------------------------------- #
 
@@ -619,7 +869,8 @@ def check_social(ctx: Ctx) -> list[Finding]:
 # Registry + driver
 # --------------------------------------------------------------------------- #
 
-VALIDATORS = [check_physics, check_earth, check_biology, check_chemistry, check_social]
+VALIDATORS = [check_physics, check_earth, check_biology, check_chemistry,
+              check_materials, check_social]
 
 _CODE_EXT = {".py": "python", ".r": "r", ".R": "r"}
 
@@ -695,8 +946,9 @@ def discover(root: Path) -> list[Path]:
 
 NOTE = (
     "Domain-correctness gate — flags known dangerous patterns per discipline "
-    "(units, CRS, coordinates). It checks for specific error classes only; "
-    "absence of findings is not a guarantee the science is correct."
+    "(units, CRS, coordinates, fractional coords, POSCAR). It checks for "
+    "specific error classes only; absence of findings is not a guarantee the "
+    "science is correct."
 )
 
 

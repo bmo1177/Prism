@@ -676,7 +676,7 @@ competitors.
 | P0-2 | Local data + local compute | P0 | ✅ Done — local Python **and** R + data-flow card |
 | P0-3 | Artifact provenance / reproducibility | P0 | ✅ Done — versioned records + env/package lockfile + Reproduce |
 | P0-4 | Reviewer: traceable claims (3 checks) | P0 | 🟡 Partial — 3 checks + PDF-manuscript extractor shipped; weak-model robustness pending |
-| **P0-5** | **Domain-correctness gates ("runs" ≠ "right")** | **P0** | 🟡 **Partial — 5 gates ship (physics/earth/biology/chemistry/social science), deterministic + pluggable; chemistry now uses real RDKit round-trip when installed; only POSCAR→pymatgen round-trip pending** |
+| **P0-5** | **Domain-correctness gates ("runs" ≠ "right")** | **P0** | ✅ **Done — 6 gates ship (physics/earth/biology/chemistry/materials/social science), deterministic + pluggable; real library round-trips as authority when installed (SMILES→RDKit, POSCAR→pymatgen) with stdlib fallbacks** |
 | P0-6 | Large files: reference, don't load | P0 | ✅ Done — memory-pointer probe (table/parquet/hdf5/fits/netcdf/log + genomics FASTQ/FASTA/VCF/BAM, GRIB, ROOT) + one-click "Inspect without loading" in the too-large-preview card |
 | **P0-7** | **Safety-defaults compliance + audit debt** | **P0** | 🟡 **Partial — ALL critical items addressed (approval modes, sidecar/preview auth, kernel deadlock, Windows injection, owner-only key files); keychain-at-rest deferred to signed releases (P2-3); moderate/cleanup backlog remains** |
 | P1-1 | Multi-discipline from day one | P1 | 🟡 Partial — pluggable + climate example; non-bio depth pending |
@@ -695,15 +695,18 @@ runtime, local compute, provenance, notebooks, privacy. The next frontier is the
 discipline-specific 20% and the one cross-cutting gap this revision adds:
 
 1. **P0-5 domain-correctness gates** — the deterministic, pluggable layer now
-   ships with five gates (physics/earth/biology/chemistry/social science); next
-   is the remaining library round-trip (POSCAR→pymatgen validity — SMILES→RDKit
-   now ships).
+   ships with **six** gates (physics/earth/biology/chemistry/materials/social
+   science), each with a library round-trip as authority when installed:
+   SMILES→RDKit **and** POSCAR→pymatgen, stdlib fallbacks otherwise. The
+   materials gate also catches norm/distance on fractional coordinates and
+   VASP-5 `skip=5` header misreads.
 2. **P1-2 / P1-3 non-bio connectors + viewers** — connectors now span all five
    targeted disciplines (materials, economics, physics space-weather, earth
    Open-Meteo/USGS); next is astronomy catalogs (no PyPI MCP yet) and richer
    viewers.
-3. **Deepen the shipped gates** — P0-5 (library round-trip + social science),
-   P1-6 (in-app prereg artifact + Stata/SPSS UI). **P0-6 is now ✅ Done** — the
+3. **Deepen the shipped gates** — library round-trips shipped for P0-5 (✅
+   SMILES→RDKit + POSCAR→pymatgen); P1-6 (in-app prereg artifact + Stata/SPSS
+   UI) and P0-4 (weak-model robustness) remain. **P0-6 is now ✅ Done** — the
    probe covers genomics/GRIB/ROOT and the UI exposes it as one-click "Inspect
    without loading".
 
