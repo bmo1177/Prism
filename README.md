@@ -1,229 +1,258 @@
 <div align="center">
 
-# Prism
+  <img src="./assets/logo.png" alt="Prism Logo" width="140" style="border-radius: 24px; margin-bottom: 12px;" />
 
-**Light bent into work.**
+  # Prism
 
-One beam in, every wavelength out. Prism is a local-first, model-agnostic AI
-workbench that refracts your questions across agents, notebooks, files, figures,
-reports, and review — each a different color of the same thought.
+  ### **Light bent into work.**
 
-Built with Tauri 2, React, MCP, agent skills, and reproducible artifacts.
-Runs on macOS, Windows, and Linux.
+  *A local-first, model-agnostic AI workspace that refracts your questions across agents, notebooks, files, figures, reports, and review — each a different color of the same thought.*
 
-<p>
-  <b>English</b> ·
-  <a href="./README.zh.md">简体中文</a> ·
-  <a href="./README.ja.md">日本語</a> ·
-  <a href="./README.es.md">Español</a> ·
-  <a href="./README.de.md">Deutsch</a> ·
-  <a href="./README.fr.md">Français</a> ·
-  <a href="./README.ko.md">한국어</a> ·
-  <a href="./README.ar.md">العربية</a>
-</p>
+  <p align="center">
+    <a href="./README.md"><b>English</b></a> ·
+    <a href="./README.zh.md">简体中文</a> ·
+    <a href="./README.ja.md">日本語</a> ·
+    <a href="./README.es.md">Español</a> ·
+    <a href="./README.de.md">Deutsch</a> ·
+    <a href="./README.fr.md">Français</a> ·
+    <a href="./README.ko.md">한국어</a> ·
+    <a href="./README.ar.md">العربية</a>
+  </p>
 
-<p>
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
-  <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platforms">
-  <img src="https://img.shields.io/badge/built%20with-Tauri%202%20%2B%20React-24C8DB" alt="Built with Tauri + React">
-</p>
+  <p align="center">
+    <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+    <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platforms">
+    <img src="https://img.shields.io/badge/built%20with-Tauri%202%20%2B%20React-24C8DB" alt="Built with Tauri + React">
+    <img src="https://img.shields.io/badge/runtime-OpenCode-8A2BE2" alt="OpenCode Runtime">
+  </p>
+
+  <br />
+
+  <img src="./assets/hero.png" alt="Prism Hero Banner" width="100%" style="border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.3);" />
 
 </div>
 
 ---
 
-## What is Prism?
+## 🌟 What is Prism?
 
-Prism is a desktop AI workbench. You ask a question. Prism bends it through every
-tool you have — agents, notebooks, files, browsers, remote machines — and gives
-you back not just an answer, but the whole spectrum: figures, code, reports,
-provenance, and the exact path the thinking took.
+Prism is an open-source, local-first desktop AI workspace designed for scientists, engineers, designers, and thinkers. You ask a question or state a goal; Prism bends it through every tool you have — autonomous agents, live notebooks, local files, real browsers, and remote compute nodes — returning not just an answer, but the entire spectrum of actionable results:
 
-**One input. Every wavelength.**
+* **Figures & Visualizations** — Vector plots, interactive atlas figures, and publication-ready charts.
+* **Reproducible Code & Notebooks** — Executable Python/R scripts, Jupyter kernel integration, and data pipelines.
+* **Publication-Quality Reports** — PDF and Markdown documents complete with DOIs, verified citations, and methodology audits.
+* **Full Provenance & Audit Logs** — Every output traces directly back to the exact code, model parameters, and raw inputs that created it.
 
-- A research question becomes a literature survey, an experiment, a figure, and a paper.
-- A design brief becomes prototypes, exports, and presentation decks.
-- A data question becomes analysis, notebooks, charts, and a report.
-- A coding task becomes agents, tools, tests, and documentation.
-
-All of it local. All of it yours. All of it traceable.
-
----
-
-## Why "Prism"?
-
-A prism takes one beam of light and reveals it was always made of many colors.
-Prism takes one question and reveals it was always made of many tasks — each one
-a different wavelength of the same thought, each one producing something real.
+> **One Input. Every Wavelength.**
+> * A research question becomes a literature survey, an experiment, a figure, and a paper.
+> * A design brief becomes interactive prototypes, wireframes, specs, and presentation decks.
+> * A data problem becomes exploratory analysis, clean datasets, live notebooks, and an executive report.
+> * A software task becomes agent workflows, local code edits, automated tests, and documentation.
 
 ---
 
-## Features
+## 📐 Why "Prism"?
 
-### Autonomous agents that produce real artifacts
-Not just chat. Every agent action produces inspectable files — figures, code,
-reports, notebooks — linked back to the exact inputs, environment, and conversation
-that created them.
+A optical prism takes a single ray of white light and reveals that it was always composed of many distinct wavelengths. 
 
-### Everything traces back
-Provenance tracking links every output to its source. Open any artifact and see
-the script, the data, the model output, and the conversation that made it.
-
-### Local-first by default
-Your sessions, data, provenance, notebooks, and run records live on your machine.
-Nothing leaves unless you want it to.
-
-### Model-agnostic
-Bring your own model. The runtime supports any provider — OpenAI, Anthropic,
-local models, custom endpoints. Skills and MCP servers stay pluggable.
-
-### Reach it from anywhere
-A built-in gateway serves the real desktop UI to a browser on your LAN or phone.
-Start a run at your desk, check results from your phone.
-
-### Drive your own browser
-The agent can control your real Chrome — profile and logins intact — or use an
-isolated private browser.
-
-### Plan before acting
-`/plan` lays out an execution plan. `/goal` fixes the objective, constraints, and
-acceptance criteria. Then the agent executes.
-
-### Work on several things at once
-Tile panes side by side. Run different models in each. Drag to dock. Independent
-Screens for different projects.
+Similarly, Prism takes a single prompt or hypothesis and refracts it across specialized AI agents, analytical skills, and computational tools — giving each facet of your thought the dedicated focus it requires while keeping everything unified in one local workspace.
 
 ---
 
-## Research loop
+## 📸 Visual Tour & Capabilities
 
-The full scientific method, as a skill chain:
+### 1. Intelligent Workspace & Guided Workflows
+Start from a single prompt or pick from curated scientific and creative starter tasks. Prism configures agent runtime modes (Manual Approval vs. Autonomous) and supports bring-your-own-model providers.
 
-| Stage | What it does | Output |
-| --- | --- | --- |
-| Explore | Turn a broad direction into concrete topics | Topic matrix, literature pre-survey |
-| Survey | Search and synthesize the literature | 6–20 pp PDF, 60+ real citations |
-| Experiment | Design and run experiments | Code, results, figures, provenance |
-| Write | Draft a publication | 8–14 pp PDF, 200+ citations, figures |
-
-Each stage is self-contained. Run them individually or let the meta-skill chain
-them end to end.
+![New Session Workspace](./assets/screenshots/new-session.png)
 
 ---
 
-## Connectors
+### 2. Interactive Figures & Code Execution
+Inspect generated visual artifacts alongside their underlying execution code, input datasets, and runtime environment logs. Tweak parameters live and re-render figures instantly.
 
-One-click science integrations:
-
-- Literature: arXiv, PubMed, Crossref, Semantic Scholar, bioRxiv/medRxiv
-- Biomedical: ClinicalTrials.gov, MyVariant/ClinVar
-- Materials: Materials Project
-- Economics: FRED
-- Climate: Open-Meteo
-- Space weather, USGS water data
-
-Add any MCP server or local tool from Settings.
+![Interactive Figures](./assets/screenshots/interactive-figures.png)
 
 ---
 
-## Install
+### 3. Automated Literature Survey & PDF Generation
+Fan out literature searches across arXiv, PubMed, UniProt, and bioRxiv. Prism automatically de-duplicates papers, audits DOI citations, and compiles publication-formatted PDF reports.
 
-Download from the [Releases page](https://github.com/bmo1177/Prism/releases/latest).
+![Literature Survey & PDF Report](./assets/screenshots/literature-survey.png)
 
-| Platform | Format |
-| --- | --- |
-| macOS | `.dmg` / `.app` (Apple Silicon & Intel) |
-| Windows | `.exe` / `.msi` |
-| Linux | `.deb` / `.rpm` / AppImage |
+---
+
+### 4. Shared Live Notebooks & Kernel Integration
+Run code seamlessly alongside the agent. Prism maintains active Python/Jupyter kernel sessions, allowing variables and dataframes to be inspected or edited interactively.
+
+![Live Notebook Kernel](./assets/screenshots/notebook-execution.png)
+
+---
+
+### 5. Pluggable Science Skills & Domain Gates
+Access a library of domain-specific skills including **Domain Check** (catching unit/coordinate errors), **Large File Introspection** (HDF5/Parquet/VCF), **Stats Integrity**, and **Modal/Remote Compute**.
+
+![Science Skills Library](./assets/screenshots/science-skills.png)
+
+---
+
+### 6. Design & Prototyping Templates
+Turn design briefs into annotated wireframes, lo-fi greybox blueprints, mobile app user flows, and HTML presentation decks with live side-by-side previews.
+
+![Design Templates](./assets/screenshots/design-templates.png)
+
+---
+
+### 7. Tile-able Multi-Screen Layouts & Dark Mode
+Run multiple agent sessions simultaneously. Tile screens side-by-side, assign different models to each pane, and switch smoothly between high-contrast Dark Mode and light themes.
+
+![Dark Mode & Multi-Screen Layout](./assets/screenshots/dark-mode-multi-screen.png)
+
+---
+
+### 8. System Environment Detection & Skill Management
+Prism automatically detects local Python, Node.js, `uv`, Jupyter, and Git environments, allowing you to install custom `SKILL.md` packages or MCP servers in seconds.
+
+![Environment & Skill Management](./assets/screenshots/environment-detection.png)
+
+---
+
+## 🔬 Research Loop
+
+Prism encapsulates the scientific method into a chain of autonomous skill stages:
+
+| Stage | Action | Output |
+| :--- | :--- | :--- |
+| **Explore** | Refine broad ideas into concrete, testable hypotheses | Topic matrix, literature pre-survey |
+| **Survey** | Search and synthesize academic literature | 6–20 page PDF report, 60+ verified citations |
+| **Experiment** | Formulate analysis scripts, clean datasets, and run models | Executable code, data tables, figures, provenance log |
+| **Write** | Draft publication-grade manuscript | 8–14 page PDF paper, LaTeX output, figure callouts |
+
+---
+
+## 🔌 Scientific Connectors & MCP Tools
+
+Connect directly to domain-specific databases and computational tools out of the box:
+
+* **Literature & Citation**: arXiv, PubMed, Crossref, Semantic Scholar, bioRxiv / medRxiv
+* **Biomedical & Life Sciences**: ClinicalTrials.gov, MyVariant, ClinVar, UniProt
+* **Materials Science**: Materials Project API
+* **Economics & Finance**: FRED (Federal Reserve Economic Data)
+* **Earth & Space**: Open-Meteo Weather, USGS Water Data, NOAA Space Weather
+* **Custom Extensibility**: Plug in any Model Context Protocol (MCP) server or local shell script via Settings.
+
+---
+
+## ⚡ Installation
+
+Download pre-built binaries for your platform from the [Releases Page](https://github.com/bmo1177/Prism/releases/latest).
+
+| Platform | Format / Package |
+| :--- | :--- |
+| **macOS** | `.dmg` / `.app` (Universal: Apple Silicon & Intel) |
+| **Windows** | `.exe` installer / `.msi` |
+| **Linux** | `.deb` / `.rpm` / `.AppImage` |
+
+### Linux Command Line Quick Start:
 
 ```bash
-# Linux .deb
+# Debian / Ubuntu (.deb)
 sudo apt install ./Prism_*.deb
 
-# Linux .rpm
+# Fedora / RHEL (.rpm)
 sudo rpm -i Prism-*.rpm
 
-# AppImage
+# AppImage (Universal)
 chmod +x Prism_*.AppImage
 ./Prism_*.AppImage
 ```
 
 ---
 
-## Build from source
+## 🛠️ Build from Source
 
-Requirements: Node.js ≥ 20, pnpm 9, Rust toolchain, Tauri system dependencies.
+### Prerequisites
+* **Node.js**: ≥ 20.x
+* **pnpm**: 9.x
+* **Rust Toolchain**: Stable (`cargo`, `rustc`)
+* **Tauri 2 System Dependencies**: (See [Tauri Prerequisites](https://v2.tauri.app/start/prerequisites/))
+
+### Steps
 
 ```bash
-git clone https://github.com/bmo1177/Prism
+# 1. Clone repository
+git clone https://github.com/bmo1177/Prism.git
 cd Prism
+
+# 2. Install dependencies
 pnpm install
 
-# Fetch bundled sidecars and skills
+# 3. Fetch bundled runtime sidecars & default skills
 bash scripts/dev/fetch-opencode.sh
 bash scripts/dev/fetch-uv.sh
 bash scripts/dev/fetch-skills.sh
 
-# Develop
+# 4. Launch development environment
 pnpm --filter @ai4s/desktop tauri dev
 
-# Build
+# 5. Build production desktop release
 pnpm --filter @ai4s/desktop tauri build
 ```
 
 ---
 
-## Safety
+## 🛡️ Safety & Local-First Guarantees
 
-- Workspace files stay local by default.
-- Command execution, file deletion, and remote connections require approval.
-- Provider credentials are stored in app-private config, never in git or provenance.
-- Settings shows a plain-language data-flow view.
-
----
-
-## Repository layout
-
-| Path | What |
-| --- | --- |
-| `apps/desktop/` | Tauri + React desktop shell |
-| `packages/sdk/` | Runtime client wrapper |
-| `packages/shared/` | Shared types and chart palette |
-| `packages/ui/` | Shared UI components |
-| `runtime/skills/` | Agent skills (core + external) |
-| `runtime/mcp/` | MCP configuration |
-| `runtime/harness/` | Runtime operator context |
-| `examples/` | Example workspaces |
-| `scripts/dev/` | Sidecar and skill fetchers |
-| `docs/` | Product and technical docs |
+* 🔒 **Local Workspace Isolation**: The agent strictly accesses the open project workspace directory.
+* 🛡️ **Execution Approval**: Commands, file deletions, dependency installs, and network calls require explicit user approval by default.
+* 🗝️ **Secure Credentials**: API keys are stored securely in OS credential storage / local app config — never exported into git, crash reports, or provenance files.
+* 📊 **Transparent Data Flow**: Settings provides a clear plain-language view of all network activity and model interactions.
 
 ---
 
-## Status
+## 📂 Repository Architecture
 
-Active development. MVP stage. See [PROGRESS.md](./PROGRESS.md) for the current
-implementation log.
+```
+Prism/
+├── apps/
+│   └── desktop/          # Tauri 2 Rust wrapper & React frontend shell
+├── packages/
+│   ├── sdk/              # OpenCodeClient runtime wrapper
+│   ├── shared/           # Common types, schemas, and color palettes
+│   └── ui/               # Shared UI component system
+├── runtime/
+│   ├── skills/           # Bundled & external agent skills
+│   ├── mcp/              # Model Context Protocol integrations
+│   └── harness/          # Agent execution context & prompts
+├── assets/               # Branding graphics, logos, and screenshots
+├── examples/             # Built-in demo projects (e.g. bci-trends)
+├── scripts/              # Development, fetching, and build scripts
+└── docs/                 # Product specifications and PRD
+```
 
 ---
 
-## Citation
+## 📜 Citation
+
+If you use Prism in your research or academic work, please cite:
 
 ```bibtex
-@software{prism,
-  author  = {{The Prism Contributors}},
-  title   = {Prism: light bent into work},
-  year    = {2026},
-  version = {0.3.3},
-  doi     = {10.5281/zenodo.21805331},
-  url     = {https://github.com/bmo1177/Prism},
-  license = {MIT}
+@software{prism2026,
+  author       = {{The Prism Contributors}},
+  title        = {Prism: Light bent into work},
+  year         = {2026},
+  publisher    = {GitHub},
+  journal      = {GitHub repository},
+  howpublished = {\url{https://github.com/bmo1177/Prism}},
+  version      = {0.3.3},
+  license      = {MIT}
 }
 ```
 
 ---
 
-## License
+## 📄 License
 
-[MIT](./LICENSE)
+Distributed under the [MIT License](./LICENSE).
 
-> Prism is beta software. Treat outputs as drafts — verify before you publish.
+> *Prism is local-first AI software. Always verify generated figures, code execution, and citations before publication.*
