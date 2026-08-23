@@ -54,6 +54,7 @@ export function SkillsPage() {
           subtitle={
             <>
               {t("skills.description.prefix")}
+              {/* eslint-disable-next-line i18next/no-literal-string -- a filesystem path, displayed verbatim */}
               <span className="font-mono text-xs">.opencode/skills/</span>
               {t("skills.description.suffix")}
             </>

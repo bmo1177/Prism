@@ -577,9 +577,22 @@ competitors.
   the skill documents the `.dta`/`.sav`→R (`foreign`/`haven`) round-trip;
   **verified on this host** that pandas→`.dta`→R OLS reproduces identical
   estimates (β=0.600870, SE=0.075000 both sides). 13 validator tests; CLI catches
-  all three risks on a realistic workspace. Gaps: a first-class in-app
-  preregistration artifact + automatic pipeline↔plan diff on every run;
-  packaged Stata/SPSS reader UI; deeper wrong-test-selection detection.
+  all three risks on a realistic workspace.
+  **First-class preregistration artifact (shipped):** the bundled `prereg-check`
+  skill (`runtime/skills/core/prereg-check/`) defines a versioned plan artifact
+  (`*.prereg.json`, schema `prereg.v1`: hypotheses/outcomes/predictors/tests/
+  correction/seeds/exclusions/n_min — only `schema` required,
+  forward-compatible) and deterministically diffs executed code against it:
+  **prereg · unplanned-test** (a registered-significance-test name that ran
+  without being planned), **prereg · missing-test** (planned test never ran),
+  **prereg · correction** (promised multiplicity correction absent from code),
+  **prereg · seed** (registered seeds vs unseeded randomness), plus
+  **prereg · schema** validation. Same `review` contract (`check: "prereg"`),
+  Python AST diffing with documented R limits, surfaced in `/science` gallery
+  and wired into the science-integrity workflow starter. 17 validator tests;
+  CLI catches all deviation classes on a realistic workspace. Gaps: packaged
+  Stata/SPSS reader UI; deeper wrong-test-selection detection; an in-app
+  inspector view rendering the plan artifact itself.
 
 ---
 
@@ -684,7 +697,7 @@ competitors.
 | P1-3 | Scientific renderers | P1 | 🟡 Partial — base + 3D structure + genome + FITS + DOS + band + phase + qualitative-coding + anomaly map (all 4 disciplines; materials trio complete); ternary/coastlines next |
 | P1-4 | Windows + macOS installers | P1 | 🟡 Partial — macOS done; Windows CI ready (signing/verify host-bound) |
 | P1-5 | Interaction & visualization craft | P1 | 🟡 Partial — chart system + palette + command palette + native table→chart surface shipped |
-| **P1-6** | **Social-science analysis integrity** | **P1** | 🟡 **Partial — stats-integrity skill: interpretation/prereg/seed checks + verified .dta→R round-trip** |
+| **P1-6** | **Social-science analysis integrity** | **P1** | 🟡 **Partial — stats-integrity skill (interpretation/prereg/seed checks, verified .dta→R round-trip) + prereg-check skill: versioned `.prereg.json` artifact (prereg.v1) deterministically diffed against executed code** |
 | P2-1 | Notebook + larger-project handling | P2 | ✅ Done — notebook + workspace Files explorer |
 | P2-2 | HPC / SSH / Slurm / Modal | P2 | 🟡 Partial — SSH+Slurm + Modal (detection + skill) shipped; multi-env mgmt pending |
 | P2-3 | Plain-language privacy posture | P2 | ✅ Done — disclosure + creds in mode-600 file |
@@ -705,8 +718,10 @@ discipline-specific 20% and the one cross-cutting gap this revision adds:
    Open-Meteo/USGS); next is astronomy catalogs (no PyPI MCP yet) and richer
    viewers.
 3. **Deepen the shipped gates** — library round-trips shipped for P0-5 (✅
-   SMILES→RDKit + POSCAR→pymatgen); P1-6 (in-app prereg artifact + Stata/SPSS
-   UI) and P0-4 (weak-model robustness) remain. **P0-6 is now ✅ Done** — the
+   SMILES→RDKit + POSCAR→pymatgen) and P1-6's prereg artifact shipped (✅
+   `prereg-check` diffs code against the registered `.prereg.v1` plan); the
+   Stata/SPSS reader UI, a plan-artifact inspector view, and P0-4 (weak-model
+   robustness) remain. **P0-6 is now ✅ Done** — the
    probe covers genomics/GRIB/ROOT and the UI exposes it as one-click "Inspect
    without loading".
 

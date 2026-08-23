@@ -162,9 +162,10 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
     icon: <ShieldCheck size={17} strokeWidth={1.75} />,
     prompt:
       "Use the science integrity skills on my analysis in the workspace: run domain-check before " +
-      "executing and again on the results, apply stats-integrity to any statistical claims, and flag " +
-      "each risk with evidence — never claim the analysis is sound. Write integrity-report.md with the " +
-      "findings. Ask me which files to audit if there is more than one candidate.",
+      "executing and again on the results, apply stats-integrity to any statistical claims, and if a " +
+      ".prereg.json plan exists run prereg-check to diff the executed code against the registered " +
+      "plan. Flag each risk with evidence — never claim the analysis is sound. Write integrity-report.md " +
+      "with the findings. Ask me which files to audit if there is more than one candidate.",
   },
 ];
 

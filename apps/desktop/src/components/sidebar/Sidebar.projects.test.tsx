@@ -95,9 +95,10 @@ describe("Sidebar projects", () => {
     });
     renderAt("/files");
     await screen.findByText("BCI Trends");
-    // Being the active project tints the row's folder icon with the accent.
+    // Being the active project tints the row's folder icon with the focus
+    // color (the Mesophotic redesign moved active states accent → focus).
     const row = screen.getByText("BCI Trends").closest("div");
-    expect(row?.querySelector(".text-accent")).not.toBeNull();
+    expect(row?.querySelector(".text-focus")).not.toBeNull();
   });
 
   it("offers a new-project entry when no projects exist yet", async () => {

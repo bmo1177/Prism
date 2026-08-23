@@ -19,6 +19,8 @@
     "cronInvalid": "Cette expression cron n'est pas valide."
   },
   "scheduleKind": {
+    "daily": "Tous les jours à",
+    "weekday": "Jours ouvrés à",
     "every": "Toutes les x secondes",
     "cron": "Expression cron",
     "at": "À l'horodatage",
@@ -36,7 +38,8 @@
     "create": "Créer la tâche",
     "everyPlaceholder": "p. ex. 3600 = chaque heure",
     "cronPlaceholder": "p. ex. 0 9 * * 1-5",
-    "atPlaceholder": "Secondes Unix, p. ex. 1704067200"
+    "atPlaceholder": "Secondes Unix, p. ex. 1704067200",
+    "time": "Heure"
   },
   "empty": {
     "title": "Aucune tâche pour l'instant",

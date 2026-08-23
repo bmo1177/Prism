@@ -73,6 +73,11 @@ It prints one ` ```review ` fenced JSON block covering three risks:
   the workspace) never named — a HARKing path.
 - **stats · seed** — a randomised analysis with no fixed seed.
 
+If the workspace has a structured plan artifact (`*.prereg.json`,
+schema `prereg.v1`), also run the **prereg-check** skill: it diffs the executed
+code against the registered tests, correction, and seeds exactly, catching
+deviations this gate's free-text matching cannot see.
+
 ## Reporting
 
 Copy the ` ```review ` block as the **last thing** in your message — the app

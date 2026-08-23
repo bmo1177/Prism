@@ -19,6 +19,8 @@
     "cronInvalid": "その cron 式は無効です。"
   },
   "scheduleKind": {
+    "daily": "毎日",
+    "weekday": "平日",
     "every": "n 秒ごと",
     "cron": "cron 式",
     "at": "タイムスタンプに",
@@ -36,7 +38,8 @@
     "create": "タスクを作成",
     "everyPlaceholder": "例: 3600 = 毎時間",
     "cronPlaceholder": "例: 0 9 * * 1-5",
-    "atPlaceholder": "Unix 秒、例: 1704067200"
+    "atPlaceholder": "Unix 秒、例: 1704067200",
+    "time": "時刻"
   },
   "empty": {
     "title": "タスクはまだありません",

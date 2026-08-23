@@ -19,6 +19,8 @@
     "cronInvalid": "Dieser Cron-Ausdruck ist ungültig."
   },
   "scheduleKind": {
+    "daily": "Täglich um",
+    "weekday": "Werktags um",
     "every": "Alle x Sekunden",
     "cron": "Cron-Ausdruck",
     "at": "Zu Zeitstempel",
@@ -36,7 +38,8 @@
     "create": "Aufgabe erstellen",
     "everyPlaceholder": "z. B. 3600 = jede Stunde",
     "cronPlaceholder": "z. B. 0 9 * * 1-5",
-    "atPlaceholder": "Unix-Sekunden, z. B. 1704067200"
+    "atPlaceholder": "Unix-Sekunden, z. B. 1704067200",
+    "time": "Uhrzeit"
   },
   "empty": {
     "title": "Noch keine Aufgaben",

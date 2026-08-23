@@ -19,6 +19,8 @@
     "cronInvalid": "해당 cron 표현식이 잘못되었습니다."
   },
   "scheduleKind": {
+    "daily": "매일",
+    "weekday": "평일",
     "every": "N초마다",
     "cron": "cron 표현식",
     "at": "타임스탬프로",
@@ -36,7 +38,8 @@
     "create": "작업 만들기",
     "everyPlaceholder": "예: 3600 = 매시간",
     "cronPlaceholder": "예: 0 9 * * 1-5",
-    "atPlaceholder": "Unix 초, 예: 1704067200"
+    "atPlaceholder": "Unix 초, 예: 1704067200",
+    "time": "시간"
   },
   "empty": {
     "title": "아직 작업이 없습니다",
