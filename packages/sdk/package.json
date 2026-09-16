@@ -9,7 +9,15 @@
     ".": "./src/index.ts",
     "./mock-server": "./src/mockServer.ts"
   },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@ai4s/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
   }
 }

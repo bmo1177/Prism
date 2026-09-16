@@ -1,14 +1,14 @@
 {
   "name": "craft",
-  "version": "0.1.0",
+  "version": "0.3.3",
   "private": true,
-  "description": "Craft — unified AI cowork, design and science workspace for macOS, Windows and Linux.",
+  "description": "Prism — local-first AI workspace: cowork, design and science for macOS, Windows and Linux.",
   "license": "MIT",
   "scripts": {
     "dev": "pnpm --filter @ai4s/desktop dev",
     "build": "pnpm --filter @ai4s/desktop build",
-    "test": "pnpm --filter @ai4s/desktop test",
-    "typecheck": "pnpm --filter @ai4s/desktop typecheck",
+    "test": "pnpm --filter @ai4s/desktop test && pnpm --filter @ai4s/sdk test",
+    "typecheck": "pnpm --filter @ai4s/desktop typecheck && pnpm --filter @ai4s/sdk typecheck",
     "lint": "pnpm --filter @ai4s/desktop lint"
   },
   "engines": {
