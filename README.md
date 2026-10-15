@@ -6,7 +6,7 @@
 
   ### **Light bent into work.**
 
-  *A local-first, model-agnostic AI workspace that refracts your questions across agents, notebooks, files, figures, reports, and review — each a different color of the same thought.*
+  *A local-first, model-agnostic AI workspace that refracts your questions across agents, notebooks, files, figures, reports, and review, each a different color of the same thought.*
 
   <p align="center">
     <a href="./README.md"><b>English</b></a> ·
@@ -36,12 +36,12 @@
 
 ## 🌟 What is Prism?
 
-Prism is an open-source, local-first desktop AI workspace designed for scientists, engineers, designers, and thinkers. You ask a question or state a goal; Prism bends it through every tool you have — autonomous agents, live notebooks, local files, real browsers, and remote compute nodes — returning not just an answer, but the entire spectrum of actionable results:
+Prism is an open-source, local-first desktop AI workspace designed for scientists, engineers, designers, and thinkers. You ask a question or state a goal; Prism bends it through every tool you have, including autonomous agents, live notebooks, local files, real browsers, and remote compute nodes, returning not just an answer, but the entire spectrum of actionable results:
 
-* **Figures & Visualizations** — Vector plots, interactive atlas figures, and publication-ready charts.
-* **Reproducible Code & Notebooks** — Executable Python/R scripts, Jupyter kernel integration, and data pipelines.
-* **Publication-Quality Reports** — PDF and Markdown documents complete with DOIs, verified citations, and methodology audits.
-* **Full Provenance & Audit Logs** — Every output traces directly back to the exact code, model parameters, and raw inputs that created it.
+* **Figures & Visualizations**: Vector plots, interactive atlas figures, and publication-ready charts.
+* **Reproducible Code & Notebooks**: Executable Python/R scripts, Jupyter kernel integration, and data pipelines.
+* **Publication-Quality Reports**: PDF and Markdown documents complete with DOIs, verified citations, and methodology audits.
+* **Full Provenance & Audit Logs**: Every output traces directly back to the exact code, model parameters, and raw inputs that created it.
 
 > **One Input. Every Wavelength.**
 > * A research question becomes a literature survey, an experiment, a figure, and a paper.
@@ -53,9 +53,9 @@ Prism is an open-source, local-first desktop AI workspace designed for scientist
 
 ## 📐 Why "Prism"?
 
-A optical prism takes a single ray of white light and reveals that it was always composed of many distinct wavelengths. 
+An optical prism takes a single ray of white light and reveals that it was always composed of many distinct wavelengths.
 
-Similarly, Prism takes a single prompt or hypothesis and refracts it across specialized AI agents, analytical skills, and computational tools — giving each facet of your thought the dedicated focus it requires while keeping everything unified in one local workspace.
+Similarly, Prism takes a single prompt or hypothesis and refracts it across specialized AI agents, analytical skills, and computational tools, giving each facet of your thought the dedicated focus it requires while keeping everything unified in one local workspace.
 
 ---
 
@@ -103,7 +103,7 @@ Turn design briefs into annotated wireframes, lo-fi greybox blueprints, mobile a
 
 ---
 
-### 7. Tile-able Multi-Screen Layouts & Dark Mode
+### 7. Tileable Multi-Screen Layouts & Dark Mode
 Run multiple agent sessions simultaneously. Tile screens side-by-side, assign different models to each pane, and switch smoothly between high-contrast Dark Mode and light themes.
 
 ![Dark Mode & Multi-Screen Layout](./assets/screenshots/dark-mode-multi-screen.png)
@@ -124,9 +124,9 @@ Prism encapsulates the scientific method into a chain of autonomous skill stages
 | Stage | Action | Output |
 | :--- | :--- | :--- |
 | **Explore** | Refine broad ideas into concrete, testable hypotheses | Topic matrix, literature pre-survey |
-| **Survey** | Search and synthesize academic literature | 6–20 page PDF report, 60+ verified citations |
+| **Survey** | Search and synthesize academic literature | 6 to 20 page PDF report, 60+ verified citations |
 | **Experiment** | Formulate analysis scripts, clean datasets, and run models | Executable code, data tables, figures, provenance log |
-| **Write** | Draft publication-grade manuscript | 8–14 page PDF paper, LaTeX output, figure callouts |
+| **Write** | Draft publication-grade manuscript | 8 to 14 page PDF paper, LaTeX output, figure callouts |
 
 ---
 
@@ -145,7 +145,7 @@ Connect directly to domain-specific databases and computational tools out of the
 
 ## ⚡ Installation
 
-Download pre-built binaries for your platform from the [Releases Page](https://github.com/bmo1177/Prism/releases/latest).
+Pre-built binaries for macOS, Windows, and Linux are published on the [Releases Page](https://github.com/bmo1177/Prism/releases). If a build for your platform is not available yet, follow the source build below.
 
 | Platform | Format / Package |
 | :--- | :--- |
@@ -189,8 +189,10 @@ pnpm install
 
 # 3. Fetch bundled runtime sidecars & default skills
 bash scripts/dev/fetch-opencode.sh
-bash scripts/dev/fetch-uv.sh
 bash scripts/dev/fetch-skills.sh
+bash scripts/dev/fetch-uv.sh
+bash scripts/dev/fetch-agent-browser.sh
+bash scripts/dev/fetch-goal-plugin.sh
 
 # 4. Launch development environment
 pnpm --filter @ai4s/desktop tauri dev
@@ -205,7 +207,7 @@ pnpm --filter @ai4s/desktop tauri build
 
 * 🔒 **Local Workspace Isolation**: The agent strictly accesses the open project workspace directory.
 * 🛡️ **Execution Approval**: Commands, file deletions, dependency installs, and network calls require explicit user approval by default.
-* 🗝️ **Secure Credentials**: API keys are stored securely in OS credential storage / local app config — never exported into git, crash reports, or provenance files.
+* 🗝️ **Secure Credentials**: API keys are stored securely in OS credential storage / local app config, never exported into git, crash reports, or provenance files.
 * 📊 **Transparent Data Flow**: Settings provides a clear plain-language view of all network activity and model interactions.
 
 ---
@@ -229,6 +231,12 @@ Prism/
 ├── scripts/              # Development, fetching, and build scripts
 └── docs/                 # Product specifications and PRD
 ```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup, project structure, and how to send a pull request. Notable changes are tracked in [CHANGELOG.md](./CHANGELOG.md).
 
 ---
 
