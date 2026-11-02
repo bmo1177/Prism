@@ -255,6 +255,28 @@
     "warningsCount_other": "{{count}} Annotationen übersprungen oder markiert:",
     "hoverDefaultHint": "über eine Hervorhebung hovern, um ihre Codes zu sehen · auf einen Code klicken, um dessen Textstellen zu isolieren"
   },
+  "prereg": {
+    "badge": "Präregistrierungsplan",
+    "verifiedSchema": "prereg.v1",
+    "readError": "Präregistrierungsplan konnte nicht gelesen werden: {{error}}",
+    "unknownFormat": "Unbekanntes oder ungültiges Format",
+    "hypothesesTitle": "Hypothesen",
+    "variablesTitle": "Variablen & Maße",
+    "outcomesLabel": "Zielvariablen",
+    "predictorsLabel": "Prädiktoren",
+    "testsTitle": "Registrierte statistische Tests",
+    "testColId": "ID",
+    "testColFunction": "Funktion",
+    "testColVariables": "Variablen",
+    "testColHypothesis": "Hypothese",
+    "controlsTitle": "Kontrollen & Schutzmaßnahmen",
+    "correctionLabel": "Multiplizitätskorrektur",
+    "seedsLabel": "Startwerte (Seeds)",
+    "exclusionsLabel": "Ausschlüsse",
+    "sampleSizeLabel": "Min. Stichprobengröße (N)",
+    "viewOverview": "Übersicht",
+    "viewSource": "Quell-JSON"
+  },
   "tableChart": {
     "chartType": {
       "line": "Linie",

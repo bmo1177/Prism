@@ -243,6 +243,28 @@
     "warningsCount_other": "{{count}} 件の注釈がスキップまたはフラグされました:",
     "hoverDefaultHint": "ハイライトにホバーでコードを表示 · コードをクリックしてその範囲のみ表示"
   },
+  "prereg": {
+    "badge": "事前登録計画",
+    "verifiedSchema": "prereg.v1",
+    "readError": "事前登録計画を読み込めませんでした: {{error}}",
+    "unknownFormat": "不明または無効な事前登録形式です",
+    "hypothesesTitle": "仮説",
+    "variablesTitle": "変数と測定値",
+    "outcomesLabel": "アウトカム",
+    "predictorsLabel": "予測因子",
+    "testsTitle": "登録された統計的検定",
+    "testColId": "ID",
+    "testColFunction": "関数",
+    "testColVariables": "変数",
+    "testColHypothesis": "仮説",
+    "controlsTitle": "管理と安全基準",
+    "correctionLabel": "多重性補正",
+    "seedsLabel": "シード",
+    "exclusionsLabel": "除外条件",
+    "sampleSizeLabel": "最小サンプルサイズ (N)",
+    "viewOverview": "概要",
+    "viewSource": "生JSON"
+  },
   "tableChart": {
     "chartType": {
       "line": "線",

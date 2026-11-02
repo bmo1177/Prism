@@ -1,5 +1,5 @@
 {
-  "name": "craft",
+  "name": "prism",
   "version": "0.3.3",
   "private": true,
   "description": "Prism: local-first, model-agnostic AI workspace that unites cowork, design, and science on macOS, Windows, and Linux.",
@@ -35,13 +35,15 @@
   },
   "packageManager": "pnpm@9.4.0",
   "//overrides": {
-    "brace-expansion": "Two separate advisories hit this package, each with its own set of affected ranges per major line, and nothing in the tree depends on it directly — exceljs → archiver → glob@7 → minimatch@3 pulls 1.x into a PRODUCTION install, readdir-glob → minimatch@5 pulls 2.x, minimatch@10 pulls 5.x. GHSA-3jxr-9vmj-r5cp (Dependabot #4): exponential expansion of consecutive empty {} groups, fixed in 1.1.16 / 2.1.2 / 5.0.7. GHSA-mh99-v99m-4gvg (Dependabot #6): unbounded expansion length crashes the process out of memory, fixed in 1.1.17 / 2.1.3 / 3.0.3 / 5.0.8 — a strictly higher floor on every line, which is what the pins below encode. One override per major line so each stays outside both advisories without disturbing the others. Drop these once the dependents ship modern minimatch versions."
+    "brace-expansion": "Three separate advisories have hit this package, each with its own set of affected ranges per major line, and nothing in the tree depends on it directly — exceljs → archiver → glob@7 → minimatch@3 pulls 1.x into a PRODUCTION install, readdir-glob → minimatch@5 pulls 2.x, minimatch@10 pulls 5.x. GHSA-3jxr-9vmj-r5cp (Dependabot #4): exponential expansion of consecutive empty {} groups, fixed in 1.1.16 / 2.1.2 / 5.0.7. GHSA-mh99-v99m-4gvg (Dependabot #6): unbounded expansion length crashes the process out of memory, fixed in 1.1.17 / 2.1.3 / 3.0.3 / 5.0.8. GHSA-rgw5-rvv9-x895: DoS via unbounded intermediate arrays, which bypasses the previous mitigation, fixed in 1.1.18. Each advisory raised the floor, which is what the pins below encode. One override per major line so each stays outside every advisory without disturbing the others. Drop these once the dependents ship modern minimatch versions.",
+    "js-yaml": "GHSA-2883-xcg3-v3hh (CVE-2026-84375, HIGH): maxTotalMergeKeys does not count empty mapping sources, so a small document that merges a large sequence of empty mappings burns CPU (O(N*K)) without ever reaching the limit. Affected: >= 4.0.0 < 4.3.2 and >= 3.0.0 < 3.15.2; merge keys are enabled by default on both lines. The tree resolves exactly one version, 4.3.0, pulled in by dev-only tooling (eslint, @eslint/eslintrc, jsdom via vitest) and never by app code, but the advisory flags the lockfile, so floor the whole dependency at the patched 4.x release. Drop this once eslint 9 / a modern vitest stop depending on the 4.x line."
   },
   "pnpm": {
     "overrides": {
-      "brace-expansion@1": "^1.1.17",
+      "brace-expansion@1": "^1.1.18",
       "brace-expansion@2": "^2.1.3",
-      "brace-expansion@5": "^5.0.8"
+      "brace-expansion@5": "^5.0.8",
+      "js-yaml": "^4.3.2"
     }
   }
 }

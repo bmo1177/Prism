@@ -255,6 +255,28 @@
     "warningsCount_other": "{{count}} annotations skipped or flagged:",
     "hoverDefaultHint": "hover a highlight to see its codes · click a code to isolate its spans"
   },
+  "prereg": {
+    "badge": "Preregistration Plan",
+    "verifiedSchema": "prereg.v1",
+    "readError": "Could not read preregistration plan: {{error}}",
+    "unknownFormat": "Unknown or invalid preregistration format",
+    "hypothesesTitle": "Hypotheses",
+    "variablesTitle": "Variables & Measures",
+    "outcomesLabel": "Outcomes",
+    "predictorsLabel": "Predictors",
+    "testsTitle": "Registered Statistical Tests",
+    "testColId": "ID",
+    "testColFunction": "Function",
+    "testColVariables": "Variables",
+    "testColHypothesis": "Hypothesis",
+    "controlsTitle": "Controls & Guardrails",
+    "correctionLabel": "Multiplicity Correction",
+    "seedsLabel": "Seeds",
+    "exclusionsLabel": "Exclusions",
+    "sampleSizeLabel": "Min Sample Size (N)",
+    "viewOverview": "Overview",
+    "viewSource": "Raw JSON"
+  },
   "tableChart": {
     "chartType": {
       "line": "line",

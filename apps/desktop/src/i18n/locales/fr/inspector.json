@@ -255,6 +255,28 @@
     "warningsCount_other": "{{count}} annotations ignorées ou signalées :",
     "hoverDefaultHint": "survolez un surlignage pour voir ses codes · cliquez sur un code pour isoler ses extraits"
   },
+  "prereg": {
+    "badge": "Plan de préenregistrement",
+    "verifiedSchema": "prereg.v1",
+    "readError": "Impossible de lire le plan de préenregistrement : {{error}}",
+    "unknownFormat": "Format de préenregistrement inconnu ou invalide",
+    "hypothesesTitle": "Hypothèses",
+    "variablesTitle": "Variables et mesures",
+    "outcomesLabel": "Résultats",
+    "predictorsLabel": "Prédicteurs",
+    "testsTitle": "Tests statistiques enregistrés",
+    "testColId": "ID",
+    "testColFunction": "Fonction",
+    "testColVariables": "Variables",
+    "testColHypothesis": "Hypothèse",
+    "controlsTitle": "Contrôles et garde-fous",
+    "correctionLabel": "Correction de multiplicité",
+    "seedsLabel": "Graines (seeds)",
+    "exclusionsLabel": "Exclusions",
+    "sampleSizeLabel": "Taille d'échantillon min. (N)",
+    "viewOverview": "Aperçu",
+    "viewSource": "JSON brut"
+  },
   "tableChart": {
     "chartType": {
       "line": "ligne",

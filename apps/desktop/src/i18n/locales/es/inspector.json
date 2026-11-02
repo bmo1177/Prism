@@ -255,6 +255,28 @@
     "warningsCount_other": "{{count}} anotaciones omitidas o marcadas:",
     "hoverDefaultHint": "pasa el cursor sobre un resaltado para ver sus códigos · haz clic en un código para aislar sus fragmentos"
   },
+  "prereg": {
+    "badge": "Plan de prerregistro",
+    "verifiedSchema": "prereg.v1",
+    "readError": "No se pudo leer el plan de prerregistro: {{error}}",
+    "unknownFormat": "Formato de prerregistro desconocido o no válido",
+    "hypothesesTitle": "Hipótesis",
+    "variablesTitle": "Variables y medidas",
+    "outcomesLabel": "Variables de resultado",
+    "predictorsLabel": "Predictores",
+    "testsTitle": "Pruebas estadísticas registradas",
+    "testColId": "ID",
+    "testColFunction": "Función",
+    "testColVariables": "Variables",
+    "testColHypothesis": "Hipótesis",
+    "controlsTitle": "Controles y salvaguardas",
+    "correctionLabel": "Corrección por multiplicidad",
+    "seedsLabel": "Semillas",
+    "exclusionsLabel": "Exclusiones",
+    "sampleSizeLabel": "Tamaño muestral mín. (N)",
+    "viewOverview": "Resumen",
+    "viewSource": "JSON original"
+  },
   "tableChart": {
     "chartType": {
       "line": "líneas",

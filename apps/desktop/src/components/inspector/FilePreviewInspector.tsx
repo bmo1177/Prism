@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Code2, Download, Eye, ExternalLink, FileSearch, History, Loader2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { FilePreviewInspector as FilePreviewInspectorT, FileRoot } from "@ai4s/shared";
@@ -23,7 +23,6 @@ import { TableChart } from "./TableChart";
 import { canChart } from "@/lib/tableChart";
 import { DocxView, PptxView, XlsxView } from "./OfficePreview";
 import { MoleculeView } from "./MoleculeView";
-import { MeshView } from "./MeshView";
 import { GenomeView } from "./GenomeView";
 import { FitsView } from "./FitsView";
 import { DosView } from "./DosView";
@@ -31,6 +30,9 @@ import { BandView } from "./BandView";
 import { QCodeView } from "./QCodeView";
 import { AnomalyMapView } from "./AnomalyMapView";
 import { PhaseView } from "./PhaseView";
+import { PreregView } from "./PreregView";
+
+const MeshView = lazy(() => import("./MeshView").then((m) => ({ default: m.MeshView })));
 import { useScrollMemory } from "@/lib/scrollMemory";
 import { cn } from "@/lib/cn";
 import { PaneTitlebarInset } from "./RightPane";
@@ -85,7 +87,7 @@ export function FilePreviewInspector({
   const needsText =
     kind === "table" || kind === "text" || kind === "html" || kind === "markdown" ||
     kind === "molecule" || kind === "genome" || kind === "qcode" || kind === "anomaly" ||
-    kind === "phase";
+    kind === "phase" || kind === "prereg";
   const needsBytes =
     kind === "docx" || kind === "xlsx" || kind === "pptx" || kind === "mesh" ||
     kind === "fits" || kind === "dos" || kind === "bands";
@@ -206,7 +208,7 @@ export function FilePreviewInspector({
   };
 
   const canToggle =
-    kind === "html" || kind === "markdown" || kind === "molecule" || kind === "genome";
+    kind === "html" || kind === "markdown" || kind === "molecule" || kind === "genome" || kind === "prereg";
 
   // Where the user was in this file, restored when they come back to it —
   // history browsing keeps its own offset so the two don't clobber each other.
@@ -345,7 +347,16 @@ function Body({
   }
   if (kind === "mesh") {
     return bytes !== null ? (
-      <MeshView filename={filename} bytes={bytes} />
+      <Suspense
+        fallback={
+          <div className="flex h-full items-center justify-center p-6 text-xs text-muted">
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            {t("filePreview.loading", { filename })}
+          </div>
+        }
+      >
+        <MeshView filename={filename} bytes={bytes} />
+      </Suspense>
     ) : (
       <Note text={t("filePreview.desktopOnly")} />
     );
@@ -388,6 +399,22 @@ function Body({
   if (kind === "phase") {
     return text !== null ? (
       <PhaseView filename={filename} text={text} />
+    ) : (
+      <Note text={t("filePreview.desktopOnly")} />
+    );
+  }
+  if (kind === "prereg") {
+    if (showCode) {
+      return text !== null ? (
+        <div className="p-3">
+          <CodeViewer code={text} language={language} />
+        </div>
+      ) : (
+        <Note text={t("filePreview.sourceDesktopOnly")} />
+      );
+    }
+    return text !== null ? (
+      <PreregView filename={filename} text={text} />
     ) : (
       <Note text={t("filePreview.desktopOnly")} />
     );

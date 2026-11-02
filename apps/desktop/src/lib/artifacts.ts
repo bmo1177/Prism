@@ -135,7 +135,8 @@ export type PreviewKind =
   | "qcode"
   | "anomaly"
   | "bands"
-  | "phase";
+  | "phase"
+  | "prereg";
 
 /** 3D mesh / CAD formats rendered by the three.js viewer. */
 export const MESH_EXTS = ["stl", "obj", "ply", "gltf", "glb"];
@@ -163,6 +164,7 @@ export function previewKind(ext: string): PreviewKind {
   if (e === "anom") return "anomaly";
   if (e === "eigenval") return "bands";
   if (e === "phase") return "phase";
+  if (e === "prereg") return "prereg";
   if (["mol", "mol2", "sdf", "smi", "smiles", "cif", "mcif", "mmcif", "pdb", "pqr", "xyz", "cube"].includes(e))
     return "molecule";
   if (["bed", "bedgraph", "bdg", "gff", "gff3", "gtf", "vcf"].includes(e)) return "genome";
@@ -173,6 +175,9 @@ export function previewKind(ext: string): PreviewKind {
  *  Prefer a name match, else fall back to the extension registry. */
 export function previewKindForName(filename: string): PreviewKind {
   const base = (filename.split(/[\\/]/).pop() ?? filename).toLowerCase();
+  if (base.endsWith(".prereg.json") || base === "analysis-plan.json" || base.endsWith(".prereg")) {
+    return "prereg";
+  }
   if (base === "doscar" || base.startsWith("doscar.")) return "dos";
   if (base === "eigenval" || base.startsWith("eigenval.")) return "bands";
   return previewKind(extOf(filename));

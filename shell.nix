@@ -40,7 +40,7 @@ pkgs.mkShell {
   ];
 
   shellHook = ''
-    echo "Craft dev shell ready."
+    echo "Prism dev shell ready."
     rustc --version 2>/dev/null || rustup default stable
   '';
 }

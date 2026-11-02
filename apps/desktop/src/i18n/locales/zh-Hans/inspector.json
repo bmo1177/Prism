@@ -243,6 +243,28 @@
     "warningsCount_other": "{{count}} 条注释被跳过或标记：",
     "hoverDefaultHint": "悬停高亮内容查看其编码 · 点击编码以单独查看其片段"
   },
+  "prereg": {
+    "badge": "预注册计划",
+    "verifiedSchema": "prereg.v1",
+    "readError": "无法读取预注册计划：{{error}}",
+    "unknownFormat": "未知或无效的预注册格式",
+    "hypothesesTitle": "假设列表",
+    "variablesTitle": "变量与度量",
+    "outcomesLabel": "结果变量",
+    "predictorsLabel": "预测变量",
+    "testsTitle": "已注册统计检验",
+    "testColId": "编号",
+    "testColFunction": "检验函数",
+    "testColVariables": "分析变量",
+    "testColHypothesis": "对应假设",
+    "controlsTitle": "控制与检验规则",
+    "correctionLabel": "多重重合校正",
+    "seedsLabel": "随机种子",
+    "exclusionsLabel": "排除标准",
+    "sampleSizeLabel": "最小样本量 (N)",
+    "viewOverview": "概览",
+    "viewSource": "原始 JSON"
+  },
   "tableChart": {
     "chartType": {
       "line": "折线图",

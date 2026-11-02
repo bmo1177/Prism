@@ -239,6 +239,13 @@ describe("previewKind", () => {
 });
 
 describe("previewKindForName", () => {
+  it("recognizes preregistration plan artifacts by name or extension", () => {
+    expect(previewKind("prereg")).toBe("prereg");
+    expect(previewKindForName("study.prereg.json")).toBe("prereg");
+    expect(previewKindForName("workspace/analysis-plan.json")).toBe("prereg");
+    expect(previewKindForName("study.prereg")).toBe("prereg");
+  });
+
   it("recognizes extensionless VASP files by filename", () => {
     expect(previewKindForName("DOSCAR")).toBe("dos");
     expect(previewKindForName("run/DOSCAR")).toBe("dos");
