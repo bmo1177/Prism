@@ -210,7 +210,7 @@ pnpm --filter @ai4s/desktop tauri build
   author  = {{The Prism Contributors}},
   title   = {Prism: light bent into work},
   year    = {2026},
-  version = {0.3.3},
+  version = {0.3.4},
   doi     = {10.5281/zenodo.21805331},
   url     = {https://github.com/bmo1177/Prism},
   license = {MIT}

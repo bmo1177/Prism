@@ -1,6 +1,6 @@
 {
   "name": "prism",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": true,
   "description": "Prism: local-first, model-agnostic AI workspace that unites cowork, design, and science on macOS, Windows, and Linux.",
   "keywords": [

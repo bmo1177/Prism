@@ -252,7 +252,7 @@ If you use Prism in your research or academic work, please cite:
   publisher    = {GitHub},
   journal      = {GitHub repository},
   howpublished = {\url{https://github.com/bmo1177/Prism}},
-  version      = {0.3.3},
+  version      = {0.3.4},
   license      = {MIT}
 }
 ```

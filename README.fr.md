@@ -213,7 +213,7 @@ Si vous utilisez Craft dans vos recherches, merci de le citer ainsi :
   author  = {{The Prism Contributors}},
   title   = {Prism: a local-first, model-agnostic AI research workbench},
   year    = {2026},
-  version = {0.3.3},
+  version = {0.3.4},
   doi     = {10.5281/zenodo.21805331},
   url     = {https://github.com/bmo1177/Prism},
   license = {MIT}

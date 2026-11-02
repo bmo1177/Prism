@@ -6,6 +6,8 @@ All notable changes to Prism are documented here. Format follows
 
 ## [Unreleased]
 
+## [0.3.4] - 2026-11-02
+
 ### Added
 
 - PR check workflow (`.github/workflows/pr-check.yml`): typecheck, lint, and tests on every PR to `main` and every push to `main`.
@@ -15,7 +17,7 @@ All notable changes to Prism are documented here. Format follows
 
 ### Changed
 
-- Aligned all manifests to version 0.3.3 (`package.json`, `tauri.conf.json`, `Cargo.toml`).
+- Aligned all manifests to version 0.3.4 (`package.json`, `tauri.conf.json`, `Cargo.toml`).
 - Hardened the Tauri Content Security Policy (was `null`): `default-src 'self'`, no remote scripts, images from self/data/blob/asset, connections limited to self, Tauri IPC, and localhost/loopback (OpenCode sidecar HTTP + SSE).
 - Removed the unused `xlsx` CDN-tarball dependency. Workbook preview rendering uses `exceljs`, which was already a dependency — no code changes required.
 - Root `pnpm test` / `pnpm typecheck` now cover both `@ai4s/desktop` and `@ai4s/sdk`.

@@ -1,6 +1,6 @@
 [package]
 name = "craft"
-version = "0.3.3"
+version = "0.3.4"
 description = "Prism — local-first AI cowork, design and science workspace"
 authors = ["Prism contributors"]
 edition = "2021"
