@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { latestRelease } from "./tauri";
 
-const RELEASE_URL = "https://api.github.com/repos/prism-ai/prism/releases/latest";
+const RELEASE_URL = "https://api.github.com/repos/bmo1177/Prism/releases/latest";
 const CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const ENABLED_KEY = "craft.update.enabled";
 const BADGE_KEY = "craft.update.badge";

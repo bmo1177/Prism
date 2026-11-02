@@ -27,7 +27,7 @@
     "menuScratch": "Empezar de cero",
     "menuExisting": "Usar una carpeta existente",
     "importTitle": "Importar carpeta existente",
-    "importSubtitle": "Elige cómo debe usar Craft «{{name}}».",
+    "importSubtitle": "Elige cómo debe usar Prism «{{name}}».",
     "importCopy": "Copiar al espacio de trabajo",
     "importCopyHint": "Crea una copia administrada y deja intacto el original, pero usa espacio adicional.",
     "importInPlace": "Usar en el sitio",

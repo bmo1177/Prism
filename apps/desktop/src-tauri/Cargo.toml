@@ -2,7 +2,7 @@
 name = "craft"
 version = "0.3.3"
 description = "Prism — local-first AI cowork, design and science workspace"
-authors = ["Craft contributors"]
+authors = ["Prism contributors"]
 edition = "2021"
 
 [lib]

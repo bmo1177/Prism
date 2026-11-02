@@ -4,8 +4,8 @@ title: "Prism: light bent into work"
 type: software
 authors:
   - name: "The Prism Contributors"
-repository-code: "https://github.com/prism-ai/prism"
-url: "https://prism-ai.github.io"
+repository-code: "https://github.com/bmo1177/Prism"
+url: "https://github.com/bmo1177/Prism#readme"
 license: MIT
 version: 0.3.3
 doi: 10.5281/zenodo.21805331

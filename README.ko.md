@@ -1,6 +1,6 @@
 <div align="center">
 
-[![Prism — Light bent into work](./docs/assets/banner.webp)](https://github.com/prism-ai/prism)
+[![Prism — Light bent into work](./docs/assets/banner.webp)](https://github.com/bmo1177/Prism)
 
 # Prism
 
@@ -150,7 +150,7 @@
 
 ## 설치
 
-[Releases](https://github.com/prism-ai/prism/releases/latest)에서 최신 설치 파일을 받으세요.
+[Releases](https://github.com/bmo1177/Prism/releases/latest)에서 최신 설치 파일을 받으세요.
 
 - **macOS**: `.dmg` / `.app`, Apple Silicon 및 Intel, macOS 13 Ventura 이상.
 - **Windows**: NSIS `.exe` 및 `.msi`, Windows 10/11 x64.
@@ -163,7 +163,7 @@ Windows에서는 SmartScreen에서 **More info -> Run anyway**를 선택합니�
 ## 소스에서 빌드
 
 ```bash
-git clone https://github.com/prism-ai/prism
+git clone https://github.com/bmo1177/Prism
 cd open-science
 pnpm install
 bash scripts/dev/fetch-opencode.sh
@@ -215,7 +215,7 @@ pnpm lint
   year    = {2026},
   version = {0.3.3},
   doi     = {10.5281/zenodo.21805331},
-  url     = {https://github.com/prism-ai/prism},
+  url     = {https://github.com/bmo1177/Prism},
   license = {MIT}
 }
 ```

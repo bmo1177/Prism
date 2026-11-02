@@ -1,6 +1,6 @@
 <div align="center">
 
-[![Prism — Light bent into work](./docs/assets/banner.webp)](https://github.com/prism-ai/prism)
+[![Prism — Light bent into work](./docs/assets/banner.webp)](https://github.com/bmo1177/Prism)
 
 # Prism
 
@@ -150,7 +150,7 @@ Connecteurs MCP scientifiques en un clic : recherche bibliographique, bases biom
 
 ## Installation
 
-Téléchargez la dernière version depuis [Releases](https://github.com/prism-ai/prism/releases/latest).
+Téléchargez la dernière version depuis [Releases](https://github.com/bmo1177/Prism/releases/latest).
 
 - **macOS** : `.dmg` / `.app`, Apple Silicon et Intel, macOS 13 Ventura ou plus récent.
 - **Windows** : `.exe` NSIS et `.msi`, Windows 10/11 x64.
@@ -163,7 +163,7 @@ Sous Windows, choisissez **More info -> Run anyway** dans SmartScreen.
 ## Construire depuis le code source
 
 ```bash
-git clone https://github.com/prism-ai/prism
+git clone https://github.com/bmo1177/Prism
 cd open-science
 pnpm install
 bash scripts/dev/fetch-opencode.sh
@@ -215,7 +215,7 @@ Si vous utilisez Craft dans vos recherches, merci de le citer ainsi :
   year    = {2026},
   version = {0.3.3},
   doi     = {10.5281/zenodo.21805331},
-  url     = {https://github.com/prism-ai/prism},
+  url     = {https://github.com/bmo1177/Prism},
   license = {MIT}
 }
 ```

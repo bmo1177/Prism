@@ -23,7 +23,7 @@ export async function notifyPermissionRequest(input: PermissionNotificationInput
 
   try {
     sendNotification({
-      title: "Craft needs your approval",
+      title: "Prism needs your approval",
       body: permissionBody(input),
     });
     return true;

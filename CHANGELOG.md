@@ -20,6 +20,11 @@ All notable changes to Prism are documented here. Format follows
 - Removed the unused `xlsx` CDN-tarball dependency. Workbook preview rendering uses `exceljs`, which was already a dependency — no code changes required.
 - Root `pnpm test` / `pnpm typecheck` now cover both `@ai4s/desktop` and `@ai4s/sdk`.
 
+### Fixed
+
+- Update checker now targets the live `bmo1177/Prism` repository on both paths: the desktop releases feed and the web API fallback. `CITATION.cff` points at the same repository instead of a dead 404.
+- Removed the remaining user-visible Craft branding: macOS folder-access prompts, the approval notification, the import dialog in all 7 locales, the model probe user agent, generated SSH and git markers, the browser title, and the release pipeline's "Open Science" names.
+
 ## [0.3.3] - 2026-08-23
 
 ### Added

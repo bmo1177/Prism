@@ -70,7 +70,7 @@ const MAX_DIR_BYTES: u64 = 50 * 1024 * 1024;
 /// ignored; anything genuinely too big is caught by the >= 100 MB size guard,
 /// which is format-agnostic (a small `.mp4` is kept, a huge `.csv` is not).
 const DEFAULT_GITIGNORE: &str = "\
-# Managed by Craft.
+# Managed by Prism.
 # Excludes paths with no provenance value plus secrets that must never be
 # committed. Research outputs, data, notebooks, and code are intentionally kept;
 # files >= 100 MB are dropped by the snapshot size guard, not by this list.

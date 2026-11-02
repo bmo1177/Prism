@@ -1,4 +1,4 @@
-// Craft — Tauri 2 entry. Hosts the React frontend and supervises the
+// Prism: Tauri 2 entry. Hosts the React frontend and supervises the
 // bundled OpenCode sidecar (isolated config/data + dedicated port; killed on exit).
 mod artifact_file;
 mod browser;
@@ -213,7 +213,7 @@ pub fn run() {
             debug_log::log_debug
         ])
         .build(tauri::generate_context!())
-        .expect("error while building Craft")
+        .expect("error while building Prism")
         .run(|app, event| {
             // Clean up on exit. macOS Cmd+Q / Quit terminates via RunEvent::Exit
             // (ExitRequested is not always delivered), so handle BOTH — otherwise
