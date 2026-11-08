@@ -39,6 +39,17 @@ venv/
 .worktrees/
 docs/superpowers/
 
+# Playwright E2E artifacts (screenshots, videos, traces, reports)
+apps/desktop/test-results/
+apps/desktop/e2e/test-results/
+apps/desktop/e2e/playwright-report/
+apps/desktop/e2e/playwright-results.json
+apps/desktop/e2e/playwright-results.xml
+apps/desktop/playwright-report/
+apps/desktop/playwright-results.json
+apps/desktop/playwright-results.xml
+apps/desktop/artifacts/
+
 # Local runtime & secrets (never commit)
 .ai4s-workbench/
 secrets/
