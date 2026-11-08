@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Atom, Loader2, Sparkles } from "lucide-react";
+import { Atom, Loader2, Search, Sparkles } from "lucide-react";
 import { listScienceSkills, scienceSkillPrompt, type ScienceSkill } from "@/lib/science";
 import { isTauri } from "@/lib/tauri";
 import { isGatewayWeb } from "@/lib/webMode";
@@ -43,9 +43,10 @@ function SkillCard({ skill, onUse }: { skill: ScienceSkill; onUse: (s: ScienceSk
  * example.html to preview.
  */
 export function SciencePage() {
-  const { t } = useTranslation("pages");
+  const { t } = useTranslation(["pages", "nav"]);
   const navigate = useNavigate();
   const [skills, setSkills] = useState<ScienceSkill[]>([]);
+  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
   // Tiling is desktop-only — web/phone show one pane, so there is no new Screen.
@@ -82,6 +83,16 @@ export function SciencePage() {
     })();
   };
 
+  const filteredSkills = skills.filter((s) => {
+    const q = query.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      s.title.toLowerCase().includes(q) ||
+      s.dir.toLowerCase().includes(q) ||
+      s.tagline.toLowerCase().includes(q)
+    );
+  });
+
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-6xl px-6 py-10">
@@ -89,6 +100,31 @@ export function SciencePage() {
           icon={<Atom size={18} strokeWidth={1.75} />}
           title={t("science.title")}
           subtitle={t("science.subtitle")}
+          badge={
+            skills.length > 0 ? (
+              <span className="rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[11px] text-muted ring-1 ring-border" aria-hidden>
+                {skills.length}
+              </span>
+            ) : undefined
+          }
+          actions={
+            skills.length > 0 ? (
+              <div className="relative">
+                <Search size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
+                <label htmlFor="science-search" className="sr-only">
+                  {t("science.searchLabel")}
+                </label>
+                <input
+                  id="science-search"
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={t("science.searchPlaceholder")}
+                  className="w-52 rounded-input border border-border bg-surface py-1 pl-8 pr-2.5 text-xs text-text outline-none placeholder:text-muted focus:border-accent"
+                />
+              </div>
+            ) : undefined
+          }
         />
 
         {!isTauri ? (
@@ -105,9 +141,13 @@ export function SciencePage() {
           <p className="mx-auto mt-10 max-w-md text-center text-sm text-muted">
             {t("science.empty.noSkills")}
           </p>
+        ) : filteredSkills.length === 0 ? (
+          <p className="mx-auto mt-10 max-w-md text-center text-sm text-muted" role="status">
+            {t("science.empty.noMatches")}
+          </p>
         ) : (
           <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {skills.map((skill, i) => (
+            {filteredSkills.map((skill, i) => (
               <div
                 key={skill.dir}
                 className="card-enter"

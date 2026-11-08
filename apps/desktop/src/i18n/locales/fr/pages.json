@@ -129,10 +129,12 @@
     "webOnly": "Les modèles de design sont disponibles dans l'application de bureau.",
     "error": "Impossible de charger les modèles de design.",
     "empty": {
-      "noTemplates": "Aucun modèle de design dans cette version."
+      "noTemplates": "Aucun modèle de design dans cette version.",
+      "noMatches": "Aucun modèle de design dans cette catégorie."
     },
     "bestFor": "Idéal pour : {{text}}",
-    "previewUnavailable": "Aperçu indisponible."
+    "previewUnavailable": "Aperçu indisponible.",
+    "filterLabel": "Filtrer par type"
   },
   "research": {
     "title": "Recherche",
@@ -174,8 +176,11 @@
     "webOnly": "Les compétences scientifiques sont disponibles dans l'application de bureau.",
     "error": "Impossible de charger les compétences scientifiques.",
     "useSkill": "Utiliser cette compétence",
+    "searchPlaceholder": "Filtrer les compétences…",
+    "searchLabel": "Filtrer les compétences scientifiques",
     "empty": {
-      "noSkills": "Aucune compétence scientifique n'est incluse dans cette version."
+      "noSkills": "Aucune compétence scientifique n'est incluse dans cette version.",
+      "noMatches": "Aucune compétence scientifique ne correspond à votre recherche."
     }
   }
 }

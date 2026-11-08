@@ -133,6 +133,12 @@
     "newSession": "新建会话",
     "heading": "我们该研究什么？",
     "subheading": "在下方描述您的分析——或从以下选项开始。",
+    "categories": {
+      "all": "全部",
+      "cowork": "协同与办公",
+      "design": "设计",
+      "science": "科学科研"
+    },
     "demo": {
       "title": "端到端运行一次演示分析",
       "description": "模拟一份数据集，拟合模型，并生成图表和可追溯的报告。"
@@ -195,7 +201,8 @@
     "science-integrity": {
       "title": "审计分析的完整性",
       "description": "对代码与结果运行领域与统计完整性检查。"
-    }
+    },
+    "filterAria": "按支柱筛选起始器"
   },
   "live": {
     "runtime": {

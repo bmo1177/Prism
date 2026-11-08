@@ -118,6 +118,13 @@
     "ariaLabel": "Paleta de comandos",
     "placeholder": "Escribe un comando…",
     "noResults": "Sin resultados.",
+    "groups": {
+      "quick": "Acciones rápidas",
+      "cowork": "AI Cowork y oficina",
+      "design": "Diseño",
+      "science": "Ciencia e investigación",
+      "tools": "Laboratorio y herramientas"
+    },
     "actions": {
       "newSession": "Nueva sesión",
       "analyzeData": "Analizar mis datos (nuevo flujo de trabajo)",
@@ -137,6 +144,12 @@
       "sciencePaper": "Redactar un informe tipo artículo",
       "scienceRepro": "Reproducir un análisis",
       "scienceIntegrity": "Comprobar integridad del análisis"
+    },
+    "footer": {
+      "title": "Acciones rápidas de Prism",
+      "navigate": "↑↓ para navegar",
+      "run": "↵ para ejecutar",
+      "close": "esc para cerrar"
     }
   },
   "rowMenu": {

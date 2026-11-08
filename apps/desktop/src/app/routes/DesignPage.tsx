@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Loader2, Palette, Sparkles } from "lucide-react";
+import { cn } from "@/lib/cn";
 import {
   designPreviewUrl,
   listDesignTemplates,
@@ -173,9 +174,10 @@ function Section({
 }
 
 export function DesignPage() {
-  const { t } = useTranslation("pages");
+  const { t } = useTranslation(["pages", "session"]);
   const navigate = useNavigate();
   const [templates, setTemplates] = useState<DesignTemplate[]>([]);
+  const [filterKind, setFilterKind] = useState<"all" | DesignTemplate["kind"]>("all");
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
   // Tiling is desktop-only — web/phone show one pane, so there is no new Screen.
@@ -219,6 +221,13 @@ export function DesignPage() {
           icon={<Palette size={18} strokeWidth={1.75} />}
           title={t("design.title")}
           subtitle={t("design.subtitle")}
+          badge={
+            templates.length > 0 ? (
+              <span className="rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[11px] text-muted ring-1 ring-border" aria-hidden>
+                {templates.length}
+              </span>
+            ) : undefined
+          }
         />
 
       {!isTauri ? (
@@ -237,14 +246,59 @@ export function DesignPage() {
         </p>
       ) : (
         <div className="mt-4">
-          {SECTIONS.map((section) => (
-            <Section
-              key={section.kind}
-              headingKey={section.titleKey}
-              templates={templates.filter((template) => template.kind === section.kind)}
-              onUse={useStyle}
-            />
-          ))}
+          <div className="flex flex-wrap items-center gap-1.5 rounded-full border border-border bg-surface-2/60 p-1 w-fit shadow-sm" role="group" aria-label={t("design.filterLabel")}>
+            <button
+              type="button"
+              onClick={() => setFilterKind("all")}
+              aria-pressed={filterKind === "all"}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-150",
+                filterKind === "all"
+                  ? "bg-surface text-text shadow-sm ring-1 ring-border"
+                  : "text-muted hover:text-text hover:bg-surface/50",
+              )}
+            >
+              <span>{t("starters.categories.all", { ns: "session" })}</span>
+              <span className="text-[11px] tabular-nums opacity-70">{templates.length}</span>
+            </button>
+            {SECTIONS.map((section) => {
+              const count = templates.filter((it) => it.kind === section.kind).length;
+              const active = filterKind === section.kind;
+              return (
+                <button
+                  key={section.kind}
+                  type="button"
+                  onClick={() => setFilterKind(section.kind)}
+                  aria-pressed={active}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-150",
+                    active
+                      ? "bg-surface text-text shadow-sm ring-1 ring-border"
+                      : "text-muted hover:text-text hover:bg-surface/50",
+                  )}
+                >
+                  <span>{t(section.titleKey)}</span>
+                  <span className="text-[11px] tabular-nums opacity-70">{count}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-2">
+            {SECTIONS.filter((s) => filterKind === "all" || s.kind === filterKind).map((section) => (
+              <Section
+                key={section.kind}
+                headingKey={section.titleKey}
+                templates={templates.filter((template) => template.kind === section.kind)}
+                onUse={useStyle}
+              />
+            ))}
+            {filterKind !== "all" && templates.filter((tmpl) => tmpl.kind === filterKind).length === 0 && (
+              <p className="mx-auto mt-10 max-w-md text-center text-sm text-muted" role="status">
+                {t("design.empty.noMatches")}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </div>

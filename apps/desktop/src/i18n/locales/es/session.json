@@ -133,6 +133,12 @@
     "newSession": "Nueva sesión",
     "heading": "¿Qué deberíamos investigar?",
     "subheading": "Describe tu análisis a continuación, o empieza con una de estas opciones.",
+    "categories": {
+      "all": "Todos",
+      "cowork": "Trabajo y oficina",
+      "design": "Diseño",
+      "science": "Ciencia"
+    },
     "demo": {
       "title": "Ejecutar un análisis de demostración de principio a fin",
       "description": "Simula un conjunto de datos, ajusta un modelo y produce una figura y un informe trazable."
@@ -195,7 +201,8 @@
     "science-integrity": {
       "title": "Comprobar la integridad del análisis",
       "description": "Aplicar las comprobaciones de dominio y estadísticas sobre el código y los resultados."
-    }
+    },
+    "filterAria": "Filtrar iniciadores por pilar"
   },
   "live": {
     "runtime": {

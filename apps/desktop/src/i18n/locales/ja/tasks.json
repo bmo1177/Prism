@@ -54,5 +54,19 @@
     "future": "{label}後",
     "past": "{label}前"
   },
-  "eventValue": "イベント: {value}"
+  "eventValue": "イベント: {value}",
+  "templates": {
+    "heading": "クイックタスクテンプレート",
+    "items": {
+      "digest": {
+        "title": "朝の研究ダイジェスト"
+      },
+      "repro": {
+        "title": "再現性チェック"
+      },
+      "audit": {
+        "title": "データと完全性の監査"
+      }
+    }
+  }
 }

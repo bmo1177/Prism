@@ -91,4 +91,22 @@ describe("SciencePage", () => {
 
     expect(await screen.findByText("Could not load science skills.")).toBeInTheDocument();
   });
+
+  it("filters skills by the search query and announces no matches", async () => {
+    listScienceSkills.mockResolvedValue(SKILLS);
+    const user = userEvent.setup();
+    renderPage();
+
+    expect(await screen.findByText("Stats Integrity")).toBeInTheDocument();
+    const input = screen.getByLabelText("Filter science skills");
+    expect(input).toHaveAttribute("placeholder", "Filter skills…");
+
+    await user.type(input, "stats");
+    expect(screen.getByText("Stats Integrity")).toBeInTheDocument();
+    expect(screen.queryByText("Large File")).not.toBeInTheDocument();
+
+    await user.clear(input);
+    await user.type(input, "zzz-no-match");
+    expect(screen.getByRole("status")).toHaveTextContent("No science skills match your search.");
+  });
 });

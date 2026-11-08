@@ -133,6 +133,12 @@
     "newSession": "Neue Sitzung",
     "heading": "Was sollen wir untersuchen?",
     "subheading": "Beschreiben Sie Ihre Analyse unten — oder beginnen Sie mit einem dieser Vorschläge.",
+    "categories": {
+      "all": "Alle",
+      "cowork": "Cowork & Office",
+      "design": "Design",
+      "science": "Wissenschaft"
+    },
     "demo": {
       "title": "Eine Demo-Analyse End-to-End ausführen",
       "description": "Einen Datensatz simulieren, ein Modell anpassen und eine Abbildung sowie einen nachvollziehbaren Bericht erstellen."
@@ -195,7 +201,8 @@
     "science-integrity": {
       "title": "Integrität einer Analyse prüfen",
       "description": "Domain- und Statistik-Integritätsprüfungen über Code und Ergebnisse ausführen."
-    }
+    },
+    "filterAria": "Starter nach Säule filtern"
   },
   "live": {
     "runtime": {

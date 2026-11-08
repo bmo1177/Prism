@@ -54,5 +54,19 @@
     "future": "{label}后",
     "past": "{label}前"
   },
-  "eventValue": "事件: {value}"
+  "eventValue": "事件: {value}",
+  "templates": {
+    "heading": "快速任务模板",
+    "items": {
+      "digest": {
+        "title": "晨间研究简报"
+      },
+      "repro": {
+        "title": "工作区可复现性检查"
+      },
+      "audit": {
+        "title": "数据与完整性审计"
+      }
+    }
+  }
 }

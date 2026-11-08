@@ -129,10 +129,12 @@
     "webOnly": "设计模板可在桌面应用中使用。",
     "error": "无法加载设计模板。",
     "empty": {
-      "noTemplates": "此版本尚未包含设计模板。"
+      "noTemplates": "此版本尚未包含设计模板。",
+      "noMatches": "此类别中没有设计模板。"
     },
     "bestFor": "适用场景：{{text}}",
-    "previewUnavailable": "预览不可用。"
+    "previewUnavailable": "预览不可用。",
+    "filterLabel": "按类型筛选"
   },
   "research": {
     "title": "研究",
@@ -174,8 +176,11 @@
     "webOnly": "科学技能仅在桌面应用可用。",
     "error": "无法加载科学技能。",
     "useSkill": "使用此技能",
+    "searchPlaceholder": "筛选技能…",
+    "searchLabel": "筛选科学技能",
     "empty": {
-      "noSkills": "此构建未附带科学技能。"
+      "noSkills": "此构建未附带科学技能。",
+      "noMatches": "没有与您的搜索匹配的科学技能。"
     }
   }
 }

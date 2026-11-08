@@ -133,6 +133,12 @@
     "newSession": "Nouvelle session",
     "heading": "Que devrions-nous explorer ?",
     "subheading": "Décrivez votre analyse ci-dessous — ou partez de l'un de ces exemples.",
+    "categories": {
+      "all": "Tous",
+      "cowork": "Travail & bureautique",
+      "design": "Design",
+      "science": "Science"
+    },
     "demo": {
       "title": "Exécuter une analyse de démonstration, de bout en bout",
       "description": "Simuler un jeu de données, ajuster un modèle, et produire une figure et un rapport traçable."
@@ -195,7 +201,8 @@
     "science-integrity": {
       "title": "Vérifier l'intégrité d'une analyse",
       "description": "Appliquer les gardes de domaine et de statistiques au code et aux résultats."
-    }
+    },
+    "filterAria": "Filtrer les démarrages par pilier"
   },
   "live": {
     "runtime": {

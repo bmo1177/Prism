@@ -129,10 +129,12 @@
     "webOnly": "Las plantillas de diseño están disponibles en la aplicación de escritorio.",
     "error": "No se pudieron cargar las plantillas de diseño.",
     "empty": {
-      "noTemplates": "Esta versión no incluye plantillas de diseño."
+      "noTemplates": "Esta versión no incluye plantillas de diseño.",
+      "noMatches": "No hay plantillas de diseño en esta categoría."
     },
     "bestFor": "Ideal para: {{text}}",
-    "previewUnavailable": "Vista previa no disponible."
+    "previewUnavailable": "Vista previa no disponible.",
+    "filterLabel": "Filtrar por tipo"
   },
   "research": {
     "title": "Investigación",
@@ -174,8 +176,11 @@
     "webOnly": "Las habilidades científicas están disponibles en la aplicación de escritorio.",
     "error": "No se pudieron cargar las habilidades científicas.",
     "useSkill": "Usar esta habilidad",
+    "searchPlaceholder": "Filtrar habilidades…",
+    "searchLabel": "Filtrar habilidades científicas",
     "empty": {
-      "noSkills": "Este build no incluye habilidades científicas."
+      "noSkills": "Este build no incluye habilidades científicas.",
+      "noMatches": "Ninguna habilidad científica coincide con tu búsqueda."
     }
   }
 }

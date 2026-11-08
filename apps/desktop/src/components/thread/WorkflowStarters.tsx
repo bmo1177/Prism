@@ -1,10 +1,15 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BookOpen, ChevronRight, FileSearch, FileSpreadsheet, FileText, FlaskConical, Globe2, LayoutTemplate, LineChart, NotebookPen, Presentation, RotateCw, ScanSearch, ShieldCheck } from "lucide-react";
+import { BookOpen, ChevronRight, FileSearch, FileSpreadsheet, FileText, FlaskConical, Globe2, LayoutTemplate, LineChart, NotebookPen, Presentation, RotateCw, ScanSearch, ShieldCheck, Sparkles } from "lucide-react";
 import { installExample, isTauri } from "@/lib/tauri";
 import { toast } from "@/lib/toast";
+import { cn } from "@/lib/cn";
+
+export type WorkflowCategory = "all" | "cowork" | "design" | "science";
 
 export interface WorkflowStarter {
   id: string;
+  category: "cowork" | "design" | "science";
   icon: React.ReactNode;
   /** Sent to the agent as-is — content, not UI copy, so it is never translated.
    *  The card's display title/description live in `session:starters.<id>.*`. */
@@ -18,6 +23,7 @@ export interface WorkflowStarter {
 export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   {
     id: "demo",
+    category: "cowork",
     icon: <FlaskConical size={17} strokeWidth={1.75} />,
     prompt:
       "Run a complete demo analysis end to end: simulate a small dose–response dataset in Python, " +
@@ -27,6 +33,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "analyze",
+    category: "cowork",
     icon: <LineChart size={17} strokeWidth={1.75} />,
     prompt:
       "Analyze the data file I added to the workspace end to end: explore it, run the analysis in code, " +
@@ -35,6 +42,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "audit",
+    category: "cowork",
     icon: <FileSearch size={17} strokeWidth={1.75} />,
     prompt:
       "Use the traceability-review skill to audit the report or manuscript in my workspace: resolve every " +
@@ -43,6 +51,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "example-climate",
+    category: "cowork",
     icon: <Globe2 size={17} strokeWidth={1.75} />,
     prompt:
       "Analyze the real climate dataset at climate-trends/data/gistemp_global_means.csv " +
@@ -58,6 +67,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "docx",
+    category: "cowork",
     icon: <FileText size={17} strokeWidth={1.75} />,
     prompt:
       "Create a polished Word document (.docx) using the docx skill — a professional report " +
@@ -67,6 +77,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "pptx",
+    category: "cowork",
     icon: <Presentation size={17} strokeWidth={1.75} />,
     prompt:
       "Create a slide deck (.pptx) using the pptx skill: a clean, well-structured presentation " +
@@ -77,6 +88,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "xlsx",
+    category: "cowork",
     icon: <FileSpreadsheet size={17} strokeWidth={1.75} />,
     prompt:
       "Create a professional spreadsheet (.xlsx) using the xlsx skill: organized sheets, real " +
@@ -86,6 +98,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "pdf",
+    category: "cowork",
     icon: <FileSearch size={17} strokeWidth={1.75} />,
     prompt:
       "Produce a PDF deliverable using the pdf skill: combine, format, or export the source " +
@@ -95,6 +108,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "design-wireframe",
+    category: "design",
     icon: <LayoutTemplate size={17} strokeWidth={1.75} />,
     prompt:
       "Wireframe the app or page I describe using the design skills: draw a lo-fi wireframe as a " +
@@ -105,6 +119,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "design-deck",
+    category: "design",
     icon: <Presentation size={17} strokeWidth={1.75} />,
     prompt:
       "Create an HTML slide deck using the design skills. Ask me first: what the deck is about, who the " +
@@ -118,6 +133,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "design-review",
+    category: "design",
     icon: <ScanSearch size={17} strokeWidth={1.75} />,
     prompt:
       "Run the critique skill on the HTML design artifact in my workspace: score it across the 5 " +
@@ -128,6 +144,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "science-survey",
+    category: "science",
     icon: <BookOpen size={17} strokeWidth={1.75} />,
     prompt:
       "Use the science literature skills to survey the literature on the topic I describe: screen and " +
@@ -139,6 +156,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "science-paper",
+    category: "science",
     icon: <NotebookPen size={17} strokeWidth={1.75} />,
     prompt:
       "Use the science paper-writing skills to draft a paper-style report from my workspace materials: " +
@@ -149,6 +167,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "science-repro",
+    category: "science",
     icon: <RotateCw size={17} strokeWidth={1.75} />,
     prompt:
       "Use the reproducible-research skill to reproduce the analysis in my workspace from its raw data " +
@@ -159,6 +178,7 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
   },
   {
     id: "science-integrity",
+    category: "science",
     icon: <ShieldCheck size={17} strokeWidth={1.75} />,
     prompt:
       "Use the science integrity skills on my analysis in the workspace: run domain-check before " +
@@ -170,15 +190,14 @@ export const WORKFLOW_STARTERS: WorkflowStarter[] = [
 ];
 
 /**
- * Empty-session welcome: a quiet, centered composition in the app's paper
- * aesthetic. The conversation is the point, so the copy invites a message
- * first; the starters below are an optional on-ramp, not a dashboard.
+ * Empty-session welcome: an inviting, organized composition showcasing Prism's
+ * three pillars (AI cowork, design, science). The conversation is the main point,
+ * with structured category filters providing immediate discoverability.
  */
 export function WorkflowStarters({ onPick }: { onPick: (prompt: string) => void }) {
   const { t } = useTranslation(["session", "common"]);
-  // Display copy per starter id — t()'s generated key type rejects a dynamic
-  // `starters.${id}.title` template, so each card's copy is looked up by id
-  // from this literal-keyed map instead.
+  const [activeCategory, setActiveCategory] = useState<WorkflowCategory>("all");
+
   const starterCopy: Record<string, { title: string; description: string }> = {
     demo: { title: t("starters.demo.title"), description: t("starters.demo.description") },
     analyze: { title: t("starters.analyze.title"), description: t("starters.analyze.description") },
@@ -220,21 +239,78 @@ export function WorkflowStarters({ onPick }: { onPick: (prompt: string) => void 
       description: t("starters.science-integrity.description"),
     },
   };
+
+  const categoryMeta: Record<"cowork" | "design" | "science", { label: string; badgeCls: string }> = {
+    cowork: {
+      label: t("starters.categories.cowork"),
+      badgeCls: "bg-series-1/10 text-series-1 border-series-1/20",
+    },
+    design: {
+      label: t("starters.categories.design"),
+      badgeCls: "bg-series-7/10 text-series-7 border-series-7/20",
+    },
+    science: {
+      label: t("starters.categories.science"),
+      badgeCls: "bg-series-2/10 text-series-2 border-series-2/20",
+    },
+  };
+
+  const filteredStarters = activeCategory === "all"
+    ? WORKFLOW_STARTERS
+    : WORKFLOW_STARTERS.filter((s) => s.category === activeCategory);
+
   return (
-    <div className="flex min-h-[62vh] flex-col items-center justify-center">
-      <div className="w-full max-w-[500px]">
+    <div className="flex min-h-[62vh] flex-col items-center justify-center py-6">
+      <div className="w-full max-w-[620px]">
         <div className="text-center">
-          <div className="text-[10.5px] font-medium uppercase tracking-[0.2em] text-muted">
-            {t("starters.newSession")}
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-[11px] font-medium tracking-wide text-accent">
+            <Sparkles size={12} />
+            <span>{t("starters.newSession")}</span>
           </div>
-          <h2 className="mt-2.5 font-serif text-[26px] leading-tight text-text">
+          <h2 className="mt-3 font-serif text-[26px] leading-tight text-text">
             {t("starters.heading")}
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted">{t("starters.subheading")}</p>
+          <p className="mt-1.5 text-sm leading-relaxed text-muted">{t("starters.subheading")}</p>
+
+          {/* Pillar Category Filter Tabs */}
+          <div className="mt-5 inline-flex flex-wrap items-center gap-1 rounded-full border border-border bg-surface-2/80 p-1 shadow-sm" role="group" aria-label={t("starters.filterAria", { defaultValue: "Filter starters" })}>
+            {/* eslint-disable-next-line i18next/no-literal-string -- WorkflowCategory enum values, not UI copy */}
+            {(["all", "cowork", "design", "science"] as const).map((cat) => {
+              const count = cat === "all"
+                ? WORKFLOW_STARTERS.length
+                : WORKFLOW_STARTERS.filter((s) => s.category === cat).length;
+              const active = activeCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  aria-pressed={active}
+                  aria-label={t(`starters.categories.${cat}` as const)}
+                  onClick={() => setActiveCategory(cat)}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-150",
+                    active
+                      ? "bg-surface text-text shadow-sm ring-1 ring-border"
+                      : "text-muted hover:bg-surface/50 hover:text-text",
+                  )}
+                >
+                  <span>{t(`starters.categories.${cat}` as const)}</span>
+                  <span
+                    className={cn(
+                      "rounded-full px-1.5 text-[10px] tabular-nums",
+                      active ? "bg-surface-2 text-text" : "text-muted/70",
+                    )}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        <div className="mt-7 overflow-hidden rounded-card border border-border bg-surface shadow-card">
-          {WORKFLOW_STARTERS.map((s) => (
+        <div className="mt-6 overflow-hidden rounded-card border border-border bg-surface shadow-card transition-all">
+          {filteredStarters.map((s) => (
             <button
               key={s.id}
               onClick={() => {
@@ -252,22 +328,32 @@ export function WorkflowStarters({ onPick }: { onPick: (prompt: string) => void 
                   onPick(s.prompt);
                 })();
               }}
-              className="group flex w-full items-center gap-3.5 border-t border-border px-4 py-3.5 text-left transition-colors first:border-t-0 hover:bg-surface-2"
+              className="group flex w-full items-center gap-3.5 border-t border-border px-4 py-3 text-left transition-colors first:border-t-0 hover:bg-surface-2"
             >
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-surface-2 text-accent ring-1 ring-border transition-colors group-hover:bg-surface">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-surface-2 text-accent ring-1 ring-border transition-all group-hover:scale-105 group-hover:bg-surface group-hover:shadow-sm">
                 {s.icon}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-[13.5px] font-medium text-text">
-                  {starterCopy[s.id]?.title}
+                <span className="flex items-center gap-2">
+                  <span className="block text-[13.5px] font-medium text-text group-hover:text-accent transition-colors">
+                    {starterCopy[s.id]?.title}
+                  </span>
+                  <span
+                    className={cn(
+                      "shrink-0 rounded border px-1.5 py-0.5 text-[9.5px] font-medium uppercase tracking-wider",
+                      categoryMeta[s.category].badgeCls,
+                    )}
+                  >
+                    {categoryMeta[s.category].label}
+                  </span>
                 </span>
-                <span className="mt-0.5 block text-xs leading-snug text-muted">
+                <span className="mt-0.5 block text-xs leading-snug text-muted line-clamp-1">
                   {starterCopy[s.id]?.description}
                 </span>
               </span>
               <ChevronRight
                 size={16}
-                className="shrink-0 text-muted/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-muted"
+                className="shrink-0 text-muted/60 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-accent"
               />
             </button>
           ))}

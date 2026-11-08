@@ -616,7 +616,7 @@ export function Sidebar({ project }: { project: Project }) {
         </div>
 
         {/* ── Navigation ── */}
-        <nav className="flex flex-col gap-px px-2">
+        <nav className="flex flex-col gap-0.5 px-2">
           {!webReadOnly && (
             <NavRow icon={<Plus size={14} />} label={t("items.new")} onClick={startNew} />
           )}
@@ -626,18 +626,16 @@ export function Sidebar({ project }: { project: Project }) {
           <NavRow icon={<FolderTree size={14} />} label={t("items.files")} to="/files" />
           <NavRow icon={<FlaskConical size={14} />} label={t("items.runs")} to="/runs" />
           {!isGatewayWeb && (
-            <NavRow icon={<Microscope size={14} />} label={t("items.research")} to="/research" />
+            <>
+              <div className="my-1 border-t border-border/40" />
+              <NavRow icon={<Microscope size={14} />} label={t("items.research")} to="/research" />
+              <NavRow icon={<ScrollText size={14} />} label={t("items.provenance")} to="/provenance" />
+              <NavRow icon={<Atom size={14} />} label={t("items.science")} to="/science" />
+              <NavRow icon={<Palette size={14} />} label={t("items.design")} to="/design" />
+            </>
           )}
-          {!isGatewayWeb && (
-            <NavRow icon={<ScrollText size={14} />} label={t("items.provenance")} to="/provenance" />
-          )}
-          {!isGatewayWeb && (
-            <NavRow icon={<Atom size={14} />} label={t("items.science")} to="/science" />
-          )}
+          <div className="my-1 border-t border-border/40" />
           <NavRow icon={<Files size={14} />} label={t("items.skills")} to="/skills" />
-          {!isGatewayWeb && (
-            <NavRow icon={<Palette size={14} />} label={t("items.design")} to="/design" />
-          )}
           <NavRow icon={<CalendarClock size={14} />} label={t("items.tasks")} to="/tasks" />
         </nav>
 
@@ -1119,7 +1117,7 @@ function NavRow({
   /** Fallback for items that navigate programmatically (e.g. "New"). */
   onClick?: () => void;
 }) {
-  const baseCls = "flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] leading-none transition-colors duration-150";
+  const baseCls = "flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] leading-none transition-colors duration-150";
   if (to) {
     return (
       <NavLink
@@ -1128,14 +1126,14 @@ function NavRow({
           cn(
             baseCls,
             isActive
-              ? "bg-surface-3/60 text-text"
+              ? "bg-surface-3/60 font-medium text-text shadow-sm"
               : "text-muted hover:bg-surface-3/40 hover:text-text",
           )
         }
       >
         {({ isActive }) => (
           <>
-            <span className={cn("transition-colors", isActive ? "text-text" : "text-muted/60")}>{icon}</span>
+            <span className={cn("transition-colors", isActive ? "text-accent" : "text-muted/70")}>{icon}</span>
             <span className="truncate">{label}</span>
           </>
         )}
@@ -1147,7 +1145,7 @@ function NavRow({
       onClick={onClick}
       className={cn(baseCls, "text-muted hover:bg-surface-3/40 hover:text-text")}
     >
-      <span className="text-muted/60">{icon}</span>
+      <span className="text-muted/70">{icon}</span>
       <span className="truncate">{label}</span>
     </button>
   );

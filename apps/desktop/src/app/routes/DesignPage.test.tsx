@@ -56,8 +56,8 @@ describe("DesignPage", () => {
 
     expect(await screen.findByRole("heading", { level: 1, name: "Design templates" })).toBeInTheDocument();
     // Section headings + template titles appear once the listing resolves.
-    await waitFor(() => expect(screen.getByText("Wireframes")).toBeInTheDocument());
-    expect(screen.getByText("Slide decks")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole("heading", { level: 2, name: "Wireframes" })).toBeInTheDocument());
+    expect(screen.getByRole("heading", { level: 2, name: "Slide decks" })).toBeInTheDocument();
     expect(screen.getByText("Wireframe Greybox")).toBeInTheDocument();
     expect(screen.getByText("Blue Professional")).toBeInTheDocument();
 
@@ -107,5 +107,26 @@ describe("DesignPage", () => {
   it("builds wireframe/critique prompts from the shared starters", () => {
     expect(designStylePrompt(WIREFRAME)).toContain("Wireframe the app or page");
     expect(designStylePrompt({ ...DECK, kind: "critique" })).toContain("critique");
+  });
+
+  it("filters templates by kind via the filter tabs", async () => {
+    listDesignTemplates.mockResolvedValue([WIREFRAME, DECK]);
+    const user = userEvent.setup();
+    renderPage();
+
+    expect(await screen.findByText("Wireframe Greybox")).toBeInTheDocument();
+    expect(screen.getByText("Blue Professional")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Wireframes/ }));
+    expect(screen.getByText("Wireframe Greybox")).toBeInTheDocument();
+    expect(screen.queryByText("Blue Professional")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Slide decks/ }));
+    expect(screen.getByText("Blue Professional")).toBeInTheDocument();
+    expect(screen.queryByText("Wireframe Greybox")).not.toBeInTheDocument();
+
+    // Critique has no templates in the fixture — an empty category settles.
+    await user.click(screen.getByRole("button", { name: /Design critique/ }));
+    expect(screen.getByRole("status")).toHaveTextContent("No design templates in this category.");
   });
 });

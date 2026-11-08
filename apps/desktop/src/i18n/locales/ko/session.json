@@ -133,6 +133,12 @@
     "newSession": "새 세션",
     "heading": "무엇을 살펴볼까요?",
     "subheading": "아래에 분석 내용을 설명하거나, 다음 중 하나로 시작해 보세요.",
+    "categories": {
+      "all": "전체",
+      "cowork": "협업 및 오피스",
+      "design": "디자인",
+      "science": "과학 연구"
+    },
     "demo": {
       "title": "데모 분석을 처음부터 끝까지 실행",
       "description": "데이터셋을 시뮬레이션하고, 모델을 적합시키고, 그림과 추적 가능한 리포트를 생성합니다."
@@ -195,7 +201,8 @@
     "science-integrity": {
       "title": "분석 무결성 점검",
       "description": "코드와 결과에 도메인·통계 무결성 검증을 적용합니다."
-    }
+    },
+    "filterAria": "기둥별 스타터 필터링"
   },
   "live": {
     "runtime": {

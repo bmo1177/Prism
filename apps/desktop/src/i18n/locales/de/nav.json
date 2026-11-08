@@ -118,6 +118,13 @@
     "ariaLabel": "Befehlspalette",
     "placeholder": "Befehl eingeben…",
     "noResults": "Keine Ergebnisse.",
+    "groups": {
+      "quick": "Schnellaktionen",
+      "cowork": "AI Cowork & Office",
+      "design": "Design",
+      "science": "Wissenschaft & Forschung",
+      "tools": "Labor & Werkzeuge"
+    },
     "actions": {
       "newSession": "Neue Sitzung",
       "analyzeData": "Meine Daten analysieren (neuer Workflow)",
@@ -137,6 +144,12 @@
       "sciencePaper": "Bericht im Paper-Stil entwerfen",
       "scienceRepro": "Analyse reproduzieren",
       "scienceIntegrity": "Integrität einer Analyse prüfen"
+    },
+    "footer": {
+      "title": "Prism Schnellaktionen",
+      "navigate": "↑↓ zum Navigieren",
+      "run": "↵ zum Ausführen",
+      "close": "esc zum Schließen"
     }
   },
   "rowMenu": {

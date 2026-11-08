@@ -129,10 +129,12 @@
     "webOnly": "Design templates are available in the desktop app.",
     "error": "Could not load design templates.",
     "empty": {
-      "noTemplates": "No design templates shipped with this build."
+      "noTemplates": "No design templates shipped with this build.",
+      "noMatches": "No design templates in this category."
     },
     "bestFor": "Best for: {{text}}",
-    "previewUnavailable": "Preview unavailable."
+    "previewUnavailable": "Preview unavailable.",
+    "filterLabel": "Filter by kind"
   },
   "research": {
     "title": "Research",
@@ -174,8 +176,11 @@
     "webOnly": "Science skills are available in the desktop app.",
     "error": "Could not load science skills.",
     "useSkill": "Use this skill",
+    "searchPlaceholder": "Filter skills…",
+    "searchLabel": "Filter science skills",
     "empty": {
-      "noSkills": "No science skills shipped with this build."
+      "noSkills": "No science skills shipped with this build.",
+      "noMatches": "No science skills match your search."
     }
   }
 }

@@ -129,10 +129,12 @@
     "webOnly": "Design-Vorlagen sind in der Desktop-App verfügbar.",
     "error": "Design-Vorlagen konnten nicht geladen werden.",
     "empty": {
-      "noTemplates": "In dieser Ausgabe ist noch keine Design-Vorlage enthalten."
+      "noTemplates": "In dieser Ausgabe ist noch keine Design-Vorlage enthalten.",
+      "noMatches": "Keine Design-Vorlagen in dieser Kategorie."
     },
     "bestFor": "Geeignet für: {{text}}",
-    "previewUnavailable": "Vorschau nicht verfügbar."
+    "previewUnavailable": "Vorschau nicht verfügbar.",
+    "filterLabel": "Nach Typ filtern"
   },
   "research": {
     "title": "Forschung",
@@ -174,8 +176,11 @@
     "webOnly": "Wissenschafts-Skills sind in der Desktop-App verfügbar.",
     "error": "Wissenschafts-Skills konnten nicht geladen werden.",
     "useSkill": "Skill verwenden",
+    "searchPlaceholder": "Skills filtern…",
+    "searchLabel": "Wissenschafts-Skills filtern",
     "empty": {
-      "noSkills": "Dieser Build enthält keine Wissenschafts-Skills."
+      "noSkills": "Dieser Build enthält keine Wissenschafts-Skills.",
+      "noMatches": "Keine Wissenschafts-Skills passen zu Ihrer Suche."
     }
   }
 }

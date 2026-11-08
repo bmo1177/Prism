@@ -54,5 +54,19 @@
     "future": "In {label}",
     "past": "vor {label}"
   },
-  "eventValue": "Ereignis: {value}"
+  "eventValue": "Ereignis: {value}",
+  "templates": {
+    "heading": "Schnellvorlagen für Aufgaben",
+    "items": {
+      "digest": {
+        "title": "Morgendliche Recherche-Zusammenfassung"
+      },
+      "repro": {
+        "title": "Reproduzierbarkeitsprüfung des Arbeitsbereichs"
+      },
+      "audit": {
+        "title": "Daten- und Integritätsprüfung"
+      }
+    }
+  }
 }

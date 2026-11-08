@@ -21,4 +21,16 @@ describe("CommandPalette", () => {
     expect(screen.getByText("Audit a report (traceability review)")).toBeInTheDocument();
     expect(screen.queryByText("Open notebooks")).not.toBeInTheDocument();
   });
+
+  it("groups actions under pillar headings with shortcut badges", async () => {
+    const user = userEvent.setup();
+    renderAt("/live");
+
+    await user.keyboard("{Meta>}k{/Meta}");
+    expect(await screen.findByText("Quick Actions")).toBeInTheDocument();
+    expect(screen.getAllByText("AI Cowork & Office").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Science & Research").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Lab & Tools").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Prism Quick Actions").length).toBeGreaterThan(0);
+  });
 });

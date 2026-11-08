@@ -54,5 +54,19 @@
     "future": "Dans {label}",
     "past": "il y a {label}"
   },
-  "eventValue": "événement : {value}"
+  "eventValue": "événement : {value}",
+  "templates": {
+    "heading": "Modèles de tâches rapides",
+    "items": {
+      "digest": {
+        "title": "Synthèse de recherche du matin"
+      },
+      "repro": {
+        "title": "Vérification de reproductibilité"
+      },
+      "audit": {
+        "title": "Audit des données et de l'intégrité"
+      }
+    }
+  }
 }

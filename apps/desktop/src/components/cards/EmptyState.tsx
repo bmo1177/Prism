@@ -21,11 +21,15 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex h-full flex-col items-center justify-center gap-2 p-10 text-center",
+        "flex h-full flex-col items-center justify-center gap-2.5 p-10 text-center",
         className,
       )}
     >
-      {icon && <div className="mb-1 text-focus/70">{icon}</div>}
+      {icon && (
+        <div className="mb-1 grid h-12 w-12 place-items-center rounded-2xl bg-surface-2 text-accent ring-1 ring-border shadow-sm">
+          {icon}
+        </div>
+      )}
       <div className="text-base font-medium text-text">{title}</div>
       {hint && <div className="max-w-sm text-sm leading-relaxed text-muted">{hint}</div>}
       {action && <div className="mt-2">{action}</div>}

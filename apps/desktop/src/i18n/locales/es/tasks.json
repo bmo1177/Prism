@@ -54,5 +54,19 @@
     "future": "En {label}",
     "past": "hace {label}"
   },
-  "eventValue": "evento: {value}"
+  "eventValue": "evento: {value}",
+  "templates": {
+    "heading": "Plantillas rápidas de tareas",
+    "items": {
+      "digest": {
+        "title": "Resumen matutino de investigación"
+      },
+      "repro": {
+        "title": "Verificación de reproducibilidad del espacio"
+      },
+      "audit": {
+        "title": "Auditoría de datos e integridad"
+      }
+    }
+  }
 }

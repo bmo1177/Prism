@@ -133,6 +133,12 @@
     "newSession": "New session",
     "heading": "What should we look into?",
     "subheading": "Describe your analysis below — or start from one of these.",
+    "categories": {
+      "all": "All",
+      "cowork": "Cowork & Office",
+      "design": "Design",
+      "science": "Science"
+    },
     "demo": {
       "title": "Run a demo analysis, end to end",
       "description": "Simulate a dataset, fit a model, and produce a figure and a traceable report."
@@ -195,7 +201,8 @@
     "science-integrity": {
       "title": "Audit an analysis's integrity",
       "description": "Run the domain and statistics integrity gates over your code and results."
-    }
+    },
+    "filterAria": "Filter starters by pillar"
   },
   "live": {
     "runtime": {

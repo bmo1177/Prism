@@ -118,6 +118,13 @@
     "ariaLabel": "Command palette",
     "placeholder": "Type a command…",
     "noResults": "No results.",
+    "groups": {
+      "quick": "Quick Actions",
+      "cowork": "AI Cowork & Office",
+      "design": "Design",
+      "science": "Science & Research",
+      "tools": "Lab & Tools"
+    },
     "actions": {
       "newSession": "New session",
       "analyzeData": "Analyze my data (new workflow)",
@@ -137,6 +144,12 @@
       "sciencePaper": "Draft a paper-style report",
       "scienceRepro": "Reproduce an analysis",
       "scienceIntegrity": "Audit an analysis's integrity"
+    },
+    "footer": {
+      "title": "Prism Quick Actions",
+      "navigate": "↑↓ to navigate",
+      "run": "↵ to run",
+      "close": "esc to close"
     }
   },
   "rowMenu": {

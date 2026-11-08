@@ -118,6 +118,13 @@
     "ariaLabel": "Palette de commandes",
     "placeholder": "Tapez une commande…",
     "noResults": "Aucun résultat.",
+    "groups": {
+      "quick": "Actions rapides",
+      "cowork": "AI Travail & bureautique",
+      "design": "Design",
+      "science": "Science & recherche",
+      "tools": "Labo & outils"
+    },
     "actions": {
       "newSession": "Nouvelle session",
       "analyzeData": "Analyser mes données (nouveau flux de travail)",
@@ -137,6 +144,12 @@
       "sciencePaper": "Rédiger un rapport façon article",
       "scienceRepro": "Reproduire une analyse",
       "scienceIntegrity": "Vérifier l'intégrité d'une analyse"
+    },
+    "footer": {
+      "title": "Actions rapides Prism",
+      "navigate": "↑↓ pour naviguer",
+      "run": "↵ pour exécuter",
+      "close": "esc pour fermer"
     }
   },
   "rowMenu": {

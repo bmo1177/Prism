@@ -116,6 +116,13 @@
     "ariaLabel": "コマンドパレット",
     "placeholder": "コマンドを入力…",
     "noResults": "結果がありません。",
+    "groups": {
+      "quick": "クイック操作",
+      "cowork": "AI協働・オフィス",
+      "design": "デザイン",
+      "science": "科学・研究",
+      "tools": "ラボ・ツール"
+    },
     "actions": {
       "newSession": "新規セッション",
       "analyzeData": "データを分析する（新しいワークフロー）",
@@ -135,6 +142,12 @@
       "sciencePaper": "論文形式のレポートを作成",
       "scienceRepro": "分析を再現する",
       "scienceIntegrity": "分析の整合性を監査"
+    },
+    "footer": {
+      "title": "Prism クイックアクション",
+      "navigate": "↑↓ で移動",
+      "run": "↵ で実行",
+      "close": "esc で閉じる"
     }
   },
   "rowMenu": {

@@ -116,6 +116,13 @@
     "ariaLabel": "명령 팔레트",
     "placeholder": "명령을 입력하세요…",
     "noResults": "결과가 없습니다.",
+    "groups": {
+      "quick": "빠른 작업",
+      "cowork": "AI 협업 및 오피스",
+      "design": "디자인",
+      "science": "과학 및 연구",
+      "tools": "실험실 및 도구"
+    },
     "actions": {
       "newSession": "새 세션",
       "analyzeData": "내 데이터 분석 (새 워크플로)",
@@ -135,6 +142,12 @@
       "sciencePaper": "논문 형식 보고서 작성",
       "scienceRepro": "분석 재현",
       "scienceIntegrity": "분석 무결성 점검"
+    },
+    "footer": {
+      "title": "Prism 빠른 작업",
+      "navigate": "↑↓ 탐색",
+      "run": "↵ 실행",
+      "close": "esc 닫기"
     }
   },
   "rowMenu": {

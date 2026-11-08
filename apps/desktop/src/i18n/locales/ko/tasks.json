@@ -54,5 +54,19 @@
     "future": "{label} 후",
     "past": "{label} 전"
   },
-  "eventValue": "이벤트: {value}"
+  "eventValue": "이벤트: {value}",
+  "templates": {
+    "heading": "빠른 작업 템플릿",
+    "items": {
+      "digest": {
+        "title": "아침 연구 다이제스트"
+      },
+      "repro": {
+        "title": "워크스페이스 재현성 검사"
+      },
+      "audit": {
+        "title": "데이터 및 무결성 감사"
+      }
+    }
+  }
 }

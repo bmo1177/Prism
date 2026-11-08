@@ -9,6 +9,48 @@ import { isGatewayWeb } from "@/lib/webMode";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { PageHeader } from "@/components/cards/PageHeader";
 
+/** Quick task templates for the empty state. The title is display copy
+ *  (translated via `templates.items.<id>.title`); the prompt is agent
+ *  content sent as-is and never translated, like WorkflowStarters prompts. */
+const QUICK_TEMPLATES: ReadonlyArray<{
+  id: "digest" | "repro" | "audit";
+  titleKey: "templates.items.digest.title" | "templates.items.repro.title" | "templates.items.audit.title";
+  prompt: string;
+  scheduleKind: string;
+  scheduleValue: string;
+}> = [
+  {
+    id: "digest",
+    titleKey: "templates.items.digest.title",
+    /* eslint-disable-next-line i18next/no-literal-string -- agent prompt content, not UI copy */
+    prompt: "Review newly added papers or notes in my workspace, summarize key highlights into morning-digest.md, and flag any actionable next steps.",
+    /* eslint-disable-next-line i18next/no-literal-string -- scheduleKind enum value, not UI copy */
+    scheduleKind: "daily",
+    /* eslint-disable-next-line i18next/no-literal-string -- cron expression, not UI copy */
+    scheduleValue: "0 8 * * *",
+  },
+  {
+    id: "repro",
+    titleKey: "templates.items.repro.title",
+    /* eslint-disable-next-line i18next/no-literal-string -- agent prompt content, not UI copy */
+    prompt: "Use the reproducible-research skill to rerun recent workspace code, check figure outputs against scripts, and verify reproducibility.",
+    /* eslint-disable-next-line i18next/no-literal-string -- scheduleKind enum value, not UI copy */
+    scheduleKind: "weekday",
+    /* eslint-disable-next-line i18next/no-literal-string -- cron expression, not UI copy */
+    scheduleValue: "0 18 * * 1-5",
+  },
+  {
+    id: "audit",
+    titleKey: "templates.items.audit.title",
+    /* eslint-disable-next-line i18next/no-literal-string -- agent prompt content, not UI copy */
+    prompt: "Run the domain and statistics integrity checks over the workspace analysis and write a brief audit summary.",
+    /* eslint-disable-next-line i18next/no-literal-string -- scheduleKind enum value, not UI copy */
+    scheduleKind: "every",
+    /* eslint-disable-next-line i18next/no-literal-string -- seconds value, not UI copy */
+    scheduleValue: "86400",
+  },
+];
+
 /** Sidebar "Tasks" page - scheduled agent runs ("AI cowork automation"). Each
  *  job fires an OpenCode session turn on a schedule; runs land in the normal
  *  conversation history. Desktop-only (the desktop app owns the scheduler). */
@@ -159,6 +201,13 @@ export function TasksPage() {
           icon={<CalendarClock size={18} strokeWidth={1.75} />}
           title={t("title")}
           subtitle={t("description")}
+          badge={
+            jobs.length > 0 ? (
+              <span className="rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[11px] text-muted ring-1 ring-border" aria-hidden>
+                {jobs.length}
+              </span>
+            ) : undefined
+          }
           actions={
             <button
               onClick={() => setShowForm((s) => !s)}
@@ -352,6 +401,31 @@ export function TasksPage() {
               <Plus size={14} />
               {t("form.add")}
             </button>
+
+            <div className="mt-6 flex w-full max-w-md flex-col gap-2 text-left">
+              <span className="text-[11px] font-medium uppercase tracking-wider text-muted">
+                {t("templates.heading")}
+              </span>
+              {QUICK_TEMPLATES.map((tmpl) => (
+                <button
+                  key={tmpl.id}
+                  type="button"
+                  onClick={() => {
+                    setEditing({
+                      title: t(tmpl.titleKey),
+                      prompt: tmpl.prompt,
+                      scheduleKind: tmpl.scheduleKind,
+                      scheduleValue: tmpl.scheduleValue,
+                    });
+                    setShowForm(true);
+                  }}
+                  className="group flex items-center justify-between rounded-input border border-border bg-surface-2/50 px-3 py-2 text-xs transition-colors hover:border-accent/40 hover:bg-surface-2"
+                >
+                  <span className="font-medium text-text group-hover:text-accent transition-colors">{t(tmpl.titleKey)}</span>
+                  <span className="font-mono text-[10px] text-muted">+{t("form.add")}</span>
+                </button>
+              ))}
+            </div>
           </div>
         )}
 

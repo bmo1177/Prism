@@ -116,6 +116,13 @@
     "ariaLabel": "命令面板",
     "placeholder": "输入命令…",
     "noResults": "无结果。",
+    "groups": {
+      "quick": "快捷操作",
+      "cowork": "AI协同与办公",
+      "design": "设计工作流",
+      "science": "科学与科研",
+      "tools": "实验室与工具"
+    },
     "actions": {
       "newSession": "新建会话",
       "analyzeData": "分析我的数据（新建工作流）",
@@ -135,6 +142,12 @@
       "sciencePaper": "草拟论文式报告",
       "scienceRepro": "复现分析",
       "scienceIntegrity": "审计分析完整性"
+    },
+    "footer": {
+      "title": "Prism 快速操作",
+      "navigate": "↑↓ 导航",
+      "run": "↵ 运行",
+      "close": "esc 关闭"
     }
   },
   "rowMenu": {

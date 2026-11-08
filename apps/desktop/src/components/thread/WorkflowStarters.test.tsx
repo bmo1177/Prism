@@ -135,4 +135,21 @@ describe("WorkflowStarters", () => {
     await waitFor(() => expect(installCalls).toHaveLength(1));
     expect(onPick).not.toHaveBeenCalled();
   });
+
+  it("filters workflow starters when category tabs are clicked", async () => {
+    render(<WorkflowStarters onPick={() => {}} />);
+    expect(screen.getByText("Wireframe an idea")).toBeInTheDocument();
+    expect(screen.getByText("Run a demo analysis, end to end")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Design" }));
+    expect(screen.getByText("Wireframe an idea")).toBeInTheDocument();
+    expect(screen.getByText("Build an HTML slide deck")).toBeInTheDocument();
+    expect(screen.getByText("Review a design")).toBeInTheDocument();
+    expect(screen.queryByText("Run a demo analysis, end to end")).not.toBeInTheDocument();
+    expect(screen.queryByText("Survey the literature")).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Science" }));
+    expect(screen.getByText("Survey the literature")).toBeInTheDocument();
+    expect(screen.queryByText("Wireframe an idea")).not.toBeInTheDocument();
+  });
 });

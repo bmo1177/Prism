@@ -54,5 +54,19 @@
     "future": "In {label}",
     "past": "{label} ago"
   },
-  "eventValue": "event: {value}"
+  "eventValue": "event: {value}",
+  "templates": {
+    "heading": "Quick Task Templates",
+    "items": {
+      "digest": {
+        "title": "Morning research digest"
+      },
+      "repro": {
+        "title": "Workspace reproducibility check"
+      },
+      "audit": {
+        "title": "Data and integrity audit"
+      }
+    }
+  }
 }
