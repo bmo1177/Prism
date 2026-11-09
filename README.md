@@ -62,7 +62,7 @@ Similarly, Prism takes a single prompt or hypothesis and refracts it across spec
 ## 📸 Visual Tour & Capabilities
 
 ### 1. Intelligent Workspace & Guided Workflows
-Start from a single prompt or pick from curated scientific and creative starter tasks. Prism configures agent runtime modes (Manual Approval vs. Autonomous) and supports bring-your-own-model providers.
+Start from a single prompt or pick from curated scientific and creative starter tasks. Prism configures agent runtime modes (Manual Approval vs. Autonomous), works model-agnostically, and supports bring-your-own-key providers out of the box: free OpenCode models, free keys from OpenRouter or NVIDIA, paid providers, and self-hosted OpenAI/Anthropic-compatible endpoints. It can also bridge the `agy` CLI's models for chat.
 
 ![New Session Workspace](./assets/screenshots/new-session.png)
 
@@ -83,7 +83,7 @@ Fan out literature searches across arXiv, PubMed, UniProt, and bioRxiv. Prism au
 ---
 
 ### 4. Shared Live Notebooks & Kernel Integration
-Run code seamlessly alongside the agent. Prism maintains active Python/Jupyter kernel sessions, allowing variables and dataframes to be inspected or edited interactively.
+Run code seamlessly alongside the agent. Prism maintains active Python/Jupyter kernel sessions, letting you create or import existing `.ipynb` notebooks and inspect or edit variables and dataframes interactively.
 
 ![Live Notebook Kernel](./assets/screenshots/notebook-execution.png)
 
@@ -207,7 +207,7 @@ pnpm --filter @ai4s/desktop tauri build
 
 * 🔒 **Local Workspace Isolation**: The agent strictly accesses the open project workspace directory.
 * 🛡️ **Execution Approval**: Commands, file deletions, dependency installs, and network calls require explicit user approval by default.
-* 🗝️ **Secure Credentials**: API keys are stored securely in OS credential storage / local app config, never exported into git, crash reports, or provenance files.
+* 🗝️ **Secure Credentials**: API keys are stored in the app's private credential store, never exported into git, crash reports, or provenance files.
 * 📊 **Transparent Data Flow**: Settings provides a clear plain-language view of all network activity and model interactions.
 
 ---
