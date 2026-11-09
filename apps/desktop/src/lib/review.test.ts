@@ -79,4 +79,26 @@ describe("splitReview", () => {
     expect(r.review).toBeNull();
     expect(r.clean).toBe(malformed);
   });
+
+  it("fast-paths large text without a fence: clean === input, review null", () => {
+    // #77: the SDK emits accumulated text every token, so splitReview runs on
+    // the whole growing reply per token. The no-fence fast path must be a
+    // straight passthrough — this pins that contract.
+    const large = "lorem ipsum dolor sit amet ".repeat(2000);
+    const start = performance.now();
+    const { clean, review } = splitReview(large);
+    expect(review).toBeNull();
+    expect(clean).toBe(large);
+    expect(performance.now() - start).toBeLessThan(500);
+  });
+
+  it("fast-paths an unclosed fence mid-stream: clean === input, review null", () => {
+    // Mid-stream the opening fence is present but the JSON is still being
+    // emitted — the regex must never run (every token would backtrack over
+    // the incomplete capture). This pins the closing-fence guard.
+    const partial = "thinking\n\n```review\n{\"findings\": [{\"level\": \"ok\", \"title\": \"trun";
+    const { clean, review } = splitReview(partial);
+    expect(review).toBeNull();
+    expect(clean).toBe(partial);
+  });
 });

@@ -252,6 +252,34 @@ describe("foldEvent", () => {
     ]);
     expect(s.blocks.filter((b) => b.kind === "status-line" && b.tone === "done")).toHaveLength(1);
   });
+
+  it("strips a full echoed prompt from the assistant text", () => {
+    const s = foldAll(
+      [{ type: "text.updated", sessionId: S, partId: "p1", text: "hi there, here is the answer" }],
+      { blocks: [{ kind: "user", text: "hi there" }], index: {} },
+    );
+    expect(s.blocks).toHaveLength(2);
+    expect(s.blocks[1]).toEqual({ kind: "agent", markdown: ", here is the answer" });
+  });
+
+  it("strips a partial echoed prompt prefix from the assistant text", () => {
+    const s = foldAll(
+      [{ type: "text.updated", sessionId: S, partId: "p1", text: "hi there loo, here is the answer" }],
+      { blocks: [{ kind: "user", text: "hi there look at this" }], index: {} },
+    );
+    expect(s.blocks[1]).toEqual({ kind: "agent", markdown: ", here is the answer" });
+  });
+
+  it("leaves assistant text untouched when the first char cannot be an echo", () => {
+    // #77 fast path: a text starting with a different first char than the
+    // user prompt cannot be an echo — skipping the O(len^2) prefix scan is
+    // what keeps long turns responsive under GPU contention.
+    const s = foldAll(
+      [{ type: "text.updated", sessionId: S, partId: "p1", text: "Zulu is the answer" }],
+      { blocks: [{ kind: "user", text: "alphabet question" }], index: {} },
+    );
+    expect(s.blocks[1]).toEqual({ kind: "agent", markdown: "Zulu is the answer" });
+  });
 });
 
 describe("subagent activity", () => {

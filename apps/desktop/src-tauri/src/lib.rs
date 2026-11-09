@@ -40,8 +40,31 @@ use provenance::ProvenanceState;
 use runtime::RuntimeState;
 use tauri::Manager;
 
+/// Linux WebKitGTK compositor defaults that keep the UI from freezing while a
+/// project saturates the GPU (#77). The DMABUF renderer goes through the
+/// compositor's DMA buffer path and blocks the main thread when the GPU is
+/// busy; falling back to the non-DMABUF path keeps window interaction alive.
+/// Every value is applied only when unset, so a deliberate user override wins.
+#[cfg(target_os = "linux")]
+fn apply_linux_webkit_defaults() {
+    for (key, value) in linux_webkit_defaults() {
+        if std::env::var(key).is_err() {
+            std::env::set_var(key, value);
+        }
+    }
+}
+
+#[cfg(target_os = "linux")]
+fn linux_webkit_defaults() -> [(&'static str, &'static str); 1] {
+    [("WEBKIT_DISABLE_DMABUF_RENDERER", "1")]
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // Linux: apply WebKitGTK compositor defaults BEFORE any GTK/GIO init so
+    // the renderer never enters the DMABUF path (#77).
+    #[cfg(target_os = "linux")]
+    apply_linux_webkit_defaults();
     // Native file dialogs abort (SIGABRT) when the gtk3 GSettings schema
     // `org.gtk.Settings.FileChooser` is not on XDG_DATA_DIRS (see gtk_schema).
     // Must run before any GTK/GIO initialization.
@@ -229,4 +252,18 @@ pub fn run() {
                 ssh_session::shutdown(app);
             }
         });
+}
+
+#[cfg(all(test, target_os = "linux"))]
+mod tests {
+    use super::linux_webkit_defaults;
+
+    #[test]
+    fn linux_webkit_defaults_disable_dmabuf() {
+        let defaults = linux_webkit_defaults();
+        assert!(
+            defaults.contains(&("WEBKIT_DISABLE_DMABUF_RENDERER", "1")),
+            "DMABUF renderer must be disabled by default (#77)"
+        );
+    }
 }

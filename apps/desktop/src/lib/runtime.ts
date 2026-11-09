@@ -2879,7 +2879,12 @@ function stripEchoedPrompt(blocks: ThreadBlock[], text: string): string {
     return stripped;
   }
   // Partial echo: the response may start with a prefix of the prompt.
-  for (let len = Math.min(lastUserText.length, trimmed.length); len > 10; len--) {
+  // #77 fast path: a first-char mismatch cannot be a prefix — skipping the
+  // descending O(len^2) prefix scan is what keeps long streamed turns
+  // responsive. Without it, every token pays len-many startsWith checks.
+  if (trimmed[0] !== lastUserText[0]) return text;
+  const maxLen = Math.min(lastUserText.length, trimmed.length);
+  for (let len = maxLen; len > 10; len--) {
     if (trimmed.startsWith(lastUserText.slice(0, len))) {
       return trimmed.slice(len).trimStart();
     }

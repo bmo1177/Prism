@@ -33,6 +33,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "publisher": "Prism",
     "externalBin": [
       "binaries/opencode",
       "binaries/uv",
@@ -42,6 +43,15 @@
       "hardenedRuntime": true,
       "infoPlist": "./Info.plist",
       "minimumSystemVersion": "13.0"
+    },
+    "windows": {
+      "nsis": {
+        "displayLanguageSelector": false,
+        "installerIcon": "icons/icon.ico"
+      },
+      "wix": {
+        "language": ["en-US"]
+      }
     },
     "resources": {
       "../../../runtime/goal-plugin": "goal-plugin/",
