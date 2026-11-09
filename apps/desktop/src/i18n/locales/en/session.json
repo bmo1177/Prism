@@ -114,7 +114,8 @@
       "reasoning": "Reasoning effort",
       "reasoningDefault": "Model default",
       "faster": "Faster",
-      "smarter": "Smarter"
+      "smarter": "Smarter",
+      "freeBadge": "Free"
     },
     "reference": {
       "filesAria": "Workspace files",

@@ -18,7 +18,11 @@
       "couldNotOpenJupyterLab": "No se pudo abrir JupyterLab",
       "couldNotCreateNotebook": "No se pudo crear el cuaderno",
       "deleted": "Cuaderno eliminado",
-      "couldNotDelete": "No se pudo eliminar el cuaderno"
+      "couldNotDelete": "No se pudo eliminar el cuaderno",
+      "imported": "Notebook importado: {{name}}",
+      "couldNotImportNotebook": "No se pudo importar el notebook",
+      "noNotebookSelected": "Ningún notebook seleccionado",
+      "invalidNotebook": "No es un notebook Jupyter válido"
     },
     "editor": {
       "backAria": "Volver a los cuadernos",
@@ -46,7 +50,8 @@
     "deleteTitle": "Eliminar este cuaderno",
     "confirmDeleteTitle": "Eliminar cuaderno",
     "confirmDeleteBody": "Esto elimina permanentemente {{name}} de tu espacio de trabajo. El agente podría recrearlo si lo referencia. ¿Eliminar de todos modos?",
-    "confirmDeleteLabel": "Eliminar"
+    "confirmDeleteLabel": "Eliminar",
+    "importNotebook": "Importar notebook…"
   },
   "files": {
     "loading": "Cargando…",

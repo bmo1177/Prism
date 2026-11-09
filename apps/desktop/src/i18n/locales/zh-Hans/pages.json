@@ -18,7 +18,11 @@
       "couldNotOpenJupyterLab": "无法打开 JupyterLab",
       "couldNotCreateNotebook": "无法创建笔记本",
       "deleted": "笔记本已删除",
-      "couldNotDelete": "无法删除笔记本"
+      "couldNotDelete": "无法删除笔记本",
+      "imported": "已导入笔记本：{{name}}",
+      "couldNotImportNotebook": "无法导入笔记本",
+      "noNotebookSelected": "未选择笔记本",
+      "invalidNotebook": "不是有效的 Jupyter 笔记本"
     },
     "editor": {
       "backAria": "返回笔记本列表",
@@ -46,7 +50,8 @@
     "deleteTitle": "删除此笔记本",
     "confirmDeleteTitle": "删除笔记本",
     "confirmDeleteBody": "这将从工作区中永久删除 {{name}}。如果智能体引用它，可能会重新创建。仍要删除吗？",
-    "confirmDeleteLabel": "删除"
+    "confirmDeleteLabel": "删除",
+    "importNotebook": "导入笔记本…"
   },
   "files": {
     "loading": "正在加载…",

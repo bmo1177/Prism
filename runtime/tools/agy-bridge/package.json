@@ -1,0 +1,12 @@
+{
+  "name": "prism-agy-bridge",
+  "private": true,
+  "description": "Local OpenAI-compatible bridge that exposes agy (Google Antigravity) CLI models to Prism as a custom provider. Zero dependencies — Node stdlib only.",
+  "type": "module",
+  "scripts": {
+    "start": "node bridge.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

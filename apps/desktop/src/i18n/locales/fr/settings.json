@@ -112,7 +112,8 @@
     "noResults": "Aucun modèle ne correspond à « {{query}} ».",
     "clearSearch": "Effacer la recherche",
     "addFavorite": "Ajouter {{model}} aux favoris",
-    "removeFavorite": "Retirer {{model}} des favoris"
+    "removeFavorite": "Retirer {{model}} des favoris",
+    "freeBadge": "Gratuit"
   },
   "providers": {
     "title": "Fournisseurs",
@@ -404,5 +405,43 @@
     "reveal": "Afficher la saisie",
     "hide": "Masquer la saisie",
     "privacy": "Transmis uniquement au ssh de cette machine. Jamais stocké, journalisé, ni inscrit dans la provenance."
+  },
+  "byok": {
+    "title": "Apportez votre propre clé",
+    "hint": "Collez une clé d'API d'un fournisseur que vous utilisez déjà — Prism la stocke dans son coffre d'identifiants privé et ne l'exporte jamais.",
+    "openrouterTitle": "OpenRouter",
+    "openrouterHint": "Exécutez des modèles gratuits ou payez n'importe quel modèle avec une seule clé. Inscrivez-vous, créez une clé et collez-la ici.",
+    "openrouterFree": "niveau gratuit",
+    "nvidiaTitle": "NVIDIA",
+    "nvidiaHint": "La clé gratuite inclut tout le catalogue de modèles NVIDIA (limité en débit). Créez-en une sur le site développeur NVIDIA.",
+    "nvidiaFree": "clé gratuite",
+    "customTitle": "Clé payante ou endpoint personnalisé",
+    "customHint": "N'importe quel endpoint compatible OpenAI ou Anthropic, une clé de fournisseur payante ou un serveur auto-hébergé (Ollama, vLLM, LM Studio).",
+    "apiKeyPlaceholder": "Collez votre clé d'API",
+    "connect": "Connecter",
+    "replace": "Remplacer",
+    "getFreeKey": "Obtenez une clé gratuite sur {{url}}",
+    "customConnect": "Ajouter un endpoint personnalisé",
+    "storageNote": "Les clés sont écrites dans le coffre d'identifiants privé de l'app (jamais dans les journaux, git ou les projets exportés) et envoyées uniquement au fournisseur connecté."
+  },
+  "agyBridge": {
+    "title": "Pont CLI agy",
+    "sectionHint": "Exposer les modèles de la CLI agy dans Prism",
+    "hint": "La CLI agy (Google Antigravity) exécute ses propres agents. Ce pont la sert sur un port local et enregistre ses modèles ici, pour qu'ils apparaissent dans le sélecteur de modèles.",
+    "detecting": "Recherche d'agy…",
+    "notFound": "Aucune CLI agy trouvée sur cette machine.",
+    "installHint": "Installez la CLI agy (https://github.com/google/antigravity-cli), ajoutez-la au PATH, puis vérifiez à nouveau.",
+    "recheck": "Vérifier à nouveau",
+    "found": "agy {{version}} trouvé à {{path}}",
+    "bridgeRunning": "pont actif",
+    "bridgeStopped": "pont arrêté",
+    "startRegister": "Démarrer le pont et enregistrer",
+    "registered": "Enregistré",
+    "stop": "Arrêter",
+    "removeHint": "Pour retirer l'enregistrement, utilisez Retirer dans la liste des fournisseurs ci-dessous. Arrêter le pont ne le désenregistre pas.",
+    "started": "Pont agy démarré",
+    "registrationAdded": "{{count}} modèles agy enregistrés",
+    "couldNotStart": "Impossible de démarrer le pont agy",
+    "chatOnlyNote": "agy exécute sa propre boucle d'agents, donc les modèles pontés répondent en chat sans appels d'outils OpenAI (pas d'outils shell/fichiers/web sur ce chemin)."
   }
 }

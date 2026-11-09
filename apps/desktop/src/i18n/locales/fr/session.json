@@ -114,7 +114,8 @@
       "reasoning": "Effort de raisonnement",
       "reasoningDefault": "Défaut du modèle",
       "faster": "Plus rapide",
-      "smarter": "Plus intelligent"
+      "smarter": "Plus intelligent",
+      "freeBadge": "Gratuit"
     },
     "reference": {
       "filesAria": "Fichiers de l’espace de travail",

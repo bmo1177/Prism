@@ -114,7 +114,8 @@
       "reasoning": "Denkaufwand",
       "reasoningDefault": "Modellstandard",
       "faster": "Schneller",
-      "smarter": "Klüger"
+      "smarter": "Klüger",
+      "freeBadge": "Kostenlos"
     },
     "reference": {
       "filesAria": "Dateien im Arbeitsbereich",

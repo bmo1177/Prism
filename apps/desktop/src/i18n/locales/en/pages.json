@@ -18,7 +18,11 @@
       "couldNotOpenJupyterLab": "Could not open JupyterLab",
       "couldNotCreateNotebook": "Could not create notebook",
       "deleted": "Notebook deleted",
-      "couldNotDelete": "Could not delete notebook"
+      "couldNotDelete": "Could not delete notebook",
+      "imported": "Notebook imported: {{name}}",
+      "couldNotImportNotebook": "Could not import notebook",
+      "noNotebookSelected": "No notebook selected",
+      "invalidNotebook": "Not a valid Jupyter notebook"
     },
     "editor": {
       "backAria": "Back to notebooks",
@@ -46,7 +50,8 @@
     "deleteTitle": "Delete this notebook",
     "confirmDeleteTitle": "Delete notebook",
     "confirmDeleteBody": "This permanently removes {{name}} from your workspace. The agent may recreate it if it references it. Delete anyway?",
-    "confirmDeleteLabel": "Delete"
+    "confirmDeleteLabel": "Delete",
+    "importNotebook": "Import notebook…"
   },
   "files": {
     "loading": "Loading…",

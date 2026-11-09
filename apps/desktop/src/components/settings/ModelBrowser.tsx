@@ -7,6 +7,7 @@ import { inputCls } from "./inputCls";
 import {
   filterModelOptions,
   flattenModelOptions,
+  isFreeModel,
   type ModelFilter,
   type ModelOption,
 } from "./modelCatalog";
@@ -147,6 +148,7 @@ export function ModelBrowser({ providers, defaultModel, busy, onSelect, onManage
                       <span className="flex items-center gap-2 text-[13px] font-medium text-text">
                         <span className="truncate">{model.modelName}</span>
                         {current && <span className="shrink-0 rounded bg-accent/15 px-1.5 py-0.5 text-[10px] text-accent">{t("model.currentDefault")}</span>}
+                        {isFreeModel(model.providerID, model.modelID) && <span className="shrink-0 rounded bg-ok/15 px-1.5 py-0.5 text-[10px] text-ok">{t("model.freeBadge")}</span>}
                         {pending && <span className="inline-flex shrink-0 items-center gap-1 text-[10px] text-accent"><Loader2 size={10} className="animate-spin" />{t("model.switching")}</span>}
                       </span>
                       <span className="mt-0.5 block truncate text-[11px] text-muted">{model.providerName}{model.modelName !== model.modelID ? ` · ${model.modelID}` : ""}</span>

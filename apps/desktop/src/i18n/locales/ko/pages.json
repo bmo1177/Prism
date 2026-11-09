@@ -18,7 +18,11 @@
       "couldNotOpenJupyterLab": "JupyterLab을 열 수 없습니다",
       "couldNotCreateNotebook": "노트북을 만들 수 없습니다",
       "deleted": "노트북이 삭제되었습니다",
-      "couldNotDelete": "노트북을 삭제할 수 없습니다"
+      "couldNotDelete": "노트북을 삭제할 수 없습니다",
+      "imported": "노트북을 가져왔습니다: {{name}}",
+      "couldNotImportNotebook": "노트북을 가져올 수 없습니다",
+      "noNotebookSelected": "선택한 노트북이 없습니다",
+      "invalidNotebook": "유효한 Jupyter 노트북이 아닙니다"
     },
     "editor": {
       "backAria": "노트북 목록으로 돌아가기",
@@ -46,7 +50,8 @@
     "deleteTitle": "이 노트북 삭제",
     "confirmDeleteTitle": "노트북 삭제",
     "confirmDeleteBody": "워크스페이스에서 {{name}}이(가) 영구적으로 제거됩니다. 에이전트가 참조하는 경우 다시 만들 수 있습니다. 그래도 삭제하시겠습니까?",
-    "confirmDeleteLabel": "삭제"
+    "confirmDeleteLabel": "삭제",
+    "importNotebook": "노트북 가져오기…"
   },
   "files": {
     "loading": "불러오는 중…",

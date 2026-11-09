@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, ExternalLink, NotebookPen, Plus, Trash2 } from "lucide-react";
-import { addTextToWorkspace, isTauri, jupyterStatus, openJupyterLab, workspaceBase, workspacePath } from "@/lib/tauri";
-import { deleteNotebook, listNotebooks, type NotebookEntry } from "@/lib/artifactFile";
-import { emptyIpynb } from "@/lib/notebook-file";
+import { ChevronDown, ExternalLink, NotebookPen, Plus, Trash2, Upload } from "lucide-react";
+import { addFilesToWorkspace, addTextToWorkspace, isTauri, jupyterStatus, openJupyterLab, workspaceBase, workspacePath } from "@/lib/tauri";
+import { deleteNotebook, listNotebooks, readArtifact, type NotebookEntry } from "@/lib/artifactFile";
+import { emptyIpynb, parseIpynb } from "@/lib/notebook-file";
 import type { KernelLanguage } from "@/lib/kernel";
 import { NotebookEditor } from "@/components/notebook/NotebookEditor";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
@@ -87,6 +87,35 @@ export function NotebooksPage() {
     } catch (err) {
       toast.error(`${t("notebooks.toast.couldNotCreateNotebook")}: ${err instanceof Error ? err.message : String(err)}`);
     }
+  };
+
+  /** Import one .ipynb from disk (validated as a notebook) and open it —
+   *  the attach pipeline copies it into the active workspace first. */
+  const importNotebook = async () => {
+    setMenuOpen(false);
+    let names: string[];
+    try {
+      names = await addFilesToWorkspace("ipynb");
+    } catch (err) {
+      toast.error(`${t("notebooks.toast.couldNotImportNotebook")}: ${err instanceof Error ? err.message : String(err)}`);
+      return;
+    }
+    const pick = names.find((n) => n.toLowerCase().endsWith(".ipynb"));
+    if (!pick) {
+      if (names.length > 0) toast.error(t("notebooks.toast.noNotebookSelected"));
+      return;
+    }
+    try {
+      const file = await readArtifact(pick, "workspace");
+      if (!file) throw new Error(t("notebooks.toast.noNotebookSelected"));
+      parseIpynb(file.data);
+    } catch (err) {
+      toast.error(`${t("notebooks.toast.invalidNotebook")}: ${err instanceof Error ? err.message : String(err)}`);
+      return;
+    }
+    await refresh();
+    toast.success(t("notebooks.toast.imported", { name: pick }));
+    setOpen({ path: pick, root: "workspace" });
   };
 
   const confirmDelete = async () => {
@@ -180,6 +209,14 @@ export function NotebooksPage() {
                       onClick={() => void createNew("r")}
                     >
                       <NotebookPen size={13} className="text-muted" /> {t("notebooks.rNotebook")}
+                    </button>
+                    <div className="my-1 h-px bg-faint" />
+                    <button
+                      role="menuitem"
+                      className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-text hover:bg-surface-2"
+                      onClick={() => void importNotebook()}
+                    >
+                      <Upload size={13} className="text-muted" /> {t("notebooks.importNotebook")}
                     </button>
                   </div>
                 )}

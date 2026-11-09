@@ -18,7 +18,11 @@
       "couldNotOpenJupyterLab": "JupyterLab konnte nicht geöffnet werden",
       "couldNotCreateNotebook": "Notebook konnte nicht erstellt werden",
       "deleted": "Notizbuch gelöscht",
-      "couldNotDelete": "Notizbuch konnte nicht gelöscht werden"
+      "couldNotDelete": "Notizbuch konnte nicht gelöscht werden",
+      "imported": "Notebook importiert: {{name}}",
+      "couldNotImportNotebook": "Notebook konnte nicht importiert werden",
+      "noNotebookSelected": "Kein Notebook ausgewählt",
+      "invalidNotebook": "Kein gültiges Jupyter-Notebook"
     },
     "editor": {
       "backAria": "Zurück zu Notebooks",
@@ -46,7 +50,8 @@
     "deleteTitle": "Dieses Notizbuch löschen",
     "confirmDeleteTitle": "Notizbuch löschen",
     "confirmDeleteBody": "Dadurch wird {{name}} dauerhaft aus Ihrem Arbeitsbereich entfernt. Der Agent kann es neu erstellen, falls er darauf verweist. Trotzdem löschen?",
-    "confirmDeleteLabel": "Löschen"
+    "confirmDeleteLabel": "Löschen",
+    "importNotebook": "Notebook importieren…"
   },
   "files": {
     "loading": "Wird geladen…",

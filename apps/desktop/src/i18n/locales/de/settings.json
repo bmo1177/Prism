@@ -112,7 +112,8 @@
     "noResults": "Keine Modelle entsprechen „{{query}}“.",
     "clearSearch": "Suche löschen",
     "addFavorite": "{{model}} zu Favoriten hinzufügen",
-    "removeFavorite": "{{model}} aus Favoriten entfernen"
+    "removeFavorite": "{{model}} aus Favoriten entfernen",
+    "freeBadge": "Kostenlos"
   },
   "providers": {
     "title": "Anbieter",
@@ -404,5 +405,43 @@
     "reveal": "Eingabe anzeigen",
     "hide": "Eingabe verbergen",
     "privacy": "Geht nur an das ssh auf diesem Rechner. Wird nie gespeichert, protokolliert oder in die Provenienz geschrieben."
+  },
+  "byok": {
+    "title": "Eigenen API-Schlüssel mitbringen",
+    "hint": "Füge einen API-Schlüssel eines bereits genutzten Anbieters ein — Prism speichert ihn im eigenen privaten Credential-Speicher und exportiert ihn nie.",
+    "openrouterTitle": "OpenRouter",
+    "openrouterHint": "Kostenlose Modelle nutzen oder beliebige Modelle mit einem Schlüssel bezahlen. Registrieren, Schlüssel erstellen und hier einfügen.",
+    "openrouterFree": "Gratis-Stufe",
+    "nvidiaTitle": "NVIDIA",
+    "nvidiaHint": "Gratis-Schlüssel enthält den vollen NVIDIA-Modellkatalog (ratenbegrenzt). Auf der NVIDIA-Entwicklerseite erstellen.",
+    "nvidiaFree": "Gratis-Schlüssel",
+    "customTitle": "Bezahlter Schlüssel oder eigener Endpunkt",
+    "customHint": "Jeder OpenAI- oder Anthropic-kompatible Endpunkt, ein bezahlter Anbieterschlüssel oder ein selbst gehosteter Server (Ollama, vLLM, LM Studio).",
+    "apiKeyPlaceholder": "API-Schlüssel einfügen",
+    "connect": "Verbinden",
+    "replace": "Ersetzen",
+    "getFreeKey": "Gratis-Schlüssel bei {{url}}",
+    "customConnect": "Eigenen Endpunkt hinzufügen",
+    "storageNote": "Schlüssel werden in den privaten Credential-Speicher der App geschrieben (nie in Logs, Git oder exportierte Projekte) und nur an den verbundenen Anbieter gesendet."
+  },
+  "agyBridge": {
+    "title": "agy-CLI-Brücke",
+    "sectionHint": "agy-CLI-Modelle in Prism einbinden",
+    "hint": "Die agy-CLI (Google Antigravity) führt ihre eigenen Agenten aus. Diese Brücke setzt sie über einen lokalen Port davor und registriert ihre Modelle hier, damit sie in der Modellauswahl erscheinen.",
+    "detecting": "Suche nach agy…",
+    "notFound": "Keine agy-CLI auf diesem Rechner gefunden.",
+    "installHint": "Installiere die agy-CLI (https://github.com/google/antigravity-cli), lege sie in den PATH und prüfe erneut.",
+    "recheck": "Erneut prüfen",
+    "found": "agy {{version}} gefunden bei {{path}}",
+    "bridgeRunning": "Brücke läuft",
+    "bridgeStopped": "Brücke gestoppt",
+    "startRegister": "Brücke starten & registrieren",
+    "registered": "Registriert",
+    "stop": "Stoppen",
+    "removeHint": "Zum Entfernen der Registrierung下方 in der Anbieterliste auf Entfernen klicken. Das Stoppen der Brücke hebt die Registrierung nicht auf.",
+    "started": "agy-Brücke gestartet",
+    "registrationAdded": "{{count}} agy-Modelle registriert",
+    "couldNotStart": "agy-Brücke konnte nicht gestartet werden",
+    "chatOnlyNote": "agy führt seine eigene Agentenschleife aus, daher antworten gebrückte Modelle im Chat ohne OpenAI-Tool-Aufrufe (keine Shell-/Datei-/Web-Werkzeuge auf diesem Pfad)."
   }
 }

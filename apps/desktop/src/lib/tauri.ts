@@ -60,12 +60,55 @@ export async function probeEndpointModels(
 
 /**
  * Pick local files via the native dialog and copy them into the agent
- * workspace (desktop only). Returns the workspace file names; [] on cancel.
+ * workspace (desktop only). `filter` restricts the dialog to one file
+ * extension (e.g. "ipynb") — undefined means any file. Returns the workspace
+ * file names; [] on cancel.
  */
-export async function addFilesToWorkspace(): Promise<string[]> {
+export async function addFilesToWorkspace(filter?: string): Promise<string[]> {
   if (!isTauri) return [];
   const { invoke } = await import("@tauri-apps/api/core");
-  return invoke<string[]>("add_files_to_workspace");
+  return invoke<string[]>("add_files_to_workspace", { filter: filter ?? null });
+}
+
+/** Detect the `agy` (Antigravity) CLI and enumerate its models (desktop only). */
+export interface AgyModel {
+  id: string;
+  name: string;
+}
+export interface AgyStatus {
+  found: boolean;
+  path: string | null;
+  version: string | null;
+  models: AgyModel[];
+}
+export async function agyDetect(): Promise<AgyStatus> {
+  if (!isTauri) return { found: false, path: null, version: null, models: [] };
+  const { invoke } = await import("@tauri-apps/api/core");
+  return invoke<AgyStatus>("agy_detect");
+}
+
+/**
+ * Start the local agy↔OpenAI bridge (idempotent). Returns its loopback port —
+ * register OpenCode provider "agy" with baseURL `http://127.0.0.1:<port>/v1`.
+ */
+export async function agyBridgeStart(): Promise<number> {
+  if (!isTauri) throw new Error("not running in the desktop app");
+  const { invoke } = await import("@tauri-apps/api/core");
+  return invoke<number>("agy_bridge_start");
+}
+
+/** Stop the local agy bridge, if it is running. */
+export async function agyBridgeStop(): Promise<void> {
+  if (!isTauri) return;
+  const { invoke } = await import("@tauri-apps/api/core");
+  await invoke("agy_bridge_stop");
+}
+
+/** Whether the local agy bridge process is currently running. */
+export async function agyBridgeStatus(): Promise<boolean> {
+  if (!isTauri) return false;
+  const { invoke } = await import("@tauri-apps/api/core");
+  return invoke<boolean>("agy_bridge_status");
 }
 
 /**

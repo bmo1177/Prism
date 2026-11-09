@@ -112,7 +112,8 @@
     "noResults": "「{{query}}」に一致するモデルはありません。",
     "clearSearch": "検索をクリア",
     "addFavorite": "{{model}} をお気に入りに追加",
-    "removeFavorite": "{{model}} をお気に入りから削除"
+    "removeFavorite": "{{model}} をお気に入りから削除",
+    "freeBadge": "無料"
   },
   "providers": {
     "title": "プロバイダー",
@@ -402,5 +403,43 @@
     "reveal": "入力内容を表示",
     "hide": "入力内容を隠す",
     "privacy": "このマシンの ssh にのみ送られます。保存もログ記録もされず、来歴にも書き込まれません。"
+  },
+  "byok": {
+    "title": "自分のAPIキーを利用",
+    "hint": "すでに使っているプロバイダーのAPIキーを貼り付けてください。Prismはアプリ内のプライベートな認証情報ストアに保存し、エクスポートしません。",
+    "openrouterTitle": "OpenRouter",
+    "openrouterHint": "無料モデルを実行したり、1つのキーで任意のモデルに支払ったりできます。登録してキーを作成し、ここに貼り付けてください。",
+    "openrouterFree": "無料枠",
+    "nvidiaTitle": "NVIDIA",
+    "nvidiaHint": "無料キーにはNVIDIAモデルカタログ全体が含まれます（レート制限あり）。NVIDIA開発者サイトで作成してください。",
+    "nvidiaFree": "無料キー",
+    "customTitle": "有料キー／カスタムエンドポイント",
+    "customHint": "OpenAI／Anthropic互換エンドポイント、有料プロバイダーキー、またはセルフホストのサーバー（Ollama、vLLM、LM Studio）に対応します。",
+    "apiKeyPlaceholder": "APIキーを貼り付け",
+    "connect": "接続",
+    "replace": "置き換え",
+    "getFreeKey": "{{url}} で無料キーを取得",
+    "customConnect": "カスタムエンドポイントを追加",
+    "storageNote": "キーはアプリのプライベートな認証情報ストアに書き込まれ（ログ・git・エクスポートプロジェクトには含まれません）、接続したプロバイダーにのみ送信されます。"
+  },
+  "agyBridge": {
+    "title": "agy CLIブリッジ",
+    "sectionHint": "agy CLIのモデルをPrismに表示",
+    "hint": "agy CLI（Google Antigravity）は独自のエージェントを実行します。このブリッジはローカルポートでそれを受け、モデルをここに登録してモデルピッカーに表示します。",
+    "detecting": "agyを確認中…",
+    "notFound": "このマシンにagy CLIが見つかりませんでした。",
+    "installHint": "agy CLI（https://github.com/google/antigravity-cli）をインストールしてPATHに追加し、再確認してください。",
+    "recheck": "再確認",
+    "found": "agy {{version}}（{{path}}）が見つかりました",
+    "bridgeRunning": "ブリッジ実行中",
+    "bridgeStopped": "ブリッジ停止中",
+    "startRegister": "ブリッジ起動＆登録",
+    "registered": "登録済み",
+    "stop": "停止",
+    "removeHint": "登録を外すには、下のプロバイダーリストで「削除」を使ってください。ブリッジの停止だけでは登録は外れません。",
+    "started": "agyブリッジを起動しました",
+    "registrationAdded": "{{count}} 個のagyモデルを登録しました",
+    "couldNotStart": "agyブリッジを起動できませんでした",
+    "chatOnlyNote": "agyは独自のエージェントループを実行するため、ブリッジ経由のモデルはOpenAIツール呼び出しなしでチャット応答します（この経路ではシェル／ファイル／Webツールは使えません）。"
   }
 }

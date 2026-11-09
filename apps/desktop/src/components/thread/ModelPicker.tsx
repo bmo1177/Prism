@@ -15,6 +15,7 @@ import { cn } from "@/lib/cn";
 import {
   flattenModelOptions,
   filterModelOptions,
+  isFreeModel,
   type ModelFilter,
 } from "@/components/settings/modelCatalog";
 import {
@@ -418,6 +419,9 @@ export function ModelPicker({ sessionId }: { sessionId?: string } = {}) {
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center gap-1">
                       <span className="truncate text-xs text-text">{o.modelName}</span>
+                      {isFreeModel(o.providerID, o.modelID) && (
+                        <span className="shrink-0 rounded bg-ok/15 px-1 py-px text-[9px] font-medium uppercase tracking-wide text-ok">{t("composer.model.freeBadge")}</span>
+                      )}
                       {hasReasoning && (
                         <Zap size={9} className="shrink-0 text-muted" aria-hidden />
                       )}

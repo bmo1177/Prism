@@ -114,7 +114,8 @@
       "reasoning": "推理强度",
       "reasoningDefault": "模型默认",
       "faster": "更快",
-      "smarter": "更强"
+      "smarter": "更强",
+      "freeBadge": "免费"
     },
     "reference": {
       "filesAria": "工作区文件",

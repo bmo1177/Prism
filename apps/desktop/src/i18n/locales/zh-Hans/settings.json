@@ -112,7 +112,8 @@
     "noResults": "没有模型匹配“{{query}}”。",
     "clearSearch": "清除搜索",
     "addFavorite": "将 {{model}} 添加到收藏",
-    "removeFavorite": "从收藏中移除 {{model}}"
+    "removeFavorite": "从收藏中移除 {{model}}",
+    "freeBadge": "免费"
   },
   "providers": {
     "title": "供应商",
@@ -402,5 +403,43 @@
     "reveal": "显示输入内容",
     "hide": "隐藏输入内容",
     "privacy": "只发送给本机的 ssh。不会被保存、记录日志，也不会写入溯源记录。"
+  },
+  "byok": {
+    "title": "自带 API 密钥",
+    "hint": "粘贴您已经使用的服务商的 API 密钥——Prism 将其保存在自己的私有凭据存储中，永不导出。",
+    "openrouterTitle": "OpenRouter",
+    "openrouterHint": "用一个密钥运行免费模型，或为任意模型付费。注册、创建密钥，然后粘贴到这里。",
+    "openrouterFree": "免费套餐",
+    "nvidiaTitle": "NVIDIA",
+    "nvidiaHint": "免费密钥包含完整的 NVIDIA 模型目录（有速率限制）。在 NVIDIA 开发者站点创建。",
+    "nvidiaFree": "免费密钥",
+    "customTitle": "付费密钥或自定义端点",
+    "customHint": "支持任意 OpenAI 或 Anthropic 兼容端点、付费服务商密钥，或自托管服务器（Ollama、vLLM、LM Studio）。",
+    "apiKeyPlaceholder": "粘贴您的 API 密钥",
+    "connect": "连接",
+    "replace": "替换",
+    "getFreeKey": "在 {{url}} 获取免费密钥",
+    "customConnect": "添加自定义端点",
+    "storageNote": "密钥将写入应用的私有凭据存储（永不进入日志、git 或导出的项目），仅发送给您连接的服务商。"
+  },
+  "agyBridge": {
+    "title": "agy CLI 桥接",
+    "sectionHint": "将 agy CLI 模型接入 Prism",
+    "hint": "agy CLI（Google Antigravity）运行自己的智能体。该桥接通过本地端口提供服务，并将其模型注册到这里，使其出现在模型选择器中。",
+    "detecting": "正在检查 agy…",
+    "notFound": "此计算机上未找到 agy CLI。",
+    "installHint": "安装 agy CLI（https://github.com/google/antigravity-cli）并加入 PATH，然后重新检查。",
+    "recheck": "重新检查",
+    "found": "发现 agy {{version}}（{{path}}）",
+    "bridgeRunning": "桥接运行中",
+    "bridgeStopped": "桥接已停止",
+    "startRegister": "启动桥接并注册",
+    "registered": "已注册",
+    "stop": "停止",
+    "removeHint": "如需取消注册，请使用下方服务商列表中的“移除”。停止桥接不会取消注册。",
+    "started": "agy 桥接已启动",
+    "registrationAdded": "已注册 {{count}} 个 agy 模型",
+    "couldNotStart": "无法启动 agy 桥接",
+    "chatOnlyNote": "agy 运行自己的智能体循环，因此经桥接的模型以聊天方式回答，不带 OpenAI 工具调用（此路径不支持 shell/文件/网页工具）。"
   }
 }

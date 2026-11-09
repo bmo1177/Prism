@@ -112,7 +112,8 @@
     "noResults": "No models match “{{query}}”.",
     "clearSearch": "Clear search",
     "addFavorite": "Add {{model}} to favorites",
-    "removeFavorite": "Remove {{model}} from favorites"
+    "removeFavorite": "Remove {{model}} from favorites",
+    "freeBadge": "Free"
   },
   "providers": {
     "title": "Providers",
@@ -404,5 +405,43 @@
     "reveal": "Show what you typed",
     "hide": "Hide what you typed",
     "privacy": "Sent only to ssh on this machine. Never stored, logged, or written to provenance."
+  },
+  "byok": {
+    "title": "Bring your own key",
+    "hint": "Paste an API key from a provider you already use — Prism stores it in its own private credential store and never exports it.",
+    "openrouterTitle": "OpenRouter",
+    "openrouterHint": "Run free models or pay for any model from one key. Sign up, create a key, and paste it here.",
+    "openrouterFree": "free tier",
+    "nvidiaTitle": "NVIDIA",
+    "nvidiaHint": "Free key includes the full NVIDIA model catalog (rate-limited). Create one on the NVIDIA developer site.",
+    "nvidiaFree": "free key",
+    "customTitle": "Paid key or custom endpoint",
+    "customHint": "Any OpenAI- or Anthropic-compatible endpoint, a paid provider key, or a self-hosted server (Ollama, vLLM, LM Studio).",
+    "apiKeyPlaceholder": "Paste your API key",
+    "connect": "Connect",
+    "replace": "Replace",
+    "getFreeKey": "Get a free key at {{url}}",
+    "customConnect": "Add custom endpoint",
+    "storageNote": "Keys are written to the app's private credential store (never to logs, git, or exported projects) and sent only to the provider you connected."
+  },
+  "agyBridge": {
+    "title": "agy CLI bridge",
+    "sectionHint": "Expose agy CLI models to Prism",
+    "hint": "The agy (Google Antigravity) CLI runs its own agents. This bridge fronts it over a local port and registers its models here, so they appear in the model picker.",
+    "detecting": "Checking for agy…",
+    "notFound": "No agy CLI found on this machine.",
+    "installHint": "Install the agy CLI (https://github.com/google/antigravity-cli) and put it on PATH, then re-check.",
+    "recheck": "Re-check",
+    "found": "Found agy {{version}} at {{path}}",
+    "bridgeRunning": "bridge running",
+    "bridgeStopped": "bridge stopped",
+    "startRegister": "Start bridge & register",
+    "registered": "Registered",
+    "stop": "Stop",
+    "removeHint": "To remove registration, use Remove in the provider list below. Stopping the bridge does not unregister it.",
+    "started": "agy bridge started",
+    "registrationAdded": "Registered {{count}} agy models",
+    "couldNotStart": "Could not start the agy bridge",
+    "chatOnlyNote": "agy runs its own agent loop, so bridged models answer in chat without OpenAI tool-calls (no shell/file/web tools on this path)."
   }
 }

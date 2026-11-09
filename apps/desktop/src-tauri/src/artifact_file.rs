@@ -537,10 +537,16 @@ fn attach_paths(ws: &Path, srcs: impl IntoIterator<Item = PathBuf>) -> Result<Ve
 }
 
 /// Pick local files via the native open dialog and attach them to the agent
-/// workspace so the agent can read them. Returns workspace-relative names; empty
-/// on cancel. See `attach_paths` for the in-place-vs-copy rule.
+/// Pick local files via the native dialog and copy them into the agent
+/// workspace. An optional `filter` (a file extension like "ipynb") restricts
+/// the dialog so the picker only offers matching files. Returns
+/// workspace-relative names; empty on cancel. See `attach_paths` for the
+/// in-place-vs-copy rule.
 #[tauri::command]
-pub async fn add_files_to_workspace(app: AppHandle) -> Result<Vec<String>, String> {
+pub async fn add_files_to_workspace(
+    app: AppHandle,
+    filter: Option<String>,
+) -> Result<Vec<String>, String> {
     use tauri_plugin_dialog::DialogExt;
 
     // `pick_files` may run on the main thread; any panic or error there crashes
@@ -549,7 +555,15 @@ pub async fn add_files_to_workspace(app: AppHandle) -> Result<Vec<String>, Strin
     // the app.
     let result: Result<Vec<String>, String> = async {
         let (tx, rx) = tokio::sync::oneshot::channel();
-        app.dialog().file().pick_files(move |picked| {
+        let dialog = app.dialog().file();
+        let dialog = match filter {
+            Some(ext) if !ext.trim().is_empty() => {
+                let ext = ext.trim().trim_start_matches('.').to_string();
+                dialog.add_filter(ext.clone(), &[ext.as_str()])
+            }
+            _ => dialog,
+        };
+        dialog.pick_files(move |picked| {
             let _ = tx.send(picked);
         });
         let picked = rx.await.map_err(|e| format!("dialog channel closed: {e}"))?;

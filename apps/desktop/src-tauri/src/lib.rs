@@ -1,6 +1,7 @@
 // Prism: Tauri 2 entry. Hosts the React frontend and supervises the
 // bundled OpenCode sidecar (isolated config/data + dedicated port; killed on exit).
 mod artifact_file;
+mod agy;
 mod browser;
 mod cron;
 mod debug_log;
@@ -91,6 +92,7 @@ pub fn run() {
         .manage(runs::RunState::default())
         .manage(gateway::GatewayState::default())
         .manage(ssh_session::SshState::default())
+        .manage(agy::AgyBridgeState::default())
         .setup(|app| {
             // Re-run after GTK is loaded by tao/Tauri: the early call at the
             // top of main() may have no-opped because libgtk-3.so wasn't in
@@ -192,6 +194,10 @@ pub fn run() {
             artifact_file::add_text_to_workspace,
             artifact_file::add_binary_to_workspace,
             artifact_file::add_paths_to_workspace,
+            agy::agy_detect,
+            agy::agy_bridge_start,
+            agy::agy_bridge_stop,
+            agy::agy_bridge_status,
             artifact_file::list_notebooks,
             artifact_file::delete_notebook,
             artifact_file::list_dir,
@@ -250,6 +256,9 @@ pub fn run() {
                 // An authenticated ssh channel must not outlive the app that
                 // opened it (#73) — the master lives past our exit otherwise.
                 ssh_session::shutdown(app);
+                // The agy bridge has no state worth keeping — kill it so the
+                // loopback port is free for the next launch.
+                agy::agy_bridge_stop(app.state::<agy::AgyBridgeState>());
             }
         });
 }

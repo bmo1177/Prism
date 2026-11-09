@@ -66,6 +66,8 @@ import { ModelBrowser } from "@/components/settings/ModelBrowser";
 import { fallbackDefaultModel } from "@/components/settings/modelCatalog";
 import { ProviderManagerCard } from "@/components/settings/ProviderManagerCard";
 import { AgentModelsCard } from "@/components/settings/AgentModelsCard";
+import { ByokQuickConnect } from "@/components/settings/ByokQuickConnect";
+import { AgyBridgeCard } from "@/components/settings/AgyBridgeCard";
 import { MemoryCard } from "@/components/settings/MemoryCard";
 import { Row, Section, Switch } from "@/components/settings/Section";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
@@ -978,6 +980,25 @@ export function SettingsPage() {
 
         {/* ---- One model per agent (a fast reviewer, a strong main agent) ---- */}
         {section === "models" && isTauri && <AgentModelsCard providers={providers} />}
+
+        {/* ---- Bring your own key: free (OpenRouter / NVIDIA) + custom paid ---- */}
+        {section === "models" && isTauri && connected && (
+          <Section title={t("byok.title")} hint={t("byok.hint")}>
+            <ByokQuickConnect
+              providers={providers}
+              busy={busy}
+              onConnected={() => void refreshAll()}
+              onOpenCustom={() => setShowCustom(true)}
+            />
+          </Section>
+        )}
+
+        {/* ---- agy CLI bridge: expose agy CLI models as a custom provider ---- */}
+        {section === "models" && isTauri && connected && (
+          <Section title={t("agyBridge.title")} hint={t("agyBridge.sectionHint")}>
+            <AgyBridgeCard providers={providers} busy={busy} onChanged={() => void refreshAll()} />
+          </Section>
+        )}
 
         {/* ---- Persistent memory layers ---- */}
         {section === "memory" && <MemoryCard />}

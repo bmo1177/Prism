@@ -180,7 +180,7 @@ pub const PROJECT_MEMORY_FILE: &str = "AGENTS.md";
 
 /// The free-tier default model the app ships with: opencode's own free model,
 /// available with no API key. Users can switch to a BYOK provider any time.
-pub const FREE_DEFAULT_MODEL: &str = "opencode/deepseek-v4-flash-free";
+pub const FREE_DEFAULT_MODEL: &str = "opencode/crouton-alpha-free";
 
 /// Seed the free-tier default model on first run (no `model` key yet). Never
 /// overrides a model the user chose — absent `model` means "fresh profile".

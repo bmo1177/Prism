@@ -18,7 +18,11 @@
       "couldNotOpenJupyterLab": "Impossible d'ouvrir JupyterLab",
       "couldNotCreateNotebook": "Impossible de créer le notebook",
       "deleted": "Carnet supprimé",
-      "couldNotDelete": "Impossible de supprimer le carnet"
+      "couldNotDelete": "Impossible de supprimer le carnet",
+      "imported": "Notebook importé : {{name}}",
+      "couldNotImportNotebook": "Impossible d'importer le notebook",
+      "noNotebookSelected": "Aucun notebook sélectionné",
+      "invalidNotebook": "Ce n'est pas un notebook Jupyter valide"
     },
     "editor": {
       "backAria": "Retour aux notebooks",
@@ -46,7 +50,8 @@
     "deleteTitle": "Supprimer ce carnet",
     "confirmDeleteTitle": "Supprimer le carnet",
     "confirmDeleteBody": "Cela supprime définitivement {{name}} de votre espace de travail. L'agent pourrait le recréer s'il y fait référence. Supprimer quand même ?",
-    "confirmDeleteLabel": "Supprimer"
+    "confirmDeleteLabel": "Supprimer",
+    "importNotebook": "Importer un notebook…"
   },
   "files": {
     "loading": "Chargement…",

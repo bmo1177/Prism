@@ -112,7 +112,8 @@
     "noResults": "“{{query}}”와 일치하는 모델이 없습니다.",
     "clearSearch": "검색 지우기",
     "addFavorite": "{{model}}을 즐겨찾기에 추가",
-    "removeFavorite": "{{model}}을 즐겨찾기에서 제거"
+    "removeFavorite": "{{model}}을 즐겨찾기에서 제거",
+    "freeBadge": "무료"
   },
   "providers": {
     "title": "공급자",
@@ -402,5 +403,43 @@
     "reveal": "입력 내용 표시",
     "hide": "입력 내용 숨기기",
     "privacy": "이 컴퓨터의 ssh 로만 전송됩니다. 저장·기록되지 않으며 provenance에도 기록되지 않습니다."
+  },
+  "byok": {
+    "title": "내 API 키 가져오기",
+    "hint": "이미 사용 중인 제공자의 API 키를 붙여넣으세요. Prism은 앱 전용 비공개 자격 증명 저장소에 보관하며 외부로 내보내지 않습니다.",
+    "openrouterTitle": "OpenRouter",
+    "openrouterHint": "무료 모델을 실행하거나 하나의 키로 어떤 모델이든 결제할 수 있습니다. 가입해 키를 만든 뒤 여기에 붙여넣으세요.",
+    "openrouterFree": "무료 티어",
+    "nvidiaTitle": "NVIDIA",
+    "nvidiaHint": "무료 키에 NVIDIA 모델 카탈로그 전체가 포함됩니다(속도 제한 있음). NVIDIA 개발자 사이트에서 만드세요.",
+    "nvidiaFree": "무료 키",
+    "customTitle": "유료 키 또는 사용자 지정 엔드포인트",
+    "customHint": "OpenAI 또는 Anthropic 호환 엔드포인트, 유료 제공자 키, 또는 자체 호스팅 서버(Ollama, vLLM, LM Studio)도 가능합니다.",
+    "apiKeyPlaceholder": "API 키 붙여넣기",
+    "connect": "연결",
+    "replace": "교체",
+    "getFreeKey": "{{url}}에서 무료 키 받기",
+    "customConnect": "사용자 지정 엔드포인트 추가",
+    "storageNote": "키는 앱의 비공개 자격 증명 저장소에 기록되며(로그·git·내보내기 프로젝트에는 포함되지 않음) 연결한 제공자에게만 전송됩니다."
+  },
+  "agyBridge": {
+    "title": "agy CLI 브리지",
+    "sectionHint": "agy CLI 모델을 Prism에 노출",
+    "hint": "agy CLI(Google Antigravity)는 자체 에이전트를 실행합니다. 이 브리지는 로컬 포트에서 이를 연결하고 모델을 여기에 등록해 모델 선택기에 표시합니다.",
+    "detecting": "agy 확인 중…",
+    "notFound": "이 컴퓨터에서 agy CLI를 찾을 수 없습니다.",
+    "installHint": "agy CLI(https://github.com/google/antigravity-cli)를 설치해 PATH에 추가한 뒤 다시 확인하세요.",
+    "recheck": "다시 확인",
+    "found": "agy {{version}} 발견: {{path}}",
+    "bridgeRunning": "브리지 실행 중",
+    "bridgeStopped": "브리지 중지됨",
+    "startRegister": "브리지 시작 및 등록",
+    "registered": "등록됨",
+    "stop": "중지",
+    "removeHint": "등록을 해제하려면 아래 제공자 목록에서 제거를 사용하세요. 브리지를 중지해도 등록이 해제되지는 않습니다.",
+    "started": "agy 브리지 시작됨",
+    "registrationAdded": "agy 모델 {{count}}개 등록됨",
+    "couldNotStart": "agy 브리지를 시작할 수 없습니다",
+    "chatOnlyNote": "agy는 자체 에이전트 루프를 실행하므로, 브리지를 경유한 모델은 OpenAI 도구 호출 없이 채팅으로만 응답합니다(이 경로에서는 셸/파일/웹 도구를 사용할 수 없음)."
   }
 }

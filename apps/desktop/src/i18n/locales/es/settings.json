@@ -112,7 +112,8 @@
     "noResults": "Ningún modelo coincide con «{{query}}».",
     "clearSearch": "Borrar búsqueda",
     "addFavorite": "Añadir {{model}} a favoritos",
-    "removeFavorite": "Quitar {{model}} de favoritos"
+    "removeFavorite": "Quitar {{model}} de favoritos",
+    "freeBadge": "Gratis"
   },
   "providers": {
     "title": "Proveedores",
@@ -404,5 +405,43 @@
     "reveal": "Mostrar lo escrito",
     "hide": "Ocultar lo escrito",
     "privacy": "Solo se envía al ssh de este equipo. Nunca se guarda, ni se registra, ni entra en la procedencia."
+  },
+  "byok": {
+    "title": "Trae tu propia clave",
+    "hint": "Pega una clave de API de un proveedor que ya uses: Prism la guarda en su almacén de credenciales privado y nunca la exporta.",
+    "openrouterTitle": "OpenRouter",
+    "openrouterHint": "Ejecuta modelos gratuitos o paga por cualquier modelo con una sola clave. Regístrate, crea una clave y pégala aquí.",
+    "openrouterFree": "nivel gratuito",
+    "nvidiaTitle": "NVIDIA",
+    "nvidiaHint": "La clave gratuita incluye todo el catálogo de modelos de NVIDIA (con límites de velocidad). Créala en el sitio de desarrolladores de NVIDIA.",
+    "nvidiaFree": "clave gratuita",
+    "customTitle": "Clave de pago o endpoint personalizado",
+    "customHint": "Cualquier endpoint compatible con OpenAI o Anthropic, una clave de proveedor de pago o un servidor autoalojado (Ollama, vLLM, LM Studio).",
+    "apiKeyPlaceholder": "Pega tu clave de API",
+    "connect": "Conectar",
+    "replace": "Reemplazar",
+    "getFreeKey": "Obtén una clave gratuita en {{url}}",
+    "customConnect": "Añadir endpoint personalizado",
+    "storageNote": "Las claves se escriben en el almacén de credenciales privado de la app (nunca en registros, git ni proyectos exportados) y se envían solo al proveedor conectado."
+  },
+  "agyBridge": {
+    "title": "Puente CLI agy",
+    "sectionHint": "Exponer los modelos de la CLI agy en Prism",
+    "hint": "La CLI agy (Google Antigravity) ejecuta sus propios agentes. Este puente la expone por un puerto local y registra sus modelos aquí, para que aparezcan en el selector de modelos.",
+    "detecting": "Buscando agy…",
+    "notFound": "No se encontró la CLI agy en esta máquina.",
+    "installHint": "Instala la CLI agy (https://github.com/google/antigravity-cli), añádela al PATH y vuelve a buscar.",
+    "recheck": "Volver a buscar",
+    "found": "agy {{version}} encontrado en {{path}}",
+    "bridgeRunning": "puente en ejecución",
+    "bridgeStopped": "puente detenido",
+    "startRegister": "Iniciar puente y registrar",
+    "registered": "Registrado",
+    "stop": "Detener",
+    "removeHint": "Para quitar el registro, usa Quitar en la lista de proveedores abajo. Detener el puente no lo desregistra.",
+    "started": "Puente agy iniciado",
+    "registrationAdded": "{{count}} modelos agy registrados",
+    "couldNotStart": "No se pudo iniciar el puente agy",
+    "chatOnlyNote": "agy ejecuta su propio bucle de agentes, por lo que los modelos puenteados responden en chat sin llamadas a herramientas OpenAI (sin herramientas de shell/archivos/web en esta ruta)."
   }
 }

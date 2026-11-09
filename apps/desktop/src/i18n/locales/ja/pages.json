@@ -18,7 +18,11 @@
       "couldNotOpenJupyterLab": "JupyterLab を開けませんでした",
       "couldNotCreateNotebook": "ノートブックを作成できませんでした",
       "deleted": "ノートブックを削除しました",
-      "couldNotDelete": "ノートブックを削除できませんでした"
+      "couldNotDelete": "ノートブックを削除できませんでした",
+      "imported": "ノートブックをインポートしました：{{name}}",
+      "couldNotImportNotebook": "ノートブックをインポートできませんでした",
+      "noNotebookSelected": "ノートブックが選択されていません",
+      "invalidNotebook": "有効なJupyterノートブックではありません"
     },
     "editor": {
       "backAria": "ノートブック一覧に戻る",
@@ -46,7 +50,8 @@
     "deleteTitle": "このノートブックを削除",
     "confirmDeleteTitle": "ノートブックを削除",
     "confirmDeleteBody": "ワークスペースから {{name}} が完全に削除されます。エージェントが参照している場合は再作成される可能性があります。それでも削除しますか？",
-    "confirmDeleteLabel": "削除"
+    "confirmDeleteLabel": "削除",
+    "importNotebook": "ノートブックをインポート…"
   },
   "files": {
     "loading": "読み込み中…",

@@ -8,6 +8,33 @@ export interface ModelOption {
   modelName: string;
 }
 
+/**
+ * Free-tier models served by the bundled `opencode` provider — the live
+ * roster (checked against `opencode models opencode`); every entry is
+ * usable with no API key. Kept as a curated list so the UI can badge free
+ * models even when the provider's display names change. The seeded default
+ * (`opencode/crouton-alpha-free`, see FREE_DEFAULT_MODEL) must stay in this
+ * set.
+ */
+export const FREE_MODEL_KEYS: ReadonlySet<string> = new Set([
+  "opencode/crouton-alpha-free",
+  "opencode/beam-free",
+  "opencode/big-pickle",
+  "opencode/deepseek-v4.1-flash-free",
+  "opencode/flint-40b-free",
+  "opencode/glm-5.3-flash-free",
+  "opencode/iceman-free",
+  "opencode/inkling-2-small-free",
+  "opencode/mimo-v2.6-flash-free",
+  "opencode/nemotron-3.5-lightning-free",
+  "opencode/nemotron-3.5-super-vl-free",
+]);
+
+/** True when the model is served free with no API key. */
+export function isFreeModel(providerID: string, modelID: string): boolean {
+  return FREE_MODEL_KEYS.has(`${providerID}/${modelID}`);
+}
+
 export type ModelFilter =
   | { kind: "all" }
   | { kind: "favorites" }
