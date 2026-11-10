@@ -11,11 +11,18 @@ pub const MODE_FULL: &str = "full";
 
 /// Command tokens the "approve" mode gates behind a prompt, per the AGENTS.md
 /// safety defaults: deletion, privilege/system changes, dependency installs,
-/// and remote/outward connections. Each token yields two glob rules:
-/// `"T *"` (command starts with it; also matches bare `T` — OpenCode turns a
-/// trailing " *" into an optional group) and `"* T *"` (embedded in a compound
-/// command like `cd x && rm -rf y`; the leading space avoids matching words
-/// that merely end in the token).
+/// remote/outward connections, and — because all three of those are walkable
+/// around by executing code — the code-execution entry points themselves
+/// (`python -c "os.remove(…)"` deletes just like `rm`, `npx <pkg>` runs and
+/// installs whatever it fetches). Full interpreter spellings cover their
+/// inline `-c`/`-e`/heredoc forms for free. Known unmatchable at glob
+/// granularity, by design not by neglect: absolute paths (`/bin/python3 …`,
+/// `./build.sh …`) and vetted project entry points (`make`, `npm run`,
+/// `cargo test`) stay ungated — "full" is the documented off switch.
+/// Each token yields two glob rules: `"T *"` (command starts with it; also
+/// matches bare `T` — OpenCode turns a trailing " *" into an optional group)
+/// and `"* T *"` (embedded in a compound command like `cd x && rm -rf y`; the
+/// leading space avoids matching words that merely end in the token).
 const DANGEROUS_BASH: &[&str] = &[
     // deletion
     "rm", "rmdir", "shred", "git clean",
@@ -30,6 +37,12 @@ const DANGEROUS_BASH: &[&str] = &[
     // remote / outward
     "ssh", "scp", "sftp", "rsync", "curl", "wget", "nc", "git push", "modal",
     "sbatch",
+    // interpreters / shells running code or a script file
+    "python", "python3", "node", "deno", "perl", "ruby", "php",
+    "bash", "sh", "zsh",
+    // script / package runners that fetch or execute arbitrary code
+    "npx", "npm exec", "pnpm exec", "pnpm dlx", "yarn dlx", "uv run", "go run",
+    "cargo run",
 ];
 
 fn approve_permission() -> Value {
@@ -488,6 +501,41 @@ mod tests {
         let v2: Value = serde_json::from_str(&seeded2).unwrap();
         assert_eq!(v2["theme"], "dark");
         assert_eq!(v2["model"], FREE_DEFAULT_MODEL);
+    }
+
+    #[test]
+    fn approve_mode_gates_code_execution_and_script_runners() {
+        // The deletion gate above is walkable around by executing code: a
+        // `python -c "os.remove(…)"` or `bash script.sh` deletes just as well.
+        // Approve mode therefore also asks for the interpreters, shells, and
+        // script/package runners themselves (prefix + embedded forms).
+        let out = set_permission_mode("", MODE_APPROVE).unwrap();
+        let v: Value = serde_json::from_str(&out).unwrap();
+        let bash = v["permission"]["bash"].as_object().unwrap();
+        for (token, what) in [
+            ("python", "bare interpreter"),
+            ("python3", "numbered spelling"),
+            ("node", "js runtime"),
+            ("perl", "scripting"),
+            ("ruby", "scripting"),
+            ("php", "scripting"),
+            ("deno", "js runtime"),
+            ("bash", "shell running a script"),
+            ("sh", "shell running a script"),
+            ("zsh", "shell running a script"),
+        ] {
+            assert_eq!(bash[&format!("{token} *")], "ask", "{what}: prefix");
+            assert_eq!(bash[&format!("* {token} *")], "ask", "{what}: embedded");
+        }
+        for token in ["npx", "npm exec", "pnpm exec", "pnpm dlx", "yarn dlx", "uv run", "go run", "cargo run"] {
+            for form in [format!("{token} *"), format!("* {token} *")] {
+                assert_eq!(bash[form.as_str()], "ask", "runner {token} form {form}");
+            }
+        }
+        // The prompt-on-python cost is what approve mode means; full mode is
+        // the documented off switch. No blanket rule of ours either — the
+        // builtin "*": "allow" keeps clearing everything we didn't ask about.
+        assert!(!bash.contains_key("*"));
     }
 
     #[test]
