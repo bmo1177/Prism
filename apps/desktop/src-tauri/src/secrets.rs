@@ -42,6 +42,8 @@ pub fn store_provider_key(provider: &str, api_key: &str) -> Result<(), String> {
 }
 
 /// The stored key for a provider, or None when the keychain has no entry.
+/// Used by the startup mirror (skip the rewrite when it already holds the
+/// same key) and by the tests reading entries back.
 pub fn provider_key(provider: &str) -> Result<Option<String>, String> {
     match entry(provider)?.get_password() {
         Ok(key) => Ok(Some(key)),
@@ -108,13 +110,13 @@ mod tests {
     fn forget_reports_whether_something_was_stored() {
         use_mock_store();
         let p = unique_provider("anthropic");
-        assert_eq!(forget_provider_key(&p).unwrap(), false);
+        assert!(!forget_provider_key(&p).unwrap());
         store_provider_key(&p, "sk-test").unwrap();
-        assert_eq!(forget_provider_key(&p).unwrap(), true);
+        assert!(forget_provider_key(&p).unwrap());
         // Gone, not just marked.
         assert_eq!(provider_key(&p).unwrap(), None);
         // Forgetting twice is still fine.
-        assert_eq!(forget_provider_key(&p).unwrap(), false);
+        assert!(!forget_provider_key(&p).unwrap());
     }
 
     #[test]

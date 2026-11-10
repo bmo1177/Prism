@@ -267,7 +267,17 @@ fn scrub_auth_entry(text: &str, provider: &str) -> Result<Option<String>, String
 pub(crate) fn mirror_keys_to_keychain_text(config_text: &str, auth_text: &str) -> usize {
     let mut stored = std::collections::HashSet::new();
     let mut store = |id: &str, key: &str| {
-        if !id.is_empty() && !key.is_empty() && secrets::store_provider_key(id, key).is_ok() {
+        if id.is_empty() || key.is_empty() {
+            return;
+        }
+        // Already mirrored with the same key: count it, skip the rewrite —
+        // keychain writes are not free (macOS audits/locks), and this pass
+        // runs at every startup.
+        if secrets::provider_key(id).ok().flatten().as_deref() == Some(key) {
+            stored.insert(id.to_string());
+            return;
+        }
+        if secrets::store_provider_key(id, key).is_ok() {
             stored.insert(id.to_string());
         }
     };

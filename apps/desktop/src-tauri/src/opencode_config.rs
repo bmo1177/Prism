@@ -167,12 +167,8 @@ pub fn remove_provider(existing: &str, provider: &str) -> Option<String> {
         root = json!({});
     }
     let obj = root.as_object_mut().unwrap();
-    let Some(providers) = obj.get_mut("provider").and_then(|v| v.as_object_mut()) else {
-        return None;
-    };
-    if providers.remove(provider).is_none() {
-        return None;
-    }
+    let providers = obj.get_mut("provider").and_then(|v| v.as_object_mut())?;
+    providers.remove(provider)?;
     if providers.is_empty() {
         obj.remove("provider");
     }

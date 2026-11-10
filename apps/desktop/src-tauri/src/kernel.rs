@@ -499,7 +499,7 @@ fn exec_on(k: &mut KernelIo, code: &str) -> Result<ExecResult, String> {
     if n == 0 {
         return Err("kernel exited unexpectedly".into());
     }
-    Ok(parse_kernel_response(&line)?)
+    parse_kernel_response(&line)
 }
 
 /// Kill a kernel's process and reap it — killed children must be `wait()`ed
@@ -852,7 +852,10 @@ mod tests {
         assert_eq!(r3["ok"], false);
         assert!(r3["error"].as_str().unwrap().contains("ZeroDivisionError"));
 
+        // Reap like the production `reap()` does — a killed child lingers as a
+        // zombie until waited on.
         let _ = child.kill();
+        let _ = child.wait();
     }
 
     // Same round trip against the real R bridge (skipped if R is not installed):
@@ -907,6 +910,7 @@ mod tests {
         assert!(r4["error"].as_str().unwrap().contains("boom"));
 
         let _ = child.kill();
+        let _ = child.wait();
         let _ = std::fs::remove_dir_all(&dir);
     }
 }
