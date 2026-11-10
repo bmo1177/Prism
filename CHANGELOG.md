@@ -6,6 +6,23 @@ All notable changes to Prism are documented here. Format follows
 
 ## [Unreleased]
 
+### Added
+
+- Built-in starter tasks in the Tasks scheduler: a first launch seeds two runnable jobs — **Daily AI Research Digest** (web-researched arXiv/Hugging Face/GitHub digest written as a self-contained offline HTML file to `digests/digest-YYYY-MM-DD.html` in the workspace, with the Early Alzheimer's Detection research-track section at top) and **Hermes AI Coach** (persistent learning-and-career coach for the AI job/PhD-in-Italy track, keeping state in `coach/state.md`). Seeding runs once (guarded by a `meta` marker, so deleting a starter task is respected) and a "Restore starter tasks" action re-adds missing ones on demand (`restore_default_jobs`).
+- Task failure surfaces: the scheduler records the last fire failure per job (`last_error` + retry count) with exponential retry backoff (1 m → 30 m cap), and the Tasks page shows a "Failed: …" chip with the full error on hover instead of failing silently in a background thread.
+
+### Fixed
+
+- Daily/weekday tasks could never run: the backend rejected the `daily` and `weekday` schedule kinds the page sends (`unknown schedule kind`), so every quick-template and time-picker task creation failed; both now normalize to their real `cron` form.
+- Cron wall-clock times were evaluated against UTC: "daily at 07:00" fired at 07:00 UTC (e.g. 09:00 CET). Schedule matching now evaluates hour/day/month fields in the user's local time zone via `chrono` (already in the tree), resolving DST-ambiguous minutes to their earliest instant and skipping spring-forward gaps.
+- Unfinished firing loop: a stalled sidecar HTTP connection could block the scheduler thread forever (no timeout on the fire client — now 10 s connect / 30 s total); a manually fired job stayed due so the scheduler fired it again within one tick (now rescheduled after a successful fire); re-enabling a paused task re-fired its stale past-due slot instead of its next future one (and an expired one-shot is now finished, not fired late); re-enabled jobs replay missed runs in a stampede (now recomputed to the next slot).
+- Scheduled-task fire errors are explicit instead of opaque: the workspace path is (re-)created before a fire (the "agent failed to run in this workspace path" class of failure), and runtime-down fires read as such on the task record.
+- Delete-confirmation dialog can no longer wedge open when the delete request fails, and the datetime picker's "at" minimum is local-time aware (it was built from a UTC `toISOString`, banning future times in non-UTC zones).
+
+### Changed
+
+- New brand icon: a vector master (`assets/logo.svg`, white beam dispersing through a glass prism) regenerated into the full Tauri icon set (`.icns`, `.ico`, PNG sizes, Windows/Android/iOS) and the README's `assets/logo.png`.
+
 ## [0.3.4] - 2026-11-02
 
 ### Added

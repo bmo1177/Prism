@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CalendarClock, Clock, Loader2, Pause, Play, Plus, Trash2, X, Zap } from "lucide-react";
+import { AlertTriangle, CalendarClock, Clock, Loader2, Pause, Play, Plus, Sparkles, Trash2, X, Zap } from "lucide-react";
 import type { CronJob, NewCronJob } from "@/lib/tasks";
-import { createJob, deleteJob, listJobs, runJobNow, setJobEnabled } from "@/lib/tasks";
+import { createJob, deleteJob, listJobs, restoreDefaultTasks, runJobNow, setJobEnabled } from "@/lib/tasks";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/cn";
 import { isGatewayWeb } from "@/lib/webMode";
@@ -72,8 +72,14 @@ export function TasksPage() {
   const [showForm, setShowForm] = useState(false);
   /** A task awaiting the destructive delete confirmation. */
   const [pendingDelete, setPendingDelete] = useState<CronJob | null>(null);
-  // Hoisted so the datetime picker's floor doesn't recompute on every render.
-  const [minDatetime] = useState(() => new Date(Date.now() + 60_000).toISOString().slice(0, 16));
+  // Hoisted so the datetime picker's floor doesn't recompute on every render,
+  // and expressed in LOCAL wall-clock terms: a UTC `toISOString` slice reads an
+  // hour off for anyone not on UTC, banning valid future picks from the "at" form.
+  const [minDatetime] = useState(() =>
+    new Date(Date.now() + 60_000 - new Date().getTimezoneOffset() * 60_000)
+      .toISOString()
+      .slice(0, 16),
+  );
 
   const reload = useCallback(async () => {
     try {
@@ -156,9 +162,15 @@ export function TasksPage() {
   };
 
   const remove = async (job: CronJob) => {
-    await deleteJob(job.id);
-    setPendingDelete(null);
-    await reload();
+    try {
+      await deleteJob(job.id);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e));
+    } finally {
+      // The confirm dialog must never wedge open on a failed delete.
+      setPendingDelete(null);
+      await reload();
+    }
   };
 
   const toggleEnabled = async (job: CronJob) => {
@@ -175,6 +187,20 @@ export function TasksPage() {
     try {
       await runJobNow(job.id);
       toast.success(t("fired"));
+      await reload();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e));
+    } finally {
+      setTicking(false);
+    }
+  };
+
+  /** Re-add the built-in starter tasks (digest + coach) if they are missing. */
+  const restoreStarters = async () => {
+    setTicking(true);
+    try {
+      const added = await restoreDefaultTasks();
+      toast.success(added > 0 ? t("starter.restored", { count: added }) : t("starter.present"));
       await reload();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : String(e));
@@ -209,13 +235,24 @@ export function TasksPage() {
             ) : undefined
           }
           actions={
-            <button
-              onClick={() => setShowForm((s) => !s)}
-              className="flex items-center gap-1.5 rounded-input bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg transition-opacity hover:opacity-90"
-            >
-              {showForm ? <X size={14} /> : <Plus size={14} />}
-              {showForm ? t("form.cancel") : t("form.add")}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => void restoreStarters()}
+                disabled={ticking}
+                title={t("starter.restoreHint")}
+                className="flex items-center gap-1.5 rounded-input border border-border bg-surface px-3 py-1.5 text-xs font-medium text-text transition-colors hover:bg-surface-2 disabled:opacity-50"
+              >
+                <Sparkles size={14} />
+                {t("starter.restore")}
+              </button>
+              <button
+                onClick={() => setShowForm((s) => !s)}
+                className="flex items-center gap-1.5 rounded-input bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg transition-opacity hover:opacity-90"
+              >
+                {showForm ? <X size={14} /> : <Plus size={14} />}
+                {showForm ? t("form.cancel") : t("form.add")}
+              </button>
+            </div>
           }
         />
 
@@ -460,6 +497,16 @@ export function TasksPage() {
                       {job.lastRunAt != null && (
                         <span title={absoluteTs(job.lastRunAt)}>
                           {t("lastRun")} · {relativeTs(job.lastRunAt)}
+                        </span>
+                      )}
+                      {job.lastError && (
+                        <span
+                          className="inline-flex max-w-full items-center gap-1 rounded px-2 py-0.5 text-error"
+                          style={{ backgroundColor: "var(--error-bg)" }}
+                          title={job.lastError}
+                        >
+                          <AlertTriangle size={11} className="shrink-0" />
+                          <span className="truncate font-medium">{t("lastError", "Failed: {{message}}", { message: job.lastError })}</span>
                         </span>
                       )}
                     </div>

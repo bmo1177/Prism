@@ -68,5 +68,12 @@
         "title": "Auditoría de datos e integridad"
       }
     }
+  },
+  "lastError": "Error: {{message}}",
+  "starter": {
+    "restore": "Restaurar tareas iniciales",
+    "restoreHint": "Vuelve a añadir las tareas integradas (Daily AI Research Digest, Hermes AI Coach) si las eliminaste",
+    "restored": "Las tareas iniciales están listas.",
+    "present": "Las tareas iniciales ya están en su lugar."
   }
 }

@@ -1,22 +1,23 @@
 // Prism: Tauri 2 entry. Hosts the React frontend and supervises the
 // bundled OpenCode sidecar (isolated config/data + dedicated port; killed on exit).
-mod artifact_file;
 mod agy;
+mod artifact_file;
 mod browser;
+mod compute;
 mod cron;
 mod debug_log;
 mod design_templates;
-mod science_skills;
 mod examples;
 mod gateway;
 mod git_snapshot;
 mod goal;
 mod gtk_schema;
 mod harness;
-mod compute;
 mod jupyter;
 mod kernel;
 mod large_file;
+#[cfg(target_os = "macos")]
+mod macos;
 mod modal;
 mod model_probe;
 mod opencode_config;
@@ -27,10 +28,9 @@ mod runs;
 mod runs_index;
 mod runtime;
 mod science_mcp;
+mod science_skills;
 mod ssh_session;
 mod tools;
-#[cfg(target_os = "macos")]
-mod macos;
 mod updates;
 mod uv;
 
@@ -108,6 +108,9 @@ pub fn run() {
             gateway::autostart(app.handle());
             // Wake the scheduled-jobs loop; it polls jobs.db every tick.
             cron::start_scheduler(app.handle());
+            // One-time install seed: create the built-in starter tasks if this
+            // is the first run (a deleted starter task later is not recreated).
+            cron::seed_default_jobs(app.handle());
             Ok(())
         })
         // The transparent + vibrancy window loses tao's traffic-light inset on
@@ -238,6 +241,7 @@ pub fn run() {
             cron::set_job_enabled,
             cron::run_job_now,
             cron::trigger_event,
+            cron::restore_default_jobs,
             updates::latest_release,
             debug_log::log_debug
         ])
@@ -248,7 +252,10 @@ pub fn run() {
             // (ExitRequested is not always delivered), so handle BOTH — otherwise
             // the OpenCode sidecar / kernel / Jupyter orphan on every quit. The
             // cleanup is idempotent, so running on both is safe.
-            if matches!(event, tauri::RunEvent::ExitRequested { .. } | tauri::RunEvent::Exit) {
+            if matches!(
+                event,
+                tauri::RunEvent::ExitRequested { .. } | tauri::RunEvent::Exit
+            ) {
                 runtime::kill_child(&app.state::<RuntimeState>());
                 kernel::kill_kernel(&app.state::<KernelState>());
                 jupyter::kill_jupyter(&app.state::<JupyterState>());

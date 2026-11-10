@@ -68,5 +68,12 @@
         "title": "数据与完整性审计"
       }
     }
+  },
+  "lastError": "失败：{{message}}",
+  "starter": {
+    "restore": "恢复内置任务",
+    "restoreHint": "如已删除，可将内置任务（Daily AI Research Digest、Hermes AI Coach）重新加入列表",
+    "restored": "内置任务已就绪。",
+    "present": "内置任务已在列表中。"
   }
 }

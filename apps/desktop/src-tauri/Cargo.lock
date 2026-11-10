@@ -612,6 +612,7 @@ dependencies = [
 name = "craft"
 version = "0.3.4"
 dependencies = [
+ "chrono",
  "getrandom 0.4.3",
  "notify",
  "objc2-app-kit",

@@ -68,5 +68,12 @@
         "title": "Data and integrity audit"
       }
     }
+  },
+  "lastError": "Failed: {{message}}",
+  "starter": {
+    "restore": "Restore starter tasks",
+    "restoreHint": "Add the built-in starter tasks back (Daily AI Research Digest, Hermes AI Coach) if you removed them",
+    "restored": "Starter tasks are ready.",
+    "present": "Starter tasks are already in place."
   }
 }

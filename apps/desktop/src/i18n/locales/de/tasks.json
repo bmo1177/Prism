@@ -68,5 +68,12 @@
         "title": "Daten- und Integritätsprüfung"
       }
     }
+  },
+  "lastError": "Fehlgeschlagen: {{message}}",
+  "starter": {
+    "restore": "Startaufgaben wiederherstellen",
+    "restoreHint": "Fügt die integrierten Startaufgaben (Daily AI Research Digest, Hermes AI Coach) wieder hinzu, falls sie entfernt wurden",
+    "restored": "Startaufgaben sind eingerichtet.",
+    "present": "Die Startaufgaben sind bereits vorhanden."
   }
 }

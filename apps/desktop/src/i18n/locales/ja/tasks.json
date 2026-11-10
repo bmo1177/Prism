@@ -68,5 +68,12 @@
         "title": "データと完全性の監査"
       }
     }
+  },
+  "lastError": "失敗：{{message}}",
+  "starter": {
+    "restore": "スタータータスクを復元",
+    "restoreHint": "削除した場合は内蔵スタータータスク（Daily AI Research Digest、Hermes AI Coach）を再度追加します",
+    "restored": "スタータータスクを準備しました。",
+    "present": "スタータータスクはすでにあります。"
   }
 }

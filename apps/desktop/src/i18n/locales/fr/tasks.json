@@ -68,5 +68,12 @@
         "title": "Audit des données et de l'intégrité"
       }
     }
+  },
+  "lastError": "Échec : {{message}}",
+  "starter": {
+    "restore": "Restaurer les tâches de démarrage",
+    "restoreHint": "Ré-ajoute les tâches intégrées (Daily AI Research Digest, Hermes AI Coach) si vous les avez supprimées",
+    "restored": "Les tâches de démarrage sont en place.",
+    "present": "Les tâches de démarrage sont déjà présentes."
   }
 }

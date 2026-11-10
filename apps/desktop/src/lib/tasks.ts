@@ -21,6 +21,9 @@ export interface CronJob {
   enabled: boolean;
   nextRunAt?: number | null;
   lastRunAt?: number | null;
+  /** The failure the last attempted fire hit, when it did not succeed
+   *  (a background scheduler can fail nothing visible without this). */
+  lastError?: string | null;
 }
 
 export interface NewCronJob {
@@ -78,6 +81,12 @@ export async function runJobNow(id: string): Promise<void> {
 export async function triggerEvent(eventName: string): Promise<void> {
   if (!isTauri) return;
   await whenInvoke("trigger_event", { eventName });
+}
+
+/** Re-add the built-in starter tasks that are missing (the built-in Daily AI
+ *  Research Digest and Hermes AI Coach). Returns how many were added. */
+export async function restoreDefaultTasks(): Promise<number> {
+  return whenInvoke<number>("restore_default_jobs", {});
 }
 
 async function whenInvoke<T>(cmd: string, args: Record<string, unknown>): Promise<T> {

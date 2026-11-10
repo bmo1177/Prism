@@ -68,5 +68,12 @@
         "title": "데이터 및 무결성 감사"
       }
     }
+  },
+  "lastError": "실패: {{message}}",
+  "starter": {
+    "restore": "기본 작업 복원",
+    "restoreHint": "삭제한 경우 내장 기본 작업(Daily AI Research Digest, Hermes AI Coach)을 다시 추가합니다",
+    "restored": "기본 작업이 준비되었습니다.",
+    "present": "기본 작업이 이미 있습니다."
   }
 }

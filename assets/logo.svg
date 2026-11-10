@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Prism app icon: white light entering a glass prism, dispersing into a
+       spectrum. Vector master — regenerate raster sizes with rsvg-convert +
+       `tauri icon`. -->
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4353ee"/>
+      <stop offset="0.55" stop-color="#6d4bf0"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <radialGradient id="sheen" cx="0.28" cy="0.22" r="0.75">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="0.6" stop-color="#ffffff" stop-opacity="0.0"/>
+    </radialGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+    <clipPath id="tileclip">
+      <rect x="0" y="0" width="1024" height="1024" rx="230"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#tileclip)">
+    <rect x="0" y="0" width="1024" height="1024" rx="230" fill="url(#tile)"/>
+    <rect x="0" y="0" width="1024" height="1024" rx="230" fill="url(#sheen)"/>
+
+    <!-- incoming white beam (drawn under the glass) -->
+    <g stroke-linecap="round" fill="none">
+      <line x1="76" y1="585" x2="404" y2="436" stroke="#ffffff" stroke-opacity="0.28" stroke-width="46" filter="url(#glow)"/>
+      <line x1="76" y1="585" x2="404" y2="436" stroke="#ffffff" stroke-width="22"/>
+    </g>
+
+    <!-- refracted beam inside the glass -->
+    <line x1="404" y1="436" x2="620" y2="436" stroke="#ffffff" stroke-opacity="0.55" stroke-width="16" stroke-linecap="round"/>
+
+    <!-- dispersing spectrum fan -->
+    <g stroke-linecap="round" fill="none">
+      <g filter="url(#glow)" stroke-opacity="0.33" stroke-width="24">
+        <path d="M620 436 L936 543" stroke="#ff5f56"/>
+        <path d="M620 436 L916 601" stroke="#ff9f43"/>
+        <path d="M620 436 L889 661" stroke="#ffd93d"/>
+        <path d="M620 436 L854 705" stroke="#34d399"/>
+        <path d="M620 436 L814 748" stroke="#38bdf8"/>
+        <path d="M620 436 L771 770" stroke="#a78bfa"/>
+      </g>
+      <g stroke-opacity="0.96" stroke-width="13">
+        <path d="M620 436 L936 543" stroke="#ff6a63"/>
+        <path d="M620 436 L916 601" stroke="#ffa84d"/>
+        <path d="M620 436 L889 661" stroke="#ffe063"/>
+        <path d="M620 436 L854 705" stroke="#43dca0"/>
+        <path d="M620 436 L814 748" stroke="#4cc6f7"/>
+        <path d="M620 436 L771 770" stroke="#b39bff"/>
+      </g>
+    </g>
+
+    <!-- the glass prism -->
+    <g>
+      <path d="M512 232 L728 640 L296 640 Z" fill="#ffffff" fill-opacity="0.16"/>
+      <path d="M512 232 L728 640 L296 640 Z" fill="none" stroke="#ffffff" stroke-opacity="0.9" stroke-width="13" stroke-linejoin="round"/>
+      <!-- inner facet: vertical center line -->
+      <line x1="512" y1="232" x2="512" y2="640" stroke="#ffffff" stroke-opacity="0.22" stroke-width="6"/>
+      <!-- top vertex highlight -->
+      <circle cx="512" cy="238" r="7" fill="#ffffff" fill-opacity="0.85"/>
+    </g>
+  </g>
+</svg>
