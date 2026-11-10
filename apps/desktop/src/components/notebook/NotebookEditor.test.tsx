@@ -72,3 +72,37 @@ describe("NotebookEditor · stopping a hung cell", () => {
     expect(await screen.findByText(/kernel error: kernel exited unexpectedly/)).toBeInTheDocument();
   });
 });
+
+describe("NotebookEditor · figures a cell draws are shown under the cell", () => {
+  beforeEach(() => {
+    mocks.kernelExecute.mockReset();
+    mocks.kernelReset.mockReset();
+  });
+
+  it("a kernel response with captured matplotlib figures renders the first PNG", async () => {
+    mocks.kernelExecute.mockResolvedValue({
+      ok: true,
+      stdout: "making figure\n",
+      result: null,
+      error: null,
+      images: ["iVBORw0KGgo="],
+    });
+    render(<NotebookEditor path="plot.ipynb" />);
+    await userEvent.click(await screen.findByLabelText("Run cell 1"));
+    const img = await screen.findByRole("img", { name: /figure/i });
+    expect(img).toHaveAttribute("src", "data:image/png;base64,iVBORw0KGgo=");
+    // Text output coexists with the figure.
+    expect(screen.getByText("making figure")).toBeInTheDocument();
+  });
+
+  it("a text-only response clears a previously rendered figure", async () => {
+    mocks.kernelExecute
+      .mockResolvedValueOnce({ ok: true, stdout: "", result: null, error: null, images: ["iVBORw0KGgo="] })
+      .mockResolvedValueOnce({ ok: true, stdout: "", result: null, error: null, images: [] });
+    render(<NotebookEditor path="plot.ipynb" />);
+    await userEvent.click(await screen.findByLabelText("Run cell 1"));
+    expect(await screen.findByRole("img", { name: /figure/i })).toBeInTheDocument();
+    await userEvent.click(await screen.findByLabelText("Run cell 1"));
+    expect(screen.queryByRole("img", { name: /figure/i })).not.toBeInTheDocument();
+  });
+});

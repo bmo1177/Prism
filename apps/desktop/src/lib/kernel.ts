@@ -8,6 +8,9 @@ export interface ExecResult {
   stdout: string;
   result: string | null;
   error: string | null;
+  /** Base64 PNGs of figures the cell drew (matplotlib, captured by the kernel
+   *  bridge). Empty for text-only cells, the R kernel, and old kernels. */
+  images?: string[];
 }
 
 /** Languages with a local kernel. A notebook runs one of these. */

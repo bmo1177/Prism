@@ -230,6 +230,9 @@ export function NotebookEditor({
       const res = await kernelExecute(cell.code, lang, path, root);
       update(cell.index, {
         output: res ? formatExecResult(res) : "(local kernel available only in the desktop app)",
+        // First figure under the cell (matches the ipynb image/png convention:
+        // a cell keeps one image; re-running without a figure clears it).
+        image: res?.images?.length ? res.images[0] : undefined,
       });
     } catch (e) {
       update(cell.index, {

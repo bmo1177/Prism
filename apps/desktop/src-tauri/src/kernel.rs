@@ -79,6 +79,29 @@ pub struct ExecResult {
     stdout: String,
     result: Option<String>,
     error: Option<String>,
+    /// Base64 PNGs of figures the cell drew (matplotlib via the bridge's Agg
+    /// backend). Empty for text-only cells, kernels that predate the field,
+    /// and the R kernel (whose capture is not wired yet).
+    #[serde(default)]
+    images: Vec<String>,
+}
+
+/// Parse one kernel protocol line into an ExecResult. Split out of `exec_on`
+/// so the response contract has tests without needing a real child process.
+fn parse_kernel_response(line: &str) -> Result<ExecResult, String> {
+    let v: serde_json::Value =
+        serde_json::from_str(line.trim()).map_err(|e| format!("bad kernel response: {e}"))?;
+    Ok(ExecResult {
+        ok: v.get("ok").and_then(|x| x.as_bool()).unwrap_or(false),
+        stdout: v.get("stdout").and_then(|x| x.as_str()).unwrap_or("").to_string(),
+        result: v.get("result").and_then(|x| x.as_str()).map(str::to_string),
+        error: v.get("error").and_then(|x| x.as_str()).map(str::to_string),
+        images: v
+            .get("images")
+            .and_then(|x| x.as_array())
+            .map(|a| a.iter().filter_map(|x| x.as_str()).map(str::to_string).collect())
+            .unwrap_or_default(),
+    })
 }
 
 /// Normalize a requested language to a supported kernel id. Empty -> python.
@@ -476,14 +499,7 @@ fn exec_on(k: &mut KernelIo, code: &str) -> Result<ExecResult, String> {
     if n == 0 {
         return Err("kernel exited unexpectedly".into());
     }
-    let v: serde_json::Value =
-        serde_json::from_str(line.trim()).map_err(|e| format!("bad kernel response: {e}"))?;
-    Ok(ExecResult {
-        ok: v.get("ok").and_then(|x| x.as_bool()).unwrap_or(false),
-        stdout: v.get("stdout").and_then(|x| x.as_str()).unwrap_or("").to_string(),
-        result: v.get("result").and_then(|x| x.as_str()).map(str::to_string),
-        error: v.get("error").and_then(|x| x.as_str()).map(str::to_string),
-    })
+    Ok(parse_kernel_response(&line)?)
 }
 
 /// Kill a kernel's process and reap it — killed children must be `wait()`ed
@@ -628,6 +644,22 @@ pub fn kill_kernel(state: &KernelState) {
 mod tests {
     use super::*;
     use std::process::Command;
+
+    #[test]
+    fn kernel_responses_carry_display_images_and_survive_older_bridges() {
+        let r = parse_kernel_response(r#"{"id":"1","ok":true,"stdout":"","result":null,"error":null,"images":["iVBOR"]}"#)
+            .unwrap();
+        assert!(r.ok);
+        assert_eq!(r.images, vec!["iVBOR"]);
+        // Kernels from before the figures contract send no `images` key.
+        let legacy = parse_kernel_response(r#"{"id":"2","ok":false,"stdout":"x","result":null,"error":"E"}"#)
+            .unwrap();
+        assert!(!legacy.ok);
+        assert_eq!(legacy.error.as_deref(), Some("E"));
+        assert!(legacy.images.is_empty());
+        // Garbage is a loud protocol error, not a fake empty cell.
+        assert!(parse_kernel_response("not json").is_err());
+    }
 
     fn read(stdout: &mut BufReader<ChildStdout>) -> serde_json::Value {
         let mut line = String::new();
