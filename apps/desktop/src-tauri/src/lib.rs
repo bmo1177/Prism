@@ -29,6 +29,7 @@ mod runs_index;
 mod runtime;
 mod science_mcp;
 mod science_skills;
+mod secrets;
 mod ssh_session;
 mod tools;
 mod updates;
@@ -111,6 +112,10 @@ pub fn run() {
             // One-time install seed: create the built-in starter tasks if this
             // is the first run (a deleted starter task later is not recreated).
             cron::seed_default_jobs(app.handle());
+            // One-time mirror: keys older installs kept only in the sidecar's
+            // plaintext files land in the OS keychain, where the user can
+            // inspect and delete them system-wide.
+            runtime::mirror_keys_to_keychain(app.handle());
             Ok(())
         })
         // The transparent + vibrancy window loses tao's traffic-light inset on
@@ -163,6 +168,8 @@ pub fn run() {
             jupyter::setup_jupyter,
             jupyter::start_jupyter,
             runtime::configure_opencode,
+            runtime::store_provider_key,
+            runtime::forget_provider_key,
             runtime::get_approval_mode,
             runtime::set_approval_mode,
             runtime::read_memory,

@@ -154,6 +154,31 @@ pub fn merge_config(
     serde_json::to_string_pretty(&root).map_err(|e| e.to_string())
 }
 
+/// Remove one provider entry entirely (used when a user forgets a key):
+/// `provider.<id>` goes away, an emptied `provider` wrapper with it, unrelated
+/// keys preserved. None when the config already says exactly that.
+pub fn remove_provider(existing: &str, provider: &str) -> Option<String> {
+    let mut root: Value = if existing.trim().is_empty() {
+        json!({})
+    } else {
+        serde_json::from_str(existing).ok()?
+    };
+    if !root.is_object() {
+        root = json!({});
+    }
+    let obj = root.as_object_mut().unwrap();
+    let Some(providers) = obj.get_mut("provider").and_then(|v| v.as_object_mut()) else {
+        return None;
+    };
+    if providers.remove(provider).is_none() {
+        return None;
+    }
+    if providers.is_empty() {
+        obj.remove("provider");
+    }
+    serde_json::to_string_pretty(&root).ok()
+}
+
 /// Point the config's `plugin` array at the deployed goal plugin, replacing
 /// any stale entry from a previous install location (our entries are
 /// recognized by the `goal-plugin.server.js` file name). Returns None when the
@@ -536,6 +561,27 @@ mod tests {
         // the documented off switch. No blanket rule of ours either — the
         // builtin "*": "allow" keeps clearing everything we didn't ask about.
         assert!(!bash.contains_key("*"));
+    }
+
+    #[test]
+    fn remove_provider_deletes_only_that_provider_entry() {
+        let existing = r#"{"model":"m","provider":{"openai":{"options":{"apiKey":"a"}},"openrouter":{"options":{"apiKey":"b","baseURL":"https://x"}}}}"#;
+        let out = remove_provider(existing, "openrouter").unwrap();
+        let v: Value = serde_json::from_str(&out).unwrap();
+        assert_eq!(v["model"], "m");
+        assert!(v["provider"].get("openai").is_some());
+        assert!(v["provider"].get("openrouter").is_none());
+        // Already correct — no rewrite.
+        assert!(remove_provider(&out, "openrouter").is_none());
+        // Removing the last provider takes the empty wrapper with it.
+        let gone = remove_provider(&out, "openai").unwrap();
+        let v2: Value = serde_json::from_str(&gone).unwrap();
+        assert_eq!(v2["model"], "m");
+        assert!(v2.get("provider").is_none());
+        // A provider that never existed changes nothing.
+        assert!(remove_provider(&gone, "nvidia").is_none());
+        // Non-object provider maps are treated as absent, not crashed over.
+        assert!(remove_provider(r#"{"provider":3}"#, "nvidia").is_none());
     }
 
     #[test]

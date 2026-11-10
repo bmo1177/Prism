@@ -9,6 +9,7 @@ use tauri_plugin_shell::process::CommandChild;
 use tauri_plugin_shell::ShellExt;
 
 use crate::opencode_config::merge_config;
+use crate::secrets;
 
 #[derive(Default)]
 struct RuntimeLifecycle {
@@ -237,6 +238,126 @@ fn auth_has_provider(text: &str, provider_id: &str) -> bool {
     serde_json::from_str::<serde_json::Value>(text)
         .ok()
         .is_some_and(|auth| auth.get(provider_id).is_some())
+}
+
+/// One provider entry in the sidecar's `auth.json` (OAuth or an api-type key
+/// the sidecar wrote on `PUT /auth/<id>`).
+fn scrub_auth_entry(text: &str, provider: &str) -> Result<Option<String>, String> {
+    let Ok(mut auth) = serde_json::from_str::<serde_json::Value>(text) else {
+        return Ok(None); // not ours to fix; leave the file alone
+    };
+    let Some(obj) = auth.as_object_mut() else {
+        return Ok(None);
+    };
+    if obj.remove(provider).is_none() {
+        return Ok(None);
+    }
+    serde_json::to_string_pretty(&auth).map(Some).map_err(|e| e.to_string())
+}
+
+/// Mirror every BYOK key visible in the sidecar's plaintext config files into
+/// the OS keychain: `provider.<id>.options.apiKey` from opencode.json(c) plus
+/// api-type entries (the sidecar writes those itself on `PUT /auth/<id>`) from
+/// auth.json. A key present in both files is stored once (deduped by provider
+/// id), keycycle overwrites are last-writer-wins with no prompt; returns the
+/// number of providers successfully stored. Per-provider failures are skipped
+/// (this is a best-effort mirror — the files remain the working copy), and
+/// OAuth logins are machine-local, not BYOK keys, so they are not mirrored.
+/// Secrets never appear in any error text.
+pub(crate) fn mirror_keys_to_keychain_text(config_text: &str, auth_text: &str) -> usize {
+    let mut stored = std::collections::HashSet::new();
+    let mut store = |id: &str, key: &str| {
+        if !id.is_empty() && !key.is_empty() && secrets::store_provider_key(id, key).is_ok() {
+            stored.insert(id.to_string());
+        }
+    };
+    if let Ok(root) = serde_json::from_str::<serde_json::Value>(config_text) {
+        if let Some(providers) = root.get("provider").and_then(|v| v.as_object()) {
+            for (id, p) in providers {
+                if let Some(key) = p
+                    .get("options")
+                    .and_then(|o| o.get("apiKey"))
+                    .and_then(|v| v.as_str())
+                {
+                    store(id, key);
+                }
+            }
+        }
+    }
+    if let Ok(auth) = serde_json::from_str::<serde_json::Value>(auth_text) {
+        if let Some(entries) = auth.as_object() {
+            for (id, entry) in entries {
+                if entry.get("type").and_then(|v| v.as_str()) == Some("api") {
+                    if let Some(key) = entry.get("key").and_then(|v| v.as_str()) {
+                        store(id, key);
+                    }
+                }
+            }
+        }
+    }
+    stored.len()
+}
+
+/// Best-effort startup mirror across the app-private sidecar config files.
+/// Returns the number of providers mirrored; never loud on failure (a missing
+/// file or an absent keychain daemon just means there is nothing to move).
+pub(crate) fn mirror_keys_to_keychain(app: &AppHandle) -> usize {
+    let config_text = effective_config_file(app)
+        .and_then(|p| std::fs::read_to_string(p).map_err(|e| e.to_string()))
+        .unwrap_or_default();
+    let auth_text = runtime_root(app)
+        .ok()
+        .map(|r| r.join("xdg-data").join("opencode").join("auth.json"))
+        .and_then(|p| std::fs::read_to_string(p).ok())
+        .unwrap_or_default();
+    mirror_keys_to_keychain_text(&config_text, &auth_text)
+}
+
+/// Mirror one freshly saved key into the OS keychain (called by the desktop
+/// client wrapper right after the sidecar accepted the key).
+#[tauri::command(async)]
+pub fn store_provider_key(provider: String, api_key: String) -> Result<(), String> {
+    secrets::store_provider_key(&provider, &api_key)
+}
+
+/// Remove a provider's stored key everywhere we keep copies: the OS keychain
+/// entry, its opencode.json(c) apiKey block, and its auth.json entry — then
+/// restart the sidecar so it starts over without that provider. Ok(false)
+/// when nothing was stored.
+#[tauri::command(async)]
+pub fn forget_provider_key(
+    app: AppHandle,
+    state: State<'_, RuntimeState>,
+    provider: String,
+) -> Result<bool, String> {
+    let mut changed = secrets::forget_provider_key(&provider)?;
+
+    let config_path = effective_config_file(&app)?;
+    let existing = std::fs::read_to_string(&config_path).unwrap_or_default();
+    if let Some(merged) = crate::opencode_config::remove_provider(&existing, &provider) {
+        if let Some(dir) = config_path.parent() {
+            std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
+        }
+        std::fs::write(&config_path, merged).map_err(|e| e.to_string())?;
+        tighten_private(&config_path);
+        changed = true;
+    }
+
+    let auth_path = runtime_root(&app)?.join("xdg-data").join("opencode").join("auth.json");
+    let auth_text = std::fs::read_to_string(&auth_path).unwrap_or_default();
+    if let Ok(Some(clean)) = scrub_auth_entry(&auth_text, &provider) {
+        if let Some(dir) = auth_path.parent() {
+            std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
+        }
+        std::fs::write(&auth_path, clean).map_err(|e| e.to_string())?;
+        tighten_private(&auth_path);
+        changed = true;
+    }
+
+    if changed {
+        restart_sidecar_if_running(&app, &state)?;
+    }
+    Ok(changed)
 }
 
 /// Deploy the bundled skill packs (Tauri resources) into the app-private
@@ -2143,6 +2264,50 @@ pub fn configure_opencode(
     // Restart so the running server reloads the new provider config.
     Ok(restart_sidecar_if_running(&app, &state)?
         .unwrap_or_else(|| path.to_string_lossy().to_string()))
+}
+
+#[cfg(test)]
+mod keychain_helpers_tests {
+    use super::*;
+
+    #[test]
+    fn scrub_auth_entry_deletes_only_that_provider_api_entry() {
+        let text = r#"{"openrouter":{"type":"api","key":"sk-a"},"other":{"type":"api","key":"k"}}"#;
+        let out = scrub_auth_entry(text, "openrouter").unwrap();
+        assert!(out.is_some());
+        let v: serde_json::Value = serde_json::from_str(&out.unwrap()).unwrap();
+        assert!(v.get("openrouter").is_none());
+        assert!(v.get("other").is_some());
+        // Absent entry: no rewrite, no error.
+        assert_eq!(scrub_auth_entry(text, "missing"), Ok(None));
+        // Garbage in: None, never a crash.
+        assert_eq!(scrub_auth_entry("not json", "openrouter"), Ok(None));
+        // Nothing left: the object itself goes away rather than lingering.
+        let single = r#"{"openrouter":{"type":"api","key":"sk-a"}}"#;
+        let out2 = scrub_auth_entry(single, "openrouter").unwrap().unwrap();
+        assert_eq!(out2, "{}");
+    }
+
+    #[test]
+    fn mirror_stores_byok_keys_from_both_files_once_and_skips_oauth() {
+        keyring_core::set_default_store(keyring_core::mock::Store::new().unwrap());
+        let config = r#"{
+            "provider": {
+                "openrouter": { "options": { "apiKey": "sk-or" } },
+                "nvidia": { "options": { "apiKey": "", "baseURL": "https://x" } }
+            }
+        }"#;
+        let auth = r#"{
+            "openrouter": { "type": "api", "key": "sk-or" },
+            "github": { "type": "oauth", "account": { "token": "blob" } }
+        }"#;
+        // openrouter appears in BOTH files — mirrored once; nvidia's empty
+        // key string and github's OAuth blob are not secrets to mirror.
+        let n = mirror_keys_to_keychain_text(config, auth);
+        assert_eq!(n, 1);
+        assert_eq!(super::secrets::provider_key("openrouter").unwrap().as_deref(), Some("sk-or"));
+        assert_eq!(super::secrets::provider_key("github").unwrap(), None);
+    }
 }
 
 #[cfg(test)]

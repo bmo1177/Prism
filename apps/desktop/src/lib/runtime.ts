@@ -368,6 +368,26 @@ interface RuntimeState {
 let client: AgentRuntime | null = null;
 let opencodeClient: OpenCodeClient | null = null;
 let openSessionSeq = 0;
+
+/** Desktop client wrapper: after the sidecar accepts a BYOK key, mirror it
+ *  into the OS keychain (secrets backend) so the key lives in the system
+ *  credential store, not only in the sidecar's plaintext working files.
+ *  Mirror failures log the provider id only — never the key. */
+class DesktopOpenCodeClient extends OpenCodeClient {
+  async setProviderApiKey(providerID: string, key: string): Promise<void> {
+    await super.setProviderApiKey(providerID, key);
+    if (!isTauri) return;
+    try {
+      const { invoke } = await import("@tauri-apps/api/core");
+      await invoke("store_provider_key", { provider: providerID, apiKey: key });
+    } catch (e) {
+      void logDebug(
+        `[keychain] mirror failed for ${providerID}: ${e instanceof Error ? e.message : String(e)}`,
+      );
+    }
+  }
+}
+
 /** The model the user last DELIBERATELY switched to, and when. A switch does a
  *  masked reconnect, and connect() fires loadCatalog() un-awaited — so the
  *  self-heal there can run just after `switching` clears, read the reconnecting
@@ -1487,7 +1507,7 @@ export const useRuntimeStore = create<RuntimeState>((set, get) => ({
       // The bundled sidecar requires per-run Basic auth; browser dev (no Tauri)
       // gets null and connects to a user-run passwordless server.
       password = await runtimePassword();
-      c = new OpenCodeClient({
+      c = new DesktopOpenCodeClient({
         baseUrl,
         directory: directory ?? undefined,
         password: password ?? undefined,
