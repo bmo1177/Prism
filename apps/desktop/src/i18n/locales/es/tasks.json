@@ -1,7 +1,6 @@
 {
   "title": "Tareas",
   "description": "Ejecuciones de agente programadas — un prompt que se dispara según un calendario y aparece en el historial como cualquier conversación. Crea un trabajo, define su ritmo, y la app dispara los trabajos vencidos automáticamente.",
-  "webOnly": "Los trabajos programados se ejecutan en el programador local de la aplicación de escritorio y no están disponibles en el cliente web.",
   "loading": "Cargando tareas…",
   "created": "Tarea creada — se ejecutará según lo programado.",
   "fired": "Tarea iniciada en una nueva sesión.",

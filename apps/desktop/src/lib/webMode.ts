@@ -109,3 +109,24 @@ export async function gatewayGet<T>(path: string): Promise<T | null> {
   const ct = res.headers.get("content-type") ?? "";
   return ct.includes("json") ? ((await res.json()) as T) : ((await res.text()) as unknown as T);
 }
+
+/** Send (POST / DELETE / …) to a gateway `/v1/...` path with the bearer token,
+ *  JSON-encoding `body` when given. Same contract as gatewayGet: web mode only,
+ *  throws on a non-OK response; an empty JSON body reads as null. */
+export async function gatewaySend<T>(path: string, method: string, body?: unknown): Promise<T | null> {
+  if (!isGatewayWeb) return null;
+  const token = gatewayToken();
+  const res = await fetch(`${gatewayOrigin()}${path}`, {
+    method,
+    headers: {
+      ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const ct = res.headers.get("content-type") ?? "";
+  if (!ct.includes("json")) return null as T;
+  const text = await res.text();
+  return text.trim() ? ((JSON.parse(text) as T) ?? (null as T)) : (null as T);
+}

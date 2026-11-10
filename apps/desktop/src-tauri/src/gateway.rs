@@ -452,6 +452,44 @@ fn v1(stream: &mut TcpStream, req: &Request, ctx: &Ctx, rest: &str) {
                 Err(e) => respond_json(stream, 400, &err_json(&format!("bad query: {e}"))),
             }
         }
+        // Scheduled tasks: the phone gets the identical page over the contract
+        // routes (read-only tokens accept GET only — non-GETs are already 403'd).
+        ("GET", ["jobs"]) => match crate::cron::list_jobs(ctx.app.clone()) {
+            Ok(list) => respond_json(stream, 200, &serde_json::to_string(&list).unwrap_or_else(|_| "[]".into())),
+            Err(e) => respond_json(stream, 500, &err_json(&e)),
+        },
+        ("POST", ["jobs"]) => {
+            match serde_json::from_slice::<crate::cron::NewJob>(&req.body) {
+                Ok(job) => match crate::cron::create_job(ctx.app.clone(), job) {
+                    Ok(record) => respond_json(stream, 200, &serde_json::to_string(&record).unwrap_or_else(|_| "{}".into())),
+                    Err(e) => respond_json(stream, 400, &err_json(&e)),
+                },
+                Err(e) => respond_json(stream, 400, &err_json(&format!("bad job body: {e}"))),
+            }
+        }
+        ("POST", ["jobs", "restore-defaults"]) => {
+            match crate::cron::restore_default_jobs(ctx.app.clone()) {
+                Ok(n) => respond_json(stream, 200, &serde_json::json!(n).to_string()),
+                Err(e) => respond_json(stream, 500, &err_json(&e)),
+            }
+        }
+        ("POST", ["jobs", id, "enabled"]) => {
+            match json_bool_field(&req.body, "enabled") {
+                Some(enabled) => match crate::cron::set_job_enabled(ctx.app.clone(), id.to_string(), enabled) {
+                    Ok(record) => respond_json(stream, 200, &serde_json::to_string(&record).unwrap_or_else(|_| "{}".into())),
+                    Err(e) => respond_json(stream, 400, &err_json(&e)),
+                },
+                None => respond_json(stream, 400, "{\"error\":\"missing enabled\"}"),
+            }
+        }
+        ("POST", ["jobs", id, "run"]) => match crate::cron::run_job_now(ctx.app.clone(), id.to_string()) {
+            Ok(()) => respond_json(stream, 200, "{\"ok\":true}"),
+            Err(e) => respond_json(stream, 400, &err_json(&e)),
+        },
+        ("DELETE", ["jobs", id]) => match crate::cron::delete_job(ctx.app.clone(), id.to_string()) {
+            Ok(()) => respond_json(stream, 200, "{\"ok\":true}"),
+            Err(e) => respond_json(stream, 404, &err_json(&e)),
+        },
         ("GET", ["events"]) => {
             let dir = ws_dir(ctx);
             events(stream, ctx, &dir);
@@ -942,6 +980,12 @@ fn json_str_field(body: &[u8], field: &str) -> Option<String> {
     v.get(field)?.as_str().map(|s| s.to_string())
 }
 
+/// Pull a top-level boolean field the same way (the jobs toggle body).
+fn json_bool_field(body: &[u8], field: &str) -> Option<bool> {
+    let v = serde_json::from_slice::<serde_json::Value>(body).ok()?;
+    v.get(field)?.as_bool()
+}
+
 // ---- Tauri commands ---------------------------------------------------------
 
 #[derive(serde::Serialize)]
@@ -1072,6 +1116,14 @@ mod tests {
         assert_eq!(query_get("path=a%2Fb&root=base", "path").as_deref(), Some("a/b"));
         assert_eq!(query_get("path=a%2Fb&root=base", "root").as_deref(), Some("base"));
         assert_eq!(query_get("path=x", "missing"), None);
+    }
+
+    #[test]
+    fn json_bool_field_reads_top_level() {
+        assert_eq!(json_bool_field(br#"{"enabled":true}"#, "enabled"), Some(true));
+        assert_eq!(json_bool_field(br#"{"enabled":false,"ok":true}"#, "enabled"), Some(false));
+        assert_eq!(json_bool_field(br#"{"other":1}"#, "enabled"), None);
+        assert_eq!(json_bool_field(b"not json", "enabled"), None);
     }
 
     #[test]

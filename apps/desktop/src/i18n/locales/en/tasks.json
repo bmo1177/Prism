@@ -1,7 +1,6 @@
 {
   "title": "Tasks",
   "description": "Scheduled agent runs — a prompt that fires on a schedule and appears in the conversation history like any session. Create a job, set its rhythm, and the running app fires due jobs automatically.",
-  "webOnly": "Scheduled jobs run on the desktop app's local scheduler and are not available in the web client.",
   "loading": "Loading tasks…",
   "created": "Task created — it will fire on schedule.",
   "fired": "Task started in a new session.",

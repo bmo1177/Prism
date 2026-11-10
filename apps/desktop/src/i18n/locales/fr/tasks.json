@@ -1,7 +1,6 @@
 {
   "title": "Tâches",
   "description": "Exécutions d'agent planifiées — un prompt déclenché selon un calendrier qui apparaît dans l'historique comme toute conversation. Créez un job, définissez son rythme, l'application déclenche automatiquement les jobs échus.",
-  "webOnly": "Les jobs planifiés s'exécutent dans le planificateur local du bureau et ne sont pas disponibles dans le client web.",
   "loading": "Chargement des tâches…",
   "created": "Tâche créée — elle se déclenchera selon le calendrier.",
   "fired": "Tâche démarrée dans une nouvelle session.",

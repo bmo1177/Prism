@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { AlertTriangle, CalendarClock, Clock, Loader2, Pause, Play, Plus, Sparkles, Trash2, X, Zap } from "lucide-react";
+import { useTranslation } from "react-i18next";import { AlertTriangle, CalendarClock, Clock, Loader2, Pause, Play, Plus, Sparkles, Trash2, X, Zap } from "lucide-react";
 import type { CronJob, NewCronJob } from "@/lib/tasks";
 import { createJob, deleteJob, listJobs, restoreDefaultTasks, runJobNow, setJobEnabled } from "@/lib/tasks";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/cn";
 import { isGatewayWeb } from "@/lib/webMode";
+import { useRuntimeStore } from "@/lib/runtime";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { PageHeader } from "@/components/cards/PageHeader";
 
@@ -59,6 +59,12 @@ export function TasksPage() {
   const [jobs, setJobs] = useState<CronJob[]>([]);
   const [loading, setLoading] = useState(true);
   const [ticking, setTicking] = useState(false);
+  // On the phone (gateway web client) a read-only token can SEE the schedule;
+  // every mutation is switched off instead of turning into 403 toasts. The
+  // store selector must be unconditional (rules of hooks).
+  const webReadOnly = useRuntimeStore((s) => s.webReadOnly);
+  const readOnly = isGatewayWeb && webReadOnly;
+  const blocked = ticking || readOnly;
   const [editing, setEditing] = useState<NewCronJob>({
     title: "",
     prompt: "",
@@ -209,17 +215,6 @@ export function TasksPage() {
     }
   };
 
-  if (isGatewayWeb) {
-    return (
-      <div className="h-full overflow-y-auto">
-        <div className="mx-auto max-w-3xl px-8 py-8">
-          <h1 className="font-serif text-xl text-text">{t("title")}</h1>
-          <p className="mt-1 max-w-xl text-sm text-muted">{t("webOnly")}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-3xl px-8 py-8">
@@ -238,7 +233,7 @@ export function TasksPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => void restoreStarters()}
-                disabled={ticking}
+                disabled={blocked}
                 title={t("starter.restoreHint")}
                 className="flex items-center gap-1.5 rounded-input border border-border bg-surface px-3 py-1.5 text-xs font-medium text-text transition-colors hover:bg-surface-2 disabled:opacity-50"
               >
@@ -353,7 +348,7 @@ export function TasksPage() {
 
               <button
                 onClick={() => void submit()}
-                disabled={ticking}
+                disabled={blocked}
                 className="flex items-center gap-1.5 rounded-input bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg transition-opacity hover:opacity-90 disabled:opacity-50"
               >
                 {ticking && <Loader2 size={14} className="animate-spin" />}
@@ -512,13 +507,13 @@ export function TasksPage() {
                     </div>
                   </div>
                   <div className="flex shrink-0 items-center gap-1">
-                    <IconButton label={job.enabled ? t("pause") : t("resume")} onClick={() => void toggleEnabled(job)} disabled={ticking}>
+                    <IconButton label={job.enabled ? t("pause") : t("resume")} onClick={() => void toggleEnabled(job)} disabled={blocked}>
                       {job.enabled ? <Pause size={13} /> : <Play size={13} />}
                     </IconButton>
-                    <IconButton label={t("runNow")} onClick={() => void fire(job)} disabled={ticking}>
+                    <IconButton label={t("runNow")} onClick={() => void fire(job)} disabled={blocked}>
                       <Zap size={13} />
                     </IconButton>
-                    <IconButton label={t("delete")} onClick={() => setPendingDelete(job)} disabled={ticking}>
+                    <IconButton label={t("delete")} onClick={() => setPendingDelete(job)} disabled={blocked}>
                       <Trash2 size={13} />
                     </IconButton>
                   </div>

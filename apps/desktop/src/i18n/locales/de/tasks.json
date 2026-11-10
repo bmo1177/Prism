@@ -1,7 +1,6 @@
 {
   "title": "Aufgaben",
   "description": "Zeitgesteuerte Agent-Ausführungen — ein Prompt, der nach Zeitplan ausgelöst wird und in der Historie wie jede Konversation erscheint. Erstelle einen Job, lege den Rhythmus fest, die App löst fällige Jobs automatisch aus.",
-  "webOnly": "Geplante Jobs laufen im lokalen Scheduler der Desktop-App und stehen im Web-Client nicht zur Verfügung.",
   "loading": "Aufgaben werden geladen…",
   "created": "Aufgabe erstellt — sie wird planmäßig ausgelöst.",
   "fired": "Aufgabe in neuer Sitzung gestartet.",
