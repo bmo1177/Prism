@@ -40,6 +40,7 @@ Prism is an open-source, local-first desktop AI workspace designed for scientist
 
 * **Figures & Visualizations**: Vector plots, interactive atlas figures, and publication-ready charts.
 * **Reproducible Code & Notebooks**: Executable Python/R scripts, Jupyter kernel integration, and data pipelines.
+* **Scheduled Tasks & Automation**: Agent turns that run on a schedule — at a timestamp, on an interval, via local-time cron (with daily/weekday presets), or on app events — with per-task failure reporting and retry backoff.
 * **Publication-Quality Reports**: PDF and Markdown documents complete with DOIs, verified citations, and methodology audits.
 * **Full Provenance & Audit Logs**: Every output traces directly back to the exact code, model parameters, and raw inputs that created it.
 
@@ -83,7 +84,7 @@ Fan out literature searches across arXiv, PubMed, UniProt, and bioRxiv. Prism au
 ---
 
 ### 4. Shared Live Notebooks & Kernel Integration
-Run code seamlessly alongside the agent. Prism maintains active Python/Jupyter kernel sessions, letting you create or import existing `.ipynb` notebooks and inspect or edit variables and dataframes interactively.
+Run code seamlessly alongside the agent. Prism maintains active Python/Jupyter kernel sessions, letting you create or import existing `.ipynb` notebooks, inspect or edit variables and dataframes interactively, and see matplotlib figures rendered inline — the bundled kernel captures each cell's plots headlessly (no display needed) and round-trips them through standard `.ipynb` image data.
 
 ![Live Notebook Kernel](./assets/screenshots/notebook-execution.png)
 
@@ -114,6 +115,16 @@ Run multiple agent sessions simultaneously. Tile screens side-by-side, assign di
 Prism automatically detects local Python, Node.js, `uv`, Jupyter, and Git environments, allowing you to install custom `SKILL.md` packages or MCP servers in seconds.
 
 ![Environment & Skill Management](./assets/screenshots/environment-detection.png)
+
+---
+
+### 9. Scheduled Cowork Tasks
+Put work on a clock from the Tasks page: fire an agent turn at a timestamp, every N seconds, on a local-time cron expression (daily and weekday presets included), or on app events. A first launch seeds two starter jobs — a **Daily AI Research Digest** and a **Hermes AI Coach** — and every task reports its own failures with exponential retry backoff.
+
+---
+
+### 10. Remote Access Gateway (Phone & LAN)
+Use Prism from a phone or another computer on your network: the desktop app serves the same Prism interface over an authenticated HTTP gateway (default port 4098, Bearer-token access, read-only or full scopes). Loopback by default — LAN exposure is an explicit opt-in, and the agent sidecar itself always stays bound to 127.0.0.1.
 
 ---
 
@@ -206,8 +217,9 @@ pnpm --filter @ai4s/desktop tauri build
 ## 🛡️ Safety & Local-First Guarantees
 
 * 🔒 **Local Workspace Isolation**: The agent strictly accesses the open project workspace directory.
-* 🛡️ **Execution Approval**: Commands, file deletions, dependency installs, and network calls require explicit user approval by default.
-* 🗝️ **Secure Credentials**: API keys are stored in the app's private credential store, never exported into git, crash reports, or provenance files.
+* 🛡️ **Execution Approval**: Manual approval mode gates commands, file deletions, dependency installs, and network calls — and code execution itself, so interpreters (`python`, `node`, `bash`) and script runners (`npx`, `uv run`) can't walk around the gate.
+* 🗝️ **Secure Credentials**: API keys are mirrored into the OS credential store (Apple Keychain / Windows Credential Manager / Linux Secret Service), never exported into git, crash reports, or provenance files, and purged on demand; app-side plaintext files remain only the sidecar's working copies.
+* 🌐 **Guarded Remote Access**: The gateway is opt-in, Bearer-token authenticated, loopback by default, and offers read-only scopes — the agent sidecar never leaves 127.0.0.1.
 * 📊 **Transparent Data Flow**: Settings provides a clear plain-language view of all network activity and model interactions.
 
 ---
@@ -225,9 +237,10 @@ Prism/
 ├── runtime/
 │   ├── skills/           # Bundled & external agent skills
 │   ├── mcp/              # Model Context Protocol integrations
-│   └── harness/          # Agent execution context & prompts
+│   ├── harness/          # Agent knowledge, prompts & runtime context
+│   └── kernel/           # Local Python/R kernel bridges (notebook execution, figure capture)
 ├── assets/               # Branding graphics, logos, and screenshots
-├── examples/             # Built-in demo projects (e.g. bci-trends)
+├── examples/             # Built-in demo projects (e.g. climate-trends, bci-trends)
 ├── scripts/              # Development, fetching, and build scripts
 └── docs/                 # Product specifications and PRD
 ```
