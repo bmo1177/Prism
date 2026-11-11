@@ -31,17 +31,22 @@ const SPA_ROOTS: &[&str] = &["live", "example", "skills", "notebooks", "files", 
 
 // ---- persisted config (app-level, under the runtime root) -------------------
 
-struct Persisted {
-    enabled: bool,
-    lan: bool,
+pub(crate) struct Persisted {
+    pub(crate) enabled: bool,
+    pub(crate) lan: bool,
     /// "full" = every endpoint; "read-only" = GET only (no turns, no approvals).
-    mode: String,
-    token: String,
+    pub(crate) mode: String,
+    pub(crate) token: String,
+    /// The port the listener actually bound (0 = not running / unknown). Kept in
+    /// the same owner-only file as the token so `prism agent` can find the
+    /// gateway after a restart, including when 4098 was taken and an ephemeral
+    /// port was used.
+    pub(crate) port: u16,
 }
 
 impl Default for Persisted {
     fn default() -> Self {
-        Persisted { enabled: false, lan: false, mode: "full".into(), token: String::new() }
+        Persisted { enabled: false, lan: false, mode: "full".into(), token: String::new(), port: 0 }
     }
 }
 
@@ -49,24 +54,32 @@ fn config_file(app: &AppHandle) -> Result<PathBuf, String> {
     Ok(runtime_root(app)?.join("gateway.txt"))
 }
 
-fn read_persisted(app: &AppHandle) -> Persisted {
+/// Parse the persisted config. Kept pure (and `pub(crate)`) so the CLI's
+/// `prism agent` and the tests can share the exact same grammar.
+pub(crate) fn parse_persisted(text: &str) -> Persisted {
     let mut p = Persisted::default();
-    if let Ok(f) = config_file(app) {
-        if let Ok(s) = std::fs::read_to_string(f) {
-            for line in s.lines() {
-                if let Some((k, v)) = line.trim().split_once(' ') {
-                    match k {
-                        "enabled" => p.enabled = v == "1",
-                        "lan" => p.lan = v == "1",
-                        "mode" => p.mode = normalize_mode(v),
-                        "token" => p.token = v.to_string(),
-                        _ => {}
-                    }
-                }
+    for line in text.lines() {
+        if let Some((k, v)) = line.trim().split_once(' ') {
+            match k {
+                "enabled" => p.enabled = v == "1",
+                "lan" => p.lan = v == "1",
+                "mode" => p.mode = normalize_mode(v),
+                "token" => p.token = v.to_string(),
+                "port" => p.port = v.parse().unwrap_or(0),
+                _ => {}
             }
         }
     }
     p
+}
+
+fn read_persisted(app: &AppHandle) -> Persisted {
+    if let Ok(f) = config_file(app) {
+        if let Ok(s) = std::fs::read_to_string(f) {
+            return parse_persisted(&s);
+        }
+    }
+    Persisted::default()
 }
 
 fn write_persisted(app: &AppHandle, p: &Persisted) -> Result<(), String> {
@@ -75,11 +88,12 @@ fn write_persisted(app: &AppHandle, p: &Persisted) -> Result<(), String> {
         std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
     }
     let body = format!(
-        "enabled {}\nlan {}\nmode {}\ntoken {}\n",
+        "enabled {}\nlan {}\nmode {}\ntoken {}\nport {}\n",
         if p.enabled { 1 } else { 0 },
         if p.lan { 1 } else { 0 },
         p.mode,
-        p.token
+        p.token,
+        p.port
     );
     std::fs::write(&f, body).map_err(|e| e.to_string())?;
     tighten_private(&f); // token is a secret — owner-only, never in git
@@ -88,6 +102,14 @@ fn write_persisted(app: &AppHandle, p: &Persisted) -> Result<(), String> {
 
 fn normalize_mode(m: &str) -> String {
     if m == "read-only" { "read-only".into() } else { "full".into() }
+}
+
+/// Record (or clear, with 0) the bound port without disturbing the rest of the
+/// persisted config. `prism agent` reads this to find the gateway.
+fn write_port(app: &AppHandle, port: u16) -> Result<(), String> {
+    let mut p = read_persisted(app);
+    p.port = port;
+    write_persisted(app, &p)
 }
 
 // ---- runtime state ----------------------------------------------------------
@@ -169,6 +191,9 @@ fn start(app: &AppHandle, state: &GatewayState, p: &Persisted) -> Result<u16, St
         }
     });
     *state.0.lock().unwrap() = Some(Running { port, lan: p.lan, stop: stop_flag, shared });
+    // Persist the ACTUAL bound port (may be ephemeral when 4098 was taken) so a
+    // CLI client can reach the gateway after the app restarts.
+    write_port(app, port)?;
     Ok(port)
 }
 
@@ -187,9 +212,11 @@ pub fn autostart(app: &AppHandle) {
     }
 }
 
-/// Stop the accept loop on app exit.
-pub fn shutdown(state: &GatewayState) {
+/// Stop the accept loop on app exit, and clear the persisted port so a CLI
+/// client does not keep trying a gateway that is no longer there.
+pub fn shutdown(app: &AppHandle, state: &GatewayState) {
     stop(state);
+    let _ = write_port(app, 0);
 }
 
 // ---- request handling -------------------------------------------------------
@@ -373,6 +400,9 @@ fn v1(stream: &mut TcpStream, req: &Request, ctx: &Ctx, rest: &str) {
             if forward(stream, upstream_delete(ctx, &format!("/session/{}", enc(id)))) {
                 let _ = ctx.app.emit("gateway:sessions-changed", ());
             }
+        }
+        ("GET", ["sessions", id]) => {
+            forward(stream, upstream_get(ctx, &format!("/session/{}", enc(id)), &[]));
         }
         ("GET", ["sessions", id, "messages"]) => {
             forward(stream, upstream_get(ctx, &format!("/session/{}/message", enc(id)), &[]));
@@ -1056,6 +1086,7 @@ pub fn set_gateway_config(
     write_persisted(&app, &p)?;
     if !p.enabled {
         stop(state.inner());
+        let _ = write_port(&app, 0);
         return Ok(status_of(&app, state.inner()));
     }
     // If already running on the same binding, update token/mode IN PLACE so the
@@ -1302,5 +1333,22 @@ mod tests {
         assert!(serde_json::from_str::<crate::provenance::ProvenanceQuery>("{oops").is_err());
         assert!(serde_json::from_str::<crate::provenance::ProvenanceQuery>("{}").is_ok());
         assert!(serde_json::from_str::<crate::provenance::ProvenanceQuery>("not json").is_err());
+    }
+
+    #[test]
+    fn parse_persisted_reads_fields_including_port() {
+        let text = "enabled 1\nlan 0\nmode read-only\ntoken secret123\nport 4098\n";
+        let p = parse_persisted(text);
+        assert!(p.enabled);
+        assert!(!p.lan);
+        assert_eq!(p.mode, "read-only");
+        assert_eq!(p.token, "secret123");
+        assert_eq!(p.port, 4098);
+
+        let empty = parse_persisted("");
+        assert!(!empty.enabled);
+        assert_eq!(empty.mode, "full");
+        assert_eq!(empty.token, "");
+        assert_eq!(empty.port, 0);
     }
 }

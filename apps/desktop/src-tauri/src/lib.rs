@@ -3,6 +3,7 @@
 mod agy;
 mod artifact_file;
 mod browser;
+pub mod cli;
 mod compute;
 mod cron;
 mod debug_log;
@@ -266,7 +267,7 @@ pub fn run() {
                 runtime::kill_child(&app.state::<RuntimeState>());
                 kernel::kill_kernel(&app.state::<KernelState>());
                 jupyter::kill_jupyter(&app.state::<JupyterState>());
-                gateway::shutdown(app.state::<gateway::GatewayState>().inner());
+                gateway::shutdown(app, app.state::<gateway::GatewayState>().inner());
                 // An authenticated ssh channel must not outlive the app that
                 // opened it (#73) — the master lives past our exit otherwise.
                 ssh_session::shutdown(app);

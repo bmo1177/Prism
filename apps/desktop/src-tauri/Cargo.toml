@@ -33,6 +33,10 @@ tauri-plugin-notification = "2"
 getrandom = "0.4.3"
 opener = { version = "0.8.5", features = ["reveal"] }
 rusqlite = { version = "0.32", features = ["bundled"] }
+# Already in the tree via tauri — the `prism agent` CLI resolves the app data
+# directory with the SAME rule Tauri's app_data_dir() uses, so it finds the
+# gateway config the app wrote (no second, divergent path convention).
+dirs = "6"
 # Already in the tree via dependent crates — used directly for LOCAL wall-clock
 # cron evaluation (src/cron.rs): "daily at 07:00" must fire at the user's local
 # 07:00, DST transitions resolved like any civil time library should.

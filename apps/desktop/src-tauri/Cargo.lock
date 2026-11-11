@@ -699,6 +699,7 @@ name = "craft"
 version = "0.3.4"
 dependencies = [
  "chrono",
+ "dirs",
  "getrandom 0.4.3",
  "keyring",
  "keyring-core",

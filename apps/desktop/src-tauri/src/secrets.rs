@@ -76,9 +76,12 @@ fn keychain_err(e: keyring::Error) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::Mutex;
+
+    static TEST_LOCK: Mutex<()> = Mutex::new(());
 
     fn use_mock_store() {
-        // Each test gets a ITS OWN in-memory store: entries never leak across
+        // Each test gets ITS OWN in-memory store: entries never leak across
         // tests, and no platform keychain is touched.
         keyring_core::set_default_store(keyring_core::mock::Store::new().unwrap());
     }
@@ -91,6 +94,7 @@ mod tests {
 
     #[test]
     fn stores_reads_and_replaces_a_key() {
+        let _guard = TEST_LOCK.lock().unwrap();
         use_mock_store();
         let p = unique_provider("openrouter");
         store_provider_key(&p, "sk-or-v1-test").unwrap();
@@ -101,6 +105,7 @@ mod tests {
 
     #[test]
     fn read_for_a_missing_provider_is_none_not_an_error() {
+        let _guard = TEST_LOCK.lock().unwrap();
         use_mock_store();
         let p = unique_provider("never-stored");
         assert_eq!(provider_key(&p).unwrap(), None);
@@ -108,6 +113,7 @@ mod tests {
 
     #[test]
     fn forget_reports_whether_something_was_stored() {
+        let _guard = TEST_LOCK.lock().unwrap();
         use_mock_store();
         let p = unique_provider("anthropic");
         assert!(!forget_provider_key(&p).unwrap());
@@ -121,6 +127,7 @@ mod tests {
 
     #[test]
     fn empty_inputs_are_rejected_before_touching_the_keychain() {
+        let _guard = TEST_LOCK.lock().unwrap();
         use_mock_store();
         assert!(store_provider_key("", "k").is_err());
         assert!(store_provider_key("  ", "k").is_err());

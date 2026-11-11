@@ -1,11 +1,13 @@
 name: build
 
-# Builds macOS (.dmg/.app), Windows (NSIS .exe / .msi) and Linux
-# (.deb/.rpm/.AppImage) installers. Each platform's installer can only be
+# Builds Linux (.deb/.rpm/.AppImage), Windows (NSIS .exe / .msi) and macOS
+# (.dmg/.app) installers, in that order. Each platform's installer can only be
 # produced on its own runner — hence the matrix. On a `v*` tag push the
 # installers are also attached to a draft GitHub Release.
 # Linux AppImage is built manually from the .deb (scripts/release/build-appimage.sh)
 # because Tauri's linuxdeploy/ldd path dies on the Bun sidecar (tauri#8929).
+# macOS is built but UNVERIFIED in this pipeline: no Apple signing secrets are
+# configured, so tagged macOS artifacts may be unsigned/notarized.
 
 on:
   push:
@@ -23,14 +25,17 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # Linux first, then Windows — the two platforms verified in this
+          # environment. macOS is built last and is UNVERIFIED here (no Apple
+          # secrets; see the release notes).
+          - platform: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+          - platform: windows-latest
+            target: x86_64-pc-windows-msvc
           - platform: macos-latest
             target: aarch64-apple-darwin
           - platform: macos-latest
             target: x86_64-apple-darwin
-          - platform: windows-latest
-            target: x86_64-pc-windows-msvc
-          - platform: ubuntu-22.04
-            target: x86_64-unknown-linux-gnu
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
@@ -138,20 +143,24 @@ jobs:
           releaseDraft: true
           # Standing install/first-launch notes. Tagged macOS releases are blocked
           # above unless Developer ID signing + notarization credentials are
-          # present; Windows remains unsigned for now.
+          # present; Windows remains unsigned for now. macOS builds are UNVERIFIED
+          # in this pipeline — treat macOS as experimental until a signed+notarized
+          # artifact is confirmed by hand.
           releaseBody: |
             ## Install & first launch
 
-            **macOS**: Apple Silicon: `…_aarch64.dmg` · Intel: `…_x64.dmg` (requires macOS 13+)
-            - Developer ID-signed and notarized. Open the DMG and drag **Prism** into Applications.
-            - When you use an existing project in place, allow access to its folder if macOS asks.
+            **Linux**: `.deb` / `.rpm` / `.AppImage`
+            - `sudo apt install ./…_amd64.deb` · `sudo rpm -i …x86_64.rpm` · or `chmod +x …_.AppImage && ./…_.AppImage`
+            - Verified on Ubuntu 22.04 (x86_64).
 
             **Windows**: `…_x64-setup.exe` or `…_x64_en-US.msi`
             - SmartScreen shows *"Windows protected your PC"* → **More info** → **Run anyway**.
             - Publisher: Prism. Verify the download SHA-256 against the release assets.
+            - Built on windows-latest (x86_64); smoke-tested on Windows 11 recommended.
 
-            **Linux**: `.deb` / `.rpm` / `.AppImage`
-            - `sudo apt install ./…_amd64.deb` · `sudo rpm -i …x86_64.rpm` · or `chmod +x …_.AppImage && ./…_.AppImage`
+            **macOS**: Apple Silicon: `…_aarch64.dmg` · Intel: `…_x64.dmg` (requires macOS 13+)
+            - ⚠️ **UNVERIFIED in this pipeline** — no Apple signing/notarization secrets are configured. Tagged macOS artifacts may be unsigned and will show Gatekeeper warnings. Use at your own risk until a signed + notarized build is confirmed.
+            - When you use an existing project in place, allow access to its folder if macOS asks.
 
             > **No in-app auto-update**: download new versions from this Releases page. (The `.app.tar.gz` assets are build artifacts, not an update channel.)
 
