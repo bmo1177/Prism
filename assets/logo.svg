@@ -1,66 +1,248 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <!-- Prism app icon: white light entering a glass prism, dispersing into a
-       spectrum. Vector master — regenerate raster sizes with rsvg-convert +
-       `tauri icon`. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Prism Vector Master (1024x1024)
+       Brand: Prism — "Light bent into work"
+       A local-first AI workspace uniting Cowork, Design, and Science.
+       Original pure-SVG artwork. Optimized for high-res desktop display and 32px legibility. -->
   <defs>
-    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4353ee"/>
-      <stop offset="0.55" stop-color="#6d4bf0"/>
-      <stop offset="1" stop-color="#8b5cf6"/>
+    <!-- Background & Tile Ambient Gradients -->
+    <linearGradient id="bgTile" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b101b" />
+      <stop offset="45%" stop-color="#111728" />
+      <stop offset="100%" stop-color="#070a12" />
     </linearGradient>
-    <radialGradient id="sheen" cx="0.28" cy="0.22" r="0.75">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.16"/>
-      <stop offset="0.6" stop-color="#ffffff" stop-opacity="0.0"/>
+
+    <radialGradient id="ambientGlow" cx="52%" cy="48%" r="55%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.18" />
+      <stop offset="35%" stop-color="#818cf8" stop-opacity="0.10" />
+      <stop offset="70%" stop-color="#0f172a" stop-opacity="0.04" />
+      <stop offset="100%" stop-color="#070a12" stop-opacity="0" />
     </radialGradient>
-    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="10"/>
+
+    <linearGradient id="rimGleam" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.28" />
+      <stop offset="30%" stop-color="#ffffff" stop-opacity="0.09" />
+      <stop offset="75%" stop-color="#ffffff" stop-opacity="0.02" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.08" />
+    </linearGradient>
+
+    <!-- Incoming Coherent Beam Gradients -->
+    <linearGradient id="beamOuter" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#93c5fd" stop-opacity="0" />
+      <stop offset="40%" stop-color="#bae6fd" stop-opacity="0.45" />
+      <stop offset="85%" stop-color="#e0f2fe" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="1" />
+    </linearGradient>
+
+    <linearGradient id="beamCore" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.2" />
+      <stop offset="60%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="1" />
+    </linearGradient>
+
+    <!-- Refracted Planes Gradients: Cowork, Design, Science -->
+    <!-- Pillar 1: Cowork (Solar Amber / Coral) -->
+    <linearGradient id="coworkGrad" x1="0%" y1="50%" x2="100%" y2="20%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="12%" stop-color="#fef08a" stop-opacity="0.92" />
+      <stop offset="38%" stop-color="#f59e0b" stop-opacity="0.90" />
+      <stop offset="75%" stop-color="#ea580c" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#c2410c" stop-opacity="0.75" />
+    </linearGradient>
+
+    <!-- Pillar 2: Design (Electric Fuchsia / Magenta / Violet) -->
+    <linearGradient id="designGrad" x1="0%" y1="30%" x2="100%" y2="60%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="14%" stop-color="#fbcfe8" stop-opacity="0.92" />
+      <stop offset="40%" stop-color="#ec4899" stop-opacity="0.90" />
+      <stop offset="75%" stop-color="#a855f7" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.75" />
+    </linearGradient>
+
+    <!-- Pillar 3: Science (Electric Cyan / Deep Oceanic Teal) -->
+    <linearGradient id="scienceGrad" x1="0%" y1="10%" x2="100%" y2="90%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="15%" stop-color="#cffafe" stop-opacity="0.92" />
+      <stop offset="42%" stop-color="#06b6d4" stop-opacity="0.90" />
+      <stop offset="78%" stop-color="#0284c7" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#0f766e" stop-opacity="0.75" />
+    </linearGradient>
+
+    <!-- Prism Glass Facet Gradients -->
+    <linearGradient id="frontGlass" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.32" />
+      <stop offset="25%" stop-color="#38bdf8" stop-opacity="0.18" />
+      <stop offset="65%" stop-color="#1e293b" stop-opacity="0.55" />
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.85" />
+    </linearGradient>
+
+    <linearGradient id="emergentFacet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d" stop-opacity="0.65" />
+      <stop offset="45%" stop-color="#f472b6" stop-opacity="0.60" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.70" />
+    </linearGradient>
+
+    <linearGradient id="baseFacet" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f172a" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#1e293b" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.9" />
+    </linearGradient>
+
+    <linearGradient id="internalCaustic" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="35%" stop-color="#e0f2fe" stop-opacity="0.85" />
+      <stop offset="70%" stop-color="#fed7aa" stop-opacity="0.75" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.95" />
+    </linearGradient>
+
+    <!-- Filters for Bloom and Glow -->
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
     </filter>
-    <clipPath id="tileclip">
-      <rect x="0" y="0" width="1024" height="1024" rx="230"/>
+
+    <filter id="laserGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur1" />
+      <feGaussianBlur stdDeviation="18" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <clipPath id="tileClip">
+      <rect x="0" y="0" width="1024" height="1024" rx="224" />
     </clipPath>
   </defs>
 
-  <g clip-path="url(#tileclip)">
-    <rect x="0" y="0" width="1024" height="1024" rx="230" fill="url(#tile)"/>
-    <rect x="0" y="0" width="1024" height="1024" rx="230" fill="url(#sheen)"/>
+  <!-- Squircle Container -->
+  <g clip-path="url(#tileClip)">
+    <!-- Base Background Tiles -->
+    <rect x="0" y="0" width="1024" height="1024" rx="224" fill="url(#bgTile)" />
+    <rect x="0" y="0" width="1024" height="1024" rx="224" fill="url(#ambientGlow)" />
 
-    <!-- incoming white beam (drawn under the glass) -->
-    <g stroke-linecap="round" fill="none">
-      <line x1="76" y1="585" x2="404" y2="436" stroke="#ffffff" stroke-opacity="0.28" stroke-width="46" filter="url(#glow)"/>
-      <line x1="76" y1="585" x2="404" y2="436" stroke="#ffffff" stroke-width="22"/>
+    <!-- Subtle Optical Axis Grid Lines (Scientific Rigor & Provenance) -->
+    <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="1" stroke-dasharray="6 6">
+      <line x1="140" y1="512" x2="884" y2="512" />
+      <line x1="512" y1="140" x2="512" y2="884" />
     </g>
 
-    <!-- refracted beam inside the glass -->
-    <line x1="404" y1="436" x2="620" y2="436" stroke="#ffffff" stroke-opacity="0.55" stroke-width="16" stroke-linecap="round"/>
+    <!-- ============================================================ -->
+    <!-- LAYER 1: REFRACTED OUTPUT PLANES (Light Bent Into Work)       -->
+    <!-- Three volumetric, overlapping geometric facets               -->
+    <!-- ============================================================ -->
 
-    <!-- dispersing spectrum fan -->
-    <g stroke-linecap="round" fill="none">
-      <g filter="url(#glow)" stroke-opacity="0.33" stroke-width="24">
-        <path d="M620 436 L936 543" stroke="#ff5f56"/>
-        <path d="M620 436 L916 601" stroke="#ff9f43"/>
-        <path d="M620 436 L889 661" stroke="#ffd93d"/>
-        <path d="M620 436 L854 705" stroke="#34d399"/>
-        <path d="M620 436 L814 748" stroke="#38bdf8"/>
-        <path d="M620 436 L771 770" stroke="#a78bfa"/>
+    <!-- Pillar 1: Cowork (Solar Gold / Amber Blade - Top) -->
+    <g filter="url(#softGlow)">
+      <!-- Volumetric Body -->
+      <polygon points="536,340 890,270 924,376 570,442" fill="url(#coworkGrad)" />
+      <!-- Specular Upper Ridge -->
+      <line x1="536" y1="340" x2="890" y2="270" stroke="#ffffff" stroke-opacity="0.8" stroke-width="3" stroke-linecap="round" />
+    </g>
+
+    <!-- Pillar 2: Design (Electric Orchid / Magenta Blade - Middle) -->
+    <g filter="url(#softGlow)">
+      <!-- Volumetric Body (Interlocking with Cowork & Science) -->
+      <polygon points="560,432 924,376 896,536 592,538" fill="url(#designGrad)" />
+      <!-- Luminous Center Spine -->
+      <line x1="576" y1="485" x2="910" y2="456" stroke="#ffffff" stroke-opacity="0.7" stroke-width="2.5" stroke-linecap="round" />
+    </g>
+
+    <!-- Pillar 3: Science (Electric Cyan / Deep Teal Blade - Bottom) -->
+    <g filter="url(#softGlow)">
+      <!-- Volumetric Body -->
+      <polygon points="588,532 896,536 846,706 624,646" fill="url(#scienceGrad)" />
+      <!-- Specular Lower Ridge -->
+      <line x1="624" y1="646" x2="846" y2="706" stroke="#67e8f9" stroke-opacity="0.8" stroke-width="3" stroke-linecap="round" />
+    </g>
+
+    <!-- Luminous Convergence Glow at Emergent Facet -->
+    <polygon points="536,340 630,320 706,588 624,646" fill="url(#emergentFacet)" opacity="0.65" />
+
+    <!-- ============================================================ -->
+    <!-- LAYER 2: 3D PRECISION GLASS PRISM MONOLITH                   -->
+    <!-- Faceted crystal geometry with optical refraction and bevels   -->
+    <!-- ============================================================ -->
+
+    <!-- Base / Bottom Facet (Thickness Anchor) -->
+    <polygon points="292,712 624,646 654,698 334,744" fill="url(#baseFacet)" />
+    <line x1="292" y1="712" x2="334" y2="744" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2" />
+    <line x1="334" y1="744" x2="654" y2="698" stroke="#ffffff" stroke-opacity="0.15" stroke-width="2" />
+
+    <!-- Right Rear Facet (Depth Plane) -->
+    <polygon points="454,198 536,172 706,588 624,646" fill="#111827" fill-opacity="0.6" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1.5" />
+
+    <!-- Top Ridge Bevel -->
+    <polygon points="454,198 536,172 630,320 536,340" fill="#ffffff" fill-opacity="0.12" />
+
+    <!-- Main Front Facet (The Aperture of Thought) -->
+    <polygon points="454,198 624,646 292,712" fill="url(#frontGlass)" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" stroke-linejoin="round" />
+
+    <!-- Internal Total Reflection / Caustic Path -->
+    <!-- Light striking at (374, 456), bending inside to (572, 440) and (590, 530) -->
+    <g filter="url(#laserGlow)">
+      <!-- Caustic core wedge -->
+      <polygon points="374,456 556,390 592,520 378,490" fill="url(#internalCaustic)" opacity="0.85" />
+      <line x1="374" y1="456" x2="574" y2="455" stroke="#ffffff" stroke-width="8" stroke-linecap="round" opacity="0.95" />
+    </g>
+
+    <!-- Glass Facet Chamfer Highlights (Precision Polished Edges) -->
+    <g stroke-linecap="round">
+      <!-- Leading Apex Ridge -->
+      <line x1="454" y1="198" x2="292" y2="712" stroke="#ffffff" stroke-opacity="0.75" stroke-width="3.5" />
+      <!-- Bottom Front Edge -->
+      <line x1="292" y1="712" x2="624" y2="646" stroke="#ffffff" stroke-opacity="0.45" stroke-width="2.5" />
+      <!-- Emergent Ridge Edge -->
+      <line x1="454" y1="198" x2="624" y2="646" stroke="#ffffff" stroke-opacity="0.85" stroke-width="3" />
+      <!-- Top Crest Apex Bevel -->
+      <line x1="454" y1="198" x2="536" y2="172" stroke="#ffffff" stroke-opacity="0.9" stroke-width="3" />
+    </g>
+
+    <!-- Specular Facet Sheen across Front Face -->
+    <path d="M 454 198 L 380 420 L 530 400 Z" fill="#ffffff" fill-opacity="0.08" />
+
+    <!-- ============================================================ -->
+    <!-- LAYER 3: INCOMING INCIDENT BEAM (The Spark of Intent)         -->
+    <!-- Focused coherent white light striking the glass face         -->
+    <!-- ============================================================ -->
+    <g filter="url(#laserGlow)">
+      <!-- Outer Diffusion Envelope -->
+      <polygon points="94,316 374,442 368,508 84,382" fill="url(#beamOuter)" />
+      <!-- High-Intensity Beam Core -->
+      <polygon points="92,336 374,456 370,494 88,374" fill="url(#beamCore)" />
+      <!-- Laser Centerline -->
+      <line x1="88" y1="355" x2="374" y2="475" stroke="#ffffff" stroke-width="5" stroke-linecap="round" />
+    </g>
+
+    <!-- Point of Impact: Optical Diamond Glint & Starburst Flare -->
+    <g transform="translate(374, 465)">
+      <!-- Ambient Bloom -->
+      <circle cx="0" cy="0" r="36" fill="#ffffff" fill-opacity="0.35" filter="url(#softGlow)" />
+      <circle cx="0" cy="0" r="14" fill="#ffffff" />
+      <!-- Horizontal Spike -->
+      <ellipse cx="0" cy="0" rx="64" ry="4.5" fill="#ffffff" fill-opacity="0.9" />
+      <!-- Vertical Spike -->
+      <ellipse cx="0" cy="0" rx="4.5" ry="54" fill="#ffffff" fill-opacity="0.85" />
+      <!-- Diagonal Specular Cross -->
+      <g transform="rotate(45)">
+        <ellipse cx="0" cy="0" rx="38" ry="3" fill="#ffffff" fill-opacity="0.75" />
+        <ellipse cx="0" cy="0" rx="3" ry="38" fill="#ffffff" fill-opacity="0.75" />
       </g>
-      <g stroke-opacity="0.96" stroke-width="13">
-        <path d="M620 436 L936 543" stroke="#ff6a63"/>
-        <path d="M620 436 L916 601" stroke="#ffa84d"/>
-        <path d="M620 436 L889 661" stroke="#ffe063"/>
-        <path d="M620 436 L854 705" stroke="#43dca0"/>
-        <path d="M620 436 L814 748" stroke="#4cc6f7"/>
-        <path d="M620 436 L771 770" stroke="#b39bff"/>
-      </g>
     </g>
 
-    <!-- the glass prism -->
-    <g>
-      <path d="M512 232 L728 640 L296 640 Z" fill="#ffffff" fill-opacity="0.16"/>
-      <path d="M512 232 L728 640 L296 640 Z" fill="none" stroke="#ffffff" stroke-opacity="0.9" stroke-width="13" stroke-linejoin="round"/>
-      <!-- inner facet: vertical center line -->
-      <line x1="512" y1="232" x2="512" y2="640" stroke="#ffffff" stroke-opacity="0.22" stroke-width="6"/>
-      <!-- top vertex highlight -->
-      <circle cx="512" cy="238" r="7" fill="#ffffff" fill-opacity="0.85"/>
+    <!-- Prism Apex Glint -->
+    <g transform="translate(454, 198)">
+      <circle cx="0" cy="0" r="6" fill="#ffffff" fill-opacity="0.9" />
+      <ellipse cx="0" cy="0" rx="20" ry="2" fill="#ffffff" fill-opacity="0.8" />
     </g>
+
+    <!-- ============================================================ -->
+    <!-- LAYER 4: HARDWARE RIM / TILE BEVEL FINISH                    -->
+    <!-- Precision inset border for native desktop icon polish         -->
+    <!-- ============================================================ -->
+    <rect x="0.5" y="0.5" width="1023" height="1023" rx="224" fill="none" stroke="url(#rimGleam)" stroke-width="2" />
   </g>
 </svg>

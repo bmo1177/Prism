@@ -26,7 +26,7 @@ All notable changes to Prism are documented here. Format follows
 ### Changed
 
 - Clippy clean across all targets (lib + tests): `remove_provider` restructured to the `?`-operator form, killed kernel-test children reaped like production, and the startup mirror now skips rewriting a keychain entry that already holds the same key.
-- New brand icon: a vector master (`assets/logo.svg`, white beam dispersing through a glass prism) regenerated into the full Tauri icon set (`.icns`, `.ico`, PNG sizes, Windows/Android/iOS) and the README's `assets/logo.png`.
+- New brand icon: a vector master (`assets/logo.svg` — obsidian tile, glass prism monolith, white incident beam dispersing into three volumetric planes for the Cowork/Design/Science pillars; redesigned in the agy TUI) regenerated into the full Tauri icon set (`.icns`, `.ico`, PNG sizes, Windows/Android/iOS), the README's `assets/logo.png`, and the web favicons (`favicon.svg`, `favicon.ico`, `favicon-32x32.png`).
 
 ## [0.3.4] - 2026-11-02
 
