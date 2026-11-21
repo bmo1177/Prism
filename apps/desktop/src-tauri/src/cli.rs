@@ -487,6 +487,12 @@ pub(crate) fn dispatch(args: &Args) -> Result<(), CliError> {
         print!("{HELP}");
         return Ok(());
     }
+    // Reject an unknown command before touching the gateway so a typo gets a
+    // real `unknown_command` answer, not an `app_not_running` that hides it.
+    const COMMANDS: [&str; 5] = ["status", "sessions", "prompt", "provenance", "jobs"];
+    if !COMMANDS.contains(&cmd) {
+        return Err(CliError::user(format!("unknown command: {cmd}"), "run `prism agent --help`"));
+    }
     let cfg = resolve_config(args)?;
     match cmd {
         "status" => {
@@ -544,6 +550,8 @@ pub(crate) fn dispatch(args: &Args) -> Result<(), CliError> {
             }
             None => return Err(CliError::user("jobs needs a subcommand", "use `list`, `create` or `run`")),
         },
+        // Unreachable — the `COMMANDS` pre-check above rejects anything else.
+        // Kept as a hard error so a future edit cannot silently no-op.
         other => {
             return Err(CliError::user(format!("unknown command: {other}"), "run `prism agent --help`"));
         }
@@ -570,6 +578,25 @@ pub fn run(args: &[String]) -> ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn dispatch_rejects_unknown_command_without_gateway() {
+        let a = Args {
+            human: false,
+            token: None,
+            url: None,
+            session: None,
+            title: None,
+            prompt: None,
+            kind: None,
+            value: None,
+            positional: vec!["bogus".to_string()],
+        };
+        let e = dispatch(&a).unwrap_err();
+        assert_eq!(e.code, "user_error");
+        assert_eq!(e.exit, 1);
+        assert!(e.message.contains("unknown command: bogus"));
+    }
 
     #[test]
     fn enc_keeps_unreserved_and_encodes_the_rest() {

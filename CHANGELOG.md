@@ -8,6 +8,16 @@ All notable changes to Prism are documented here. Format follows
 
 ### Added
 
+- **`prism agent` headless CLI** for scripting against a running Prism app (merged from `5731ec9` and hardened with improved exit codes + command-validation-before-gateway): commands `status`, `sessions list|show <id>`, `prompt <session> "<text>"`, `provenance list [--session <id>]`, `jobs list|create|run <id>`; stdout JSON by default (`--human` for tables); documented error envelope `{ "error": { "code", "message", "hint" } }` on **stdout**; stable exit codes 0/1/2/3 (`user_error` / `app_not_running` / `transport_error` / `not_found`); the gateway now persists the bound port (including ephemeral ones) to `gateway.txt`; docs in `docs/agent-api.md` + headless smoke test in `scripts/dev/test-agent-cli.sh`.
+
+### Fixed
+
+- Streaming-hot-loop fixes (via agy `gemini-3.8-flash-high` + `frontend-patterns` + `security-review`): `splitReview` now keeps the O(1) fast path until the ````review` fence actually closes (no backtracking regex on every token), builds the clean text from match indices instead of a second regex pass, uses `Set` for level/check lookups, and `stripEchoedPrompt` bails out on first-char mismatch instead of scanning O(len²) per token (#77 follow-up).
+- Linux WebKit DMABUF freeze (#77): the app sets `WEBKIT_DISABLE_DMABUF_RENDERER=1` before GTK init when on Linux (user override wins); new Rust unit test pins the default.
+- AppImage restored on Linux (capped by upstream `tauri#8929`): new `scripts/release/build-appimage.sh` builds the `.deb` into an AppImage via `appimagetool`, and CI builds + attaches it on tags; `build.yml` matrix is now **Linux → Windows → macOS** with macOS explicitly marked unverified (no signing secrets).
+
+### Added
+
 - Built-in starter tasks in the Tasks scheduler: a first launch seeds two runnable jobs — **Daily AI Research Digest** (web-researched arXiv/Hugging Face/GitHub digest written as a self-contained offline HTML file to `digests/digest-YYYY-MM-DD.html` in the workspace, with the Early Alzheimer's Detection research-track section at top) and **Hermes AI Coach** (persistent learning-and-career coach for the AI job/PhD-in-Italy track, keeping state in `coach/state.md`). Seeding runs once (guarded by a `meta` marker, so deleting a starter task is respected) and a "Restore starter tasks" action re-adds missing ones on demand (`restore_default_jobs`).
 - Task failure surfaces: the scheduler records the last fire failure per job (`last_error` + retry count) with exponential retry backoff (1 m → 30 m cap), and the Tasks page shows a "Failed: …" chip with the full error on hover instead of failing silently in a background thread.
 - OS keychain for provider API keys: every BYOK key the app saves is mirrored into the OS credential store (Apple Keychain / Windows Credential Manager / Linux Secret Service via `keyring`, pure-Rust zbus — no libsecret C dependency), a startup pass mirrors keys older installs kept only in the sidecar's plaintext files, and a `forget_provider_key` command purges every machine copy (keychain entry, `opencode.json(c)` provider block, `auth.json` entry) then restarts the sidecar. The plaintext files stay the sidecar's working copies; the keychain is the persistent, user-deletable authority. OAuth logins are not mirrored.

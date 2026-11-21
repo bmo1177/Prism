@@ -1129,6 +1129,26 @@ mod tests {
     use super::*;
 
     #[test]
+    fn parse_persisted_reads_the_port_and_is_backward_compatible() {
+        // New format: port line present (what the CLI reads).
+        let p = parse_persisted("enabled 1\nlan 0\nmode read-only\ntoken abc\nport 4098\n");
+        assert!(p.enabled);
+        assert_eq!(p.mode, "read-only");
+        assert_eq!(p.token, "abc");
+        assert_eq!(p.port, 4098);
+        // Old format (no port line): defaults to 0 — the CLI refuses with a
+        // clear "gateway is not running" hint instead of guessing.
+        let q = parse_persisted("enabled 1\nlan 0\nmode full\ntoken abc\n");
+        assert!(q.enabled);
+        assert_eq!(q.port, 0);
+        // Disabled still parses; enabled=false is the primary "don't run" signal.
+        let r = parse_persisted("enabled 0\nlan 0\nmode full\ntoken \nport 0\n");
+        assert!(!r.enabled);
+        // Garbage / empty.
+        assert_eq!(parse_persisted("").port, 0);
+    }
+
+    #[test]
     fn ct_eq_matches_only_identical() {
         assert!(ct_eq("abc123", "abc123"));
         assert!(!ct_eq("abc123", "abc124"));
