@@ -15,6 +15,7 @@ All notable changes to Prism are documented here. Format follows
 - Streaming-hot-loop fixes (via agy `gemini-3.8-flash-high` + `frontend-patterns` + `security-review`): `splitReview` now keeps the O(1) fast path until the ````review` fence actually closes (no backtracking regex on every token), builds the clean text from match indices instead of a second regex pass, uses `Set` for level/check lookups, and `stripEchoedPrompt` bails out on first-char mismatch instead of scanning O(len²) per token (#77 follow-up).
 - Linux WebKit DMABUF freeze (#77): the app sets `WEBKIT_DISABLE_DMABUF_RENDERER=1` before GTK init when on Linux (user override wins); new Rust unit test pins the default.
 - AppImage restored on Linux (capped by upstream `tauri#8929`): new `scripts/release/build-appimage.sh` builds the `.deb` into an AppImage via `appimagetool`, and CI builds + attaches it on tags; `build.yml` matrix is now **Linux → Windows → macOS** with macOS explicitly marked unverified (no signing secrets).
+- **Security floors now live**: the `js-yaml` / `brace-expansion` pins that `package.json` documented as `pnpm.overrides` moved to `pnpm-workspace.yaml` — pnpm 11+ no longer reads the package.json field (the warning on every pnpm command; the floors were dead config), so they now apply to every install, and the lockfile's stale `overrides` block is gone. Tree unchanged (already-patched versions kept); `pnpm install --frozen-lockfile` (the CI gate) green.
 
 ### Added
 
