@@ -9,6 +9,7 @@ All notable changes to Prism are documented here. Format follows
 ### Added
 
 - **`prism agent` headless CLI** for scripting against a running Prism app (merged from `5731ec9` and hardened with improved exit codes + command-validation-before-gateway): commands `status`, `sessions list|show <id>`, `prompt <session> "<text>"`, `provenance list [--session <id>]`, `jobs list|create|run <id>`; stdout JSON by default (`--human` for tables); documented error envelope `{ "error": { "code", "message", "hint" } }` on **stdout**; stable exit codes 0/1/2/3 (`user_error` / `app_not_running` / `transport_error` / `not_found`); the gateway now persists the bound port (including ephemeral ones) to `gateway.txt`; docs in `docs/agent-api.md` + headless smoke test in `scripts/dev/test-agent-cli.sh`.
+- **README updated**: corrected the stale pnpm prerequisite (`9.x` → `10+`); expanded the architecture tree (added `runtime/manager`, `runtime/tools`, `runtime/goal-plugin`, `runtime/opencode-profile`; `docs/` now includes the RFCs); documented the new **Headless Agent CLI** (`prism agent`: `status`, `sessions list`, `sessions show`, `prompt`, `provenance list`, `jobs list|create|run` — JSON on stdout, exit codes 0/1/2/3, token + bound port read from `gateway.txt`), linking to `docs/agent-api.md`; the gateway section now notes the persisted bound port.
 
 ### Fixed
 

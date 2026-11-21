@@ -124,7 +124,7 @@ Put work on a clock from the Tasks page: fire an agent turn at a timestamp, ever
 ---
 
 ### 10. Remote Access Gateway (Phone & LAN)
-Use Prism from a phone or another computer on your network: the desktop app serves the same Prism interface over an authenticated HTTP gateway (default port 4098, Bearer-token access, read-only or full scopes). Loopback by default — LAN exposure is an explicit opt-in, and the agent sidecar itself always stays bound to 127.0.0.1.
+Use Prism from a phone or another computer on your network: the desktop app serves the same Prism interface over an authenticated HTTP gateway (default port 4098, Bearer-token access, read-only or full scopes). Loopback by default — LAN exposure is an explicit opt-in, and the agent sidecar itself always stays bound to 127.0.0.1. The gateway persists the actual bound port (including ephemeral ones when 4098 is taken) to `gateway.txt`, so restarts are seamless.
 
 ---
 
@@ -184,7 +184,7 @@ chmod +x Prism_*.AppImage
 
 ### Prerequisites
 * **Node.js**: ≥ 20.x
-* **pnpm**: 9.x
+* **pnpm**: 10+ (the lockfile and the `pnpm-workspace.yaml` security overrides are the pnpm 10+ format; CI gates on `pnpm install --frozen-lockfile`)
 * **Rust Toolchain**: Stable (`cargo`, `rustc`)
 * **Tauri 2 System Dependencies**: (See [Tauri Prerequisites](https://v2.tauri.app/start/prerequisites/))
 
@@ -214,6 +214,23 @@ pnpm --filter @ai4s/desktop tauri build
 
 ---
 
+## 🖥️ Headless Agent CLI (`prism agent`)
+
+Scripts, CI, and other tools can drive a running Prism app headlessly: the bundled `prism agent` CLI speaks the Remote Access Gateway, so it inspects state, sends prompts, reads provenance, and manages scheduled tasks — no window needed. It reads the token and bound port from `gateway.txt`.
+
+```bash
+prism agent status                            # app status, models, and port
+prism agent sessions list                     # recent sessions
+prism agent prompt <session-id> "<text>"      # send a prompt to a session
+prism agent jobs list                         # scheduled tasks (create/run/delete too)
+```
+
+- Requires a running Prism instance with **Remote Access** enabled (Settings → Remote Access).
+- Output is JSON on stdout by default (`--human` renders tables); stable exit codes: `0` success, `1` user error, `2` transport (e.g. app not running), `3` not found.
+- See [docs/agent-api.md](./docs/agent-api.md) for the full command reference and bash/Python scripting examples.
+
+---
+
 ## 🛡️ Safety & Local-First Guarantees
 
 * 🔒 **Local Workspace Isolation**: The agent strictly accesses the open project workspace directory.
@@ -235,14 +252,18 @@ Prism/
 │   ├── shared/           # Common types, schemas, and color palettes
 │   └── ui/               # Shared UI component system
 ├── runtime/
-│   ├── skills/           # Bundled & external agent skills
-│   ├── mcp/              # Model Context Protocol integrations
-│   ├── harness/          # Agent knowledge, prompts & runtime context
-│   └── kernel/           # Local Python/R kernel bridges (notebook execution, figure capture)
-├── assets/               # Branding graphics, logos, and screenshots
-├── examples/             # Built-in demo projects (e.g. climate-trends, bci-trends)
-├── scripts/              # Development, fetching, and build scripts
-└── docs/                 # Product specifications and PRD
+│   ├── manager/           # Local Runtime Manager: detects Python/uv/Git/Node, creates the workspace + isolated environments, supervises the OpenCode sidecar, manages ports/health
+│   ├── skills/            # Bundled & external agent skills
+│   ├── mcp/               # Model Context Protocol integrations
+│   ├── harness/           # Agent knowledge, prompts & runtime context
+│   ├── goal-plugin/       # Goal-plugin (cowork) support
+│   ├── opencode-profile/  # App-private OpenCode config + profile skills (isolated via XDG dirs)
+│   ├── tools/             # OpenCode agent tools (present_artifact, agy-bridge, ssh)
+│   └── kernel/            # Local Python/R kernel bridges (notebook execution, figure capture)
+├── assets/                 # Branding graphics, logos, and screenshots
+├── examples/               # Built-in demo projects (e.g. climate-trends, bci-trends)
+├── scripts/               # Development, fetching, and build scripts
+└── docs/                 # Product specifications, PRD, and RFCs
 ```
 
 ---
